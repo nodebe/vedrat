@@ -24,8 +24,7 @@ paystack.transaction.list()'''
 @app.route('/')
 @app.route('/index')
 def index():
-	return '<h1>We just started</h1>'
-	#return render_template('index.html', title='Home')
+	return render_template('index.html', title='Home')
 
 '''@app.route('/signup', methods=['GET', 'POST'])
 def signup():

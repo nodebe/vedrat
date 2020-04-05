@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Advertisement platform for small and medium scale businesses" />
+    <title>Vedrat | {{title}}</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,400,600,700,800,900&display=swap" rel="stylesheet">
+    <!-- build:css -->
+    <link rel="stylesheet" href="../static/vendor/css/line-awesome.css">
+    <link rel="stylesheet" href="../static/vendor/css/swiper.min.css">
+    <link rel="stylesheet" href="../static/css/bootstrap-custom.css">
+    <link rel="stylesheet" href="../static/css/theme.css">
+    <!-- endbuild -->
+    <link rel="stylesheet" href="../static/css/custom.css">
+    <link rel="stylesheet" href="../static/css/rtl.css">
+</head>
+<body>
+    <header class="nav-wrap bg-dark fixed-top">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-dark px-lg-0">
+                <a class="navbar-brand mr-3 swap-link" href="/index">Ved<span class="text-primary">Rat</span></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item swap-link"> <a href="/index" class="nav-link">Home</a> </li>
+                        <li class="nav-item swap-link"> <a href="/about" class="nav-link">About</a> </li>
+                        <li class="nav-item swap-link"> <a href="/faq" class="nav-link">FAQ</a> </li>
+                        <li class="nav-item swap-link"> <a href="/blog" class="nav-link">Blog</a> </li>
+                        <li class="nav-item swap-link"> <a href="/contact" class="nav-link">Contact</a> </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown megamenu">
+                            <a class="nav-link dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown" aria-expanded="false"><i class="las la-user mr-2" style="font-size:22px;"></i></a>
+                            <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                <a class="dropdown-item font-weight-bold swap-link" href="dashboard.html"><i class="las la-user bg-info-alt p-1 rounded text-info"></i> Profile</a>
+                                <a class="dropdown-item swap-link" href="dash-settings.html"><i class="las la-sign-out-alt bg-warning-alt text-warning p-1 rounded"></i> Settings</a>
+                                <a class="dropdown-item swap-link" href="dash-downloads.html"><i class="las la-cloud-download-alt bg-success-alt text-success p-1 rounded"></i> Downloads</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item swap-link" href="dashboard.html"><i class="dropdown-icon"></i> Dashboard</a>
+                                <a class="dropdown-item swap-link" href="dash-my-items.html"><i class="dropdown-icon"></i> My Items</a>
+                                <a class="dropdown-item swap-link" href="dash-settings.html"><i class="dropdown-icon"></i> Settings
+                                    <span class="badge badge-soft-success ml-2">25 New</span></a>
+                                <a class="dropdown-item swap-link" href="dash-invoice.html"><i class="dropdown-icon"></i> Invoice</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item swap-link" href="javascript:void(0)"><i class="las la-sign-out-alt bg-danger-alt text-danger p-1 rounded"></i> Logout</a>
+                            </div>
+                        </li>
+                        {% else %}
+                        <li class="nav-item swap-link"> <a href="\signin" class="nav-link">Login</a> </li>
+                        <li class="nav-item d-flex align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-primary swap-link text-white" href="/signup" role="button">Sign up</a>
+                        </li>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    {% block body %}
+    {% endblock %}
+    <footer class="section-footer bg-dark position-relative">
+        <section class="footer py-5">
+            <div class="container">
+                <div class="row pb-3">
+                    <aside class="col-md-2">
+                        <div class="footer-logo">
+                            <h4 class="text-white font-weight-bold">Ved<span class="text-muted">Rat</span></h4>
+                        </div>
+                    </aside>
+                    <aside class="col-md">
+                        <h6 class="title">Company</h6>
+                        <ul class="list-unstyled">
+                            <li> <a href="#">About us</a></li>
+                            <li> <a href="/terms">Rules and terms</a></li>
+                        </ul>
+                    </aside>
+                    <aside class="col-md">
+                        <h6 class="title">Help</h6>
+                        <ul class="list-unstyled">
+                            <li> <a href="#">Contact us</a></li>
+                            <li> <a href="#">FAQ</a></li>
+                        </ul>
+                    </aside>
+                    <aside class="col-md">
+                        <h6 class="title">Account</h6>
+                        <ul class="list-unstyled">
+                            <li> <a href="/signin"> User Login </a></li>
+                            <li> <a href="/signup"> User register </a></li>
+                            <li> <a href="/usersetting"> Account Setting </a></li>
+                            <li> <a href="/userposts"> User Posts </a></li>
+                        </ul>
+                    </aside>
+                </div>
+                <!-- row.// -->
+            </div>
+            <!-- //container -->
+        </section>
+        <!-- footer-top.// -->
+        <section class="pt-3 pb-4">
+            <div class="container">
+                <div class="footer-cta rounded border-dark">
+                    <div class="row no-gutters d-flex justify-content-between align-items-center">
+                        <div class="col-5 col-md-4 affiliate d-flex align-items-center">
+                            <div class="aff-btn">
+                                <a href="/affiliate" class="btn btn-primary btn-sm">
+                                    Affiliate
+                                </a>
+                            </div>
+                            <div>
+                                <p class="text-white d-none d-md-block m-0 w-75 small ml-3">
+                                    Earn upto N50,000 extra cash
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="d-flex flex-row justify-content-between">
+                                <div class="fact">
+                                    <h6 class="mb-1">12,961</h6>
+                                    <p class="mb-0">Posts</p>
+                                </div>
+                                <div class="fact">
+                                    <h6 class="mb-1">900</h6>
+                                    <p class="mb-0">Users</p>
+                                </div>
+                                <div class="fact">
+                                    <h6 class="mb-1">2,700</h6>
+                                    <p class="mb-0">Payments</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="footer-bottom border-top border-dark white pt-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="pr-2">© 2020 Vedrat</span>
+                        <span class="pr-2"><a href="#">Privacy policy</a></span>
+                        <span class="pr-2"><a href="/terms">Terms of use</a></span>
+                    </div>
+                    <div class="col-md-6 text-md-right">
+                        <a href="#" class="mr-2"><img src="../static/img/payment/footer-visa.svg" width="42"></a>
+                        <a href="#" class="mr-2"><img src="../static/img/payment/footer-mastercard.svg" width="42"></a>
+                        <a href="#"><img src="../static/img/payment/footer-paypal.svg" width="42"></a>
+                    </div>
+                </div>
+                <!-- row.// -->
+            </div>
+            <!-- //container -->
+        </section>
+    </footer> <!-- build:js -->
+    <script src="../static/vendor/js/jquery.js"></script>
+    <script src="../static/vendor/js/popper.js"></script>
+    <script src="../static/vendor/js/bootstrap.js"></script>
+    <script src="../static/vendor/js/swiper.min.js"></script>
+    <script src="../static/vendor/js/prism.min.js"></script>
+
+    <script src="../static/js/custom.js"></script>
+
+    <!-- endbuild -->
+
+</body>
+
+</html>
