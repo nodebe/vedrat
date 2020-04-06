@@ -42,24 +42,33 @@ def signup():
 
 @app.route('/signin', methods=['GET','POST'])
 def signin():
-	'''if current_user.is_authenticated:
-					return redirect(url_for('userdashboard'))
-				form = UserLogForm()
-				if form.validate_on_submit():
-					user = User.query.filter_by(email=form.email.data).first()
-					if user and sha256.verify(form.password.data, user.password):
-						login_user(user)
-						next_page = request.args.get('next')
-						return redirect(next_page) if next_page else redirect(url_for('userdashboard'))
-					else: 
-						flash('Login Unsuccessful. Email or password invalid', 'danger')
-				return render_template('signin.html', form=form)'''
-	return '<h1>Welcome</h1>'
+	if current_user.is_authenticated:
+		return redirect(url_for('userdashboard'))
+	form = UserLogForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(email=form.email.data).first()
+		if user and sha256.verify(form.password.data, user.password):
+			login_user(user)
+			next_page = request.args.get('next')
+			if current_user.plan=='0':
+				flash('Please visit your payment page to pay for a plan and start earning', 'info')
+			return redirect(next_page) if next_page else redirect(url_for('userdashboard'))
+		else: 
+			flash('Login Unsuccessful. Email or password invalid', 'danger')
+	return render_template('signin.html', form=form, title='Login')
 
 @app.route('/logout')
 def logout():
 	logout_user()
 	return redirect(url_for('signin'))
+
+@app.route('/userdashboard')
+def userdashboard():
+	if current_user.plan=='0':
+		return 'Please visit your payment page to pay for a plan and start earning'
+	return '<h1>Welcome, {}'.format(current_user.fullname)
+	#return redirect(url_for('signin'))
+
 '''
 @app.route('/passwordreset', methods=['GET','POST'])
 def passwordreset():
@@ -81,6 +90,7 @@ def passwordreset():
 			flash('Password reset Unsuccessful, Invalid Email', 'danger')
 	return render_template('passwordreset.html', form=form)
 '''
+
 @app.route('/contact', methods=['GET','POST'])
 def contact():
 	form = ContactForm()

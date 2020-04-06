@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+{% block body %}
+	<div class="account-pages mt-7 mb-5">
+            <div class="container">
+                <div class="row d-flex justify-content-center align-items-center">
+                    <div class="col-md-8 col-lg-6 col-xl-5">
+                        <div class="card hover-box-shadow">
+                            <div class="card-body px-auto">
+                                <h4 class="card-title mt-3 text-center">Login Account</h4>
+                                <hr class="divider divider-fade">
+                                <form method="POST">
+              					{% from 'includes/_formhelpers.html' import render_field %}
+                                    <div class="form-group input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="las la-envelope"></i> </span>
+                                        </div>
+                                        {{render_field(form.email, class_='form-control', placeholder='Email')}}
+                                    </div>
+                                    <div class="form-group input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="las la-key"></i> </span>
+                                        </div>
+                                        {{render_field(form.password, class_='form-control', placeholder='Create Password')}}
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary btn-block"> Login </button>
+                                    </div>
+                                    <p class="text-center">Forgot password?
+                                        <a href="/forgotpassword">Click here</a>
+                                    </p>
+                                    <p class="text-center">Don't have an account?
+                                        <a href="/signup">Register</a>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- end card -->
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- end container -->
+        </div>
+        <!-- end page -->
+{% endblock body %}

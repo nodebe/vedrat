@@ -22,10 +22,10 @@ class UserRegForm(FlaskForm):
 
 
 class UserLogForm(FlaskForm):
-	email = StringField('Email Address:',
+	email = StringField('',
 		validators=[Email('Please fill in a valid email address')])
-	password = PasswordField('Password:',
-		validators=[DataRequired('Please fill in your password'),Length(min=6)])
+	password = PasswordField('',
+		validators=[DataRequired('Please fill in your password')])
 
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False
