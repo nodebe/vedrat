@@ -6,11 +6,10 @@ from wtforms.fields.html5 import DateTimeLocalField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
 class UserRegForm(FlaskForm):
-	username = StringField('Username <span class="text-danger">*</span>', validators=[DataRequired('Please fill in a username'), Length(min=3,max=30)])
-	email = StringField('Email <span class="text-danger">*</span>', validators=[Email('Please fill in a valid email address')])
-	phone = StringField('Phone Number <span class="text-danger">*</span>', validators=[DataRequired('Please fill in your phone number')])
-	password = PasswordField('Password <span class="text-danger">*</span>', validators=[DataRequired('Please choose a strong password'), Length(min=6)])
-	confirm = PasswordField('Confirm Password <span class="text-danger">*</span>', validators=[EqualTo('password')])
+	fullname = StringField('', validators=[DataRequired('Please fill in a username'), Length(min=3,max=30)])
+	email = StringField('', validators=[Email('Please fill in a valid email address')])
+	password = PasswordField('', validators=[DataRequired('Please choose a strong password'), Length(min=6)])
+	confirm = PasswordField('', validators=[EqualTo('password')])
 
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False
@@ -21,10 +20,6 @@ class UserRegForm(FlaskForm):
 		if user:
 			raise ValidationError('Email already exists!')
 
-	# def validate_phone(self, phone):
-	# 	user = User.query.filter_by(phone=phone.data).first()
-	# 	if user:
-	# 		raise ValidationError('Phone number already exists!')
 
 class UserLogForm(FlaskForm):
 	email = StringField('Email Address:',

@@ -63,8 +63,13 @@
             </nav>
         </div>
     </header>
-    {% block body %}
-    {% endblock %}
+    <main role="main">
+        <div class="mt-4 container d-flex justify-content-center col-md-7">
+            {% include 'includes/_messages.html' %}
+        </div>
+        {% block body %}
+        {% endblock %}
+    </main>
     <footer class="section-footer bg-dark position-relative">
         <section class="footer py-5">
             <div class="container">

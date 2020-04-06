@@ -26,35 +26,36 @@ paystack.transaction.list()'''
 def index():
 	return render_template('index.html', title='Home')
 
-'''@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
 	if current_user.is_authenticated:
 		return redirect(url_for('userdashboard'))
 	form = UserRegForm()
 	if form.validate_on_submit():
 		hashed_password = sha256.encrypt(str(form.password.data))
-		user = User(username=form.username.data,email=form.email.data,phone=form.phone.data,password=hashed_password,videos='',raffles='',ebooks='')
+		user = User(fullname=form.fullname.data,email=form.email.data,password=hashed_password)
 		db.session.add(user)
 		db.session.commit()
 		flash('Your account has been created successfully.', 'success')
 		return redirect(url_for('signin'))
 	return render_template('signup.html', form=form, title='Register')
-'''
-'''@app.route('/signin', methods=['GET','POST'])
+
+@app.route('/signin', methods=['GET','POST'])
 def signin():
-	if current_user.is_authenticated:
-		return redirect(url_for('userdashboard'))
-	form = UserLogForm()
-	if form.validate_on_submit():
-		user = User.query.filter_by(email=form.email.data).first()
-		if user and sha256.verify(form.password.data, user.password):
-			login_user(user)
-			next_page = request.args.get('next')
-			return redirect(next_page) if next_page else redirect(url_for('userdashboard'))
-		else: 
-			flash('Login Unsuccessful. Email or password invalid', 'danger')
-	return render_template('signin.html', form=form)
-'''
+	'''if current_user.is_authenticated:
+					return redirect(url_for('userdashboard'))
+				form = UserLogForm()
+				if form.validate_on_submit():
+					user = User.query.filter_by(email=form.email.data).first()
+					if user and sha256.verify(form.password.data, user.password):
+						login_user(user)
+						next_page = request.args.get('next')
+						return redirect(next_page) if next_page else redirect(url_for('userdashboard'))
+					else: 
+						flash('Login Unsuccessful. Email or password invalid', 'danger')
+				return render_template('signin.html', form=form)'''
+	return '<h1>Welcome</h1>'
+
 @app.route('/logout')
 def logout():
 	logout_user()
