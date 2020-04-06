@@ -35,7 +35,7 @@ class Contact(db.Model):
 	email = db.Column(db.String(50), nullable=False)
 	subject = db.Column(db.String(120), nullable=False)
 	message = db.Column(db.Text, nullable=False)
-	read = db.Column(db.String(1), nullable=False)
+	read = db.Column(db.String(1), default='0')
 
 class Post(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

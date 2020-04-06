@@ -94,13 +94,14 @@ def passwordreset():
 @app.route('/contact', methods=['GET','POST'])
 def contact():
 	form = ContactForm()
+	faqs = FAQ.query.all()
 	if form.validate_on_submit():
-		contact = Contact(name=form.name.data,email=form.email.data,subject=form.subject.data,message=form.message.data,read='0')
+		contact = Contact(fullname=form.fullname.data,email=form.email.data,subject=form.subject.data,message=form.message.data)
 		db.session.add(contact)
 		db.session.commit()
 		flash('Your message has been posted successfully. We will get back to you through an email message', 'success')
 		return redirect(url_for('contact'))
-	return render_template('contactform.html', title='Contact', form=form)
+	return render_template('contact.html', title='Contact', form=form, faqs=faqs)
 
 '''
 @app.route('/vmessage', methods=['GET','POST'])
