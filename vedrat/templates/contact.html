@@ -18,49 +18,8 @@
             </div>
         </div>
         <div class="container">
-            <div class="row d-flex align-items-stretch">
-            	<div class="col-md-2"></div>
-                <div class="col-md-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <div class="box-icon bg-info-alt text-info d-flex align-items-center justify-content-center">
-                                <i class="las la-phone-volume"></i>
-                            </div>
-                            <div class="content mt-3">
-                                <h4 class="title font-weight-bold">Phone</h4>
-                                <p class="text-muted">
-                                    Reach our customer care lines which are 24/7 always active
-                                </p>
-                                <a href="tel:+2348151667656" class="text-primary">+234-815-1667-656</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--end col-->
-                <div class="col-md-3 mt-4 mt-sm-0 pt-2 pt-sm-0">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <div class="box-icon bg-warning-alt text-warning d-flex align-items-center justify-content-center">
-                                <i class="las la-envelope-open"></i>
-                            </div>
-                            <div class="content mt-3">
-                                <h4 class="title font-weight-bold">Email</h4>
-                                <p class="text-muted">
-                                    Send us an email and recieve a response within 24 hours
-                                </p>
-                                <a href="mailto:vedrat@gmail.com" class="text-primary">vedrat@gmail.com</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--end col-->
-            </div>
-            <!--end row-->
-        </div>
-
-        <div class="container">
             <div class="row my-6">
-                <div class="col-lg-8">
+                <div class="col-md-8">
                     <div class="card">
                         <div class="card-body py-3 border-bottom">
                             <div class="d-flex align-items-center">
@@ -115,29 +74,41 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div id="faq-accordion" class="mb-5">
-                    	{% for faq in faqs %}
-	                    	{% if faq.id <= 5 %}
-		                        <div class="card mb-2 mb-md-3">
-		                            <a href="#accordion-1" data-toggle="collapse" role="button" aria-expanded="false" class="p-3 p-md-4">
-		                                <div class="d-flex justify-content-between align-items-center">
-		                                    <h6 class="mb-0 mr-2">How do I contact support?</h6>
-		                                    <i class="las la-arrow-right icon"></i>
-		                                </div>
-		                            </a>
-		                            <div class="collapse" id="accordion-1" data-parent="#faq-accordion">
-		                                <div class="px-3 px-md-4 pb-3 pb-md-4">
-		                                    f you need help with the product, please contact the shop owner by
-		                                    visiting their shop profile and sending them a message. For
-		                                    anything else (licensing, billing, etc), please visit our Help
-		                                    Center.
-		                                </div>
-		                            </div>
-		                        </div>
-	                        {% endif %}
-	                    {% endfor %}
+                <div class="col-md-4">
+                <div class="row mt-4 mt-md-0">
+                    <div class="col-md-12">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <div class="box-icon bg-info-alt text-info d-flex align-items-center justify-content-center">
+                                    <i class="las la-phone-volume"></i>
+                                </div>
+                                <div class="content mt-3">
+                                    <h4 class="title font-weight-bold">Phone</h4>
+                                    <p class="text-muted">
+                                        Reach our customer care lines which are 24/7 always active
+                                    </p>
+                                    <a href="tel:+2348151667656" class="text-primary">+234-815-1667-656</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <div class="col-md-12 mt-4 pt-2 pt-sm-0">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <div class="box-icon bg-warning-alt text-warning d-flex align-items-center justify-content-center">
+                                    <i class="las la-envelope-open"></i>
+                                </div>
+                                <div class="content mt-3">
+                                    <h4 class="title font-weight-bold">Email</h4>
+                                    <p class="text-muted">
+                                        Send us an email and recieve a response within 24 hours
+                                    </p>
+                                    <a href="mailto:vedrat@gmail.com" class="text-primary">vedrat@gmail.com</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
