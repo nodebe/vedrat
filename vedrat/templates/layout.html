@@ -37,17 +37,12 @@
                         <li class="nav-item dropdown megamenu">
                             <a class="nav-link dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown" aria-expanded="false"><i class="las la-user mr-2" style="font-size:22px;"></i></a>
                             <div class="dropdown-menu dropdown-menu-right" role="menu">
-                                <a class="dropdown-item font-weight-bold swap-link" href="dashboard.html"><i class="las la-user bg-info-alt p-1 rounded text-info"></i> Profile</a>
-                                <a class="dropdown-item swap-link" href="dash-settings.html"><i class="las la-sign-out-alt bg-warning-alt text-warning p-1 rounded"></i> Settings</a>
-                                <a class="dropdown-item swap-link" href="dash-downloads.html"><i class="las la-cloud-download-alt bg-success-alt text-success p-1 rounded"></i> Downloads</a>
-                                <div class="dropdown-divider"></div>
                                 <a class="dropdown-item swap-link" href="dashboard.html"><i class="dropdown-icon"></i> Dashboard</a>
                                 <a class="dropdown-item swap-link" href="dash-my-items.html"><i class="dropdown-icon"></i> My Items</a>
-                                <a class="dropdown-item swap-link" href="dash-settings.html"><i class="dropdown-icon"></i> Settings
-                                    <span class="badge badge-soft-success ml-2">25 New</span></a>
+                                <a class="dropdown-item swap-link" href="/usersettings"><i class="dropdown-icon"></i> Settings</a>
                                 <a class="dropdown-item swap-link" href="dash-invoice.html"><i class="dropdown-icon"></i> Invoice</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item swap-link" href="javascript:void(0)"><i class="las la-sign-out-alt bg-danger-alt text-danger p-1 rounded"></i> Logout</a>
+                                <a class="dropdown-item swap-link" href="/logout"><i class="las la-sign-out-alt bg-danger-alt text-danger p-1 rounded"></i> Logout</a>
                             </div>
                         </li>
                         {% else %}
@@ -98,7 +93,7 @@
                         <ul class="list-unstyled">
                             <li> <a href="/signin"> User Login </a></li>
                             <li> <a href="/signup"> User register </a></li>
-                            <li> <a href="/usersetting"> Account Setting </a></li>
+                            <li> <a href="/usersettings"> Account Setting </a></li>
                             <li> <a href="/userposts"> User Posts </a></li>
                         </ul>
                     </aside>

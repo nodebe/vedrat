@@ -8,10 +8,10 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_mail import Mail, Message
 from vedrat import app, db#, mail
 from vedrat.utils import unique_id, save_picture
-from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm
+from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm
 from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, logout_user, login_required
-from vedrat.models import User, Contact, Post, FAQ#, Transactiondb
+from vedrat.models import User, Contact, Post, FAQ, PickedPost#, Transactiondb
 from datetime import datetime as dt
 '''from paystackapi.paystack import Paystack
 from paystackapi.transaction import Transaction
@@ -50,8 +50,8 @@ def signin():
 		if user and sha256.verify(form.password.data, user.password):
 			login_user(user)
 			next_page = request.args.get('next')
-			if current_user.plan=='0':
-				flash('Please visit your payment page to pay for a plan and start earning', 'info')
+			if next_page and current_user.plan=='0' and 'userdashboard' not in next_page:
+				flash('Please visit the payment page to pay for a plan and start earning', 'info')
 			return redirect(next_page) if next_page else redirect(url_for('userdashboard'))
 		else: 
 			flash('Login Unsuccessful. Email or password invalid', 'danger')
@@ -63,11 +63,54 @@ def logout():
 	return redirect(url_for('signin'))
 
 @app.route('/userdashboard')
+@login_required
 def userdashboard():
 	if current_user.plan=='0':
-		return 'Please visit your payment page to pay for a plan and start earning'
-	return '<h1>Welcome, {}'.format(current_user.fullname)
-	#return redirect(url_for('signin'))
+		flash('Please visit the payment page to pay for a plan and start earning', 'info')
+	return render_template('userdashboard.html', title='Dashboard')
+
+@app.route('/usersettings', methods=['GET','POST'])
+@login_required
+def usersettings():
+	form = SettingsForm()
+	passwordform = PasswordChangeForm()
+	if form.validate_on_submit():
+		current_user.fullname = form.fullname.data
+		current_user.email = form.email.data
+		current_user.phone = '0'+str(form.phone.data)
+		current_user.bank_name = form.bank_name.data
+		current_user.acc_number = form.acc_number.data
+		current_user.acc_name = form.acc_name.data
+		db.session.commit()
+		flash('Your info has been updated', 'success')
+		return redirect(url_for('usersettings'))
+	elif request.method == 'GET':
+		form.fullname.data = current_user.fullname
+		form.email.data = current_user.email
+		form.phone.data = current_user.phone
+		form.bank_name.data = current_user.bank_name
+		form.acc_number.data = current_user.acc_number
+		form.acc_name.data = current_user.acc_name
+
+	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	return render_template('settings.html', title='Settings', shared=len(picked_ads), posted=len(shared_ads), form=form, pform=passwordform)
+
+@app.route('/changepassword', methods=['POST'])
+def changepassword():
+	pform = PasswordChangeForm()
+	if pform.validate_on_submit():
+		if sha256.verify(pform.oldpassword.data, current_user.password):
+			current_user.password = sha256.encrypt(str(pform.newpassword.data))
+			db.session.commit()
+			flash('Password changed successfully', 'success')
+			return redirect(url_for('usersettings'))
+		else:
+			flash('Your password does not match', 'info')
+			return redirect(url_for('usersettings'))
+	else:
+		flash('Your password does not match', 'info')
+		return redirect(url_for('usersettings'))
 
 '''
 @app.route('/passwordreset', methods=['GET','POST'])
@@ -94,6 +137,10 @@ def passwordreset():
 @app.route('/contact', methods=['GET','POST'])
 def contact():
 	form = ContactForm()
+	if current_user.is_authenticated:
+		if request.method == 'GET':
+			form.fullname.data = current_user.fullname
+			form.email.data = current_user.email
 	if form.validate_on_submit():
 		contact = Contact(fullname=form.fullname.data,email=form.email.data,subject=form.subject.data,message=form.message.data)
 		db.session.add(contact)
