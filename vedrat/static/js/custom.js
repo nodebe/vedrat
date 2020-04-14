@@ -1,7 +1,21 @@
 
+  /*my own code*/
+  function clickToCopy(element){
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val($(element).text()).select();
+    document.execCommand("copy");
+    $temp.remove();
+    alert('copied to clipboard')
+  }
+
+
+  /*end of my code*/
+
 $(document).ready(function () {
   "use strict"; //
   //add images with data attributes
+
 
   (function ($) {
     if ("objectFit" in document.documentElement.style === false) {

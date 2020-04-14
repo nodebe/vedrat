@@ -4,7 +4,7 @@ import random
 import json
 import flask
 from PIL import Image
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, session
 from flask_mail import Mail, Message
 from vedrat import app, db#, mail
 from vedrat.utils import unique_id, save_picture
@@ -26,14 +26,23 @@ paystack.transaction.list()'''
 def index():
 	return render_template('index.html', title='Home')
 
+@app.route('/index/<string:referrer_id>')
+def index_referrer(referrer_id):
+	session['referrer_id'] = referrer_id
+	return redirect(url_for('index'))
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
 	if current_user.is_authenticated:
 		return redirect(url_for('userdashboard'))
+	if session['referrer_id']:
+		referrer_id = session['referrer_id']
+	else:
+		referrer_id = ''
 	form = UserRegForm()
 	if form.validate_on_submit():
 		hashed_password = sha256.encrypt(str(form.password.data))
-		user = User(fullname=form.fullname.data,email=form.email.data,password=hashed_password)
+		user = User(fullname=form.fullname.data,email=form.email.data,password=hashed_password, referrer=referrer_id)
 		db.session.add(user)
 		db.session.commit()
 		flash('Your account has been created successfully.', 'success')
@@ -65,9 +74,11 @@ def logout():
 @app.route('/userdashboard')
 @login_required
 def userdashboard():
+	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
 	if current_user.plan=='0':
 		flash('Please visit the payment page to pay for a plan and start earning', 'info')
-	return render_template('userdashboard.html', title='Dashboard')
+	return render_template('userdashboard.html', title='Dashboard', shared=len(picked_ads), posted=len(shared_ads))
 
 @app.route('/usersettings', methods=['GET','POST'])
 @login_required
