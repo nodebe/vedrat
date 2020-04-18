@@ -46,7 +46,7 @@ class Post(db.Model):
 	link = db.Column(db.Text)
 	description = db.Column(db.Text, nullable=False)
 	posters_needed = db.Column(db.Integer, nullable=False)
-	posters_applied = db.Column(db.Integer)
+	posters_applied = db.Column(db.Integer, default=0)
 	post_status = db.Column(db.String(10), default='open')
 	category = db.Column(db.String(20), nullable=False)
 	report = db.Column(db.Integer, default=0)

@@ -165,6 +165,17 @@
     <script src="../static/vendor/js/prism.min.js"></script>
 
     <script src="../static/js/custom.js"></script>
+  <script>
+     function functionAlert(msg, myYes) {
+        var confirmBox = $("#confirmbox");
+        confirmBox.find(".message").text(msg);
+        confirmBox.find(".yes").unbind().click(function() {
+        confirmBox.hide();
+        });
+        confirmBox.find(".yes").click(myYes);
+        confirmBox.show();
+     }
+  </script>
     
     <!-- endbuild -->
 

@@ -77,7 +77,7 @@ def userdashboard():
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
 	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
 	page = request.args.get('page', 1, type=int)
-	posts = Post.query.order_by(Post.id.desc()).paginate(page=page,per_page=8).items
+	posts = Post.query.filter_by(post_status='open').order_by(Post.id.desc()).paginate(page=page,per_page=8).items
 	referred_1 = current_user.referred_plan_1
 	referred_2 = current_user.referred_plan_2
 	if referred_1 >= 10:
@@ -147,36 +147,97 @@ def changepassword():
 		flash('Your password does not match', 'info')
 		return redirect(url_for('usersettings'))
 
-@app.route('/report/<string:post_id>')
-def report(post_id):
-	post = Post.query.filter_by(uuid=post_id).all()
+@app.route('/reportpost/<string:post_id>')
+def reportpost(post_id):
+	post = Post.query.filter_by(uuid=post_id).first()
 	post.report += 1
 	if post.report >= 5:
 		post.post_status = 'blocked'
 	db.session.commit()
+	flash('You have reported the post', 'success')
+	return redirect(url_for('userdashboard'))
 
 @app.route('/postad', methods=["GET","POST"])
+@app.route('/postad/<string:post_id>', methods=["GET","POST"])
 @login_required
-def postad():
+def postad(post_id):
 	form = PostForm()
 	if form.validate_on_submit():
-		price = form.posters.data * 280
-		if (current_user.balance >= price):
-			if form.image.data:
-				image_name = save_picture(form.image.data)
+		price = (300 * form.posters.data) - 10 * (form.posters.data - 1)
+		if post_id=='':
+			if (current_user.balance >= price):
+				if form.image.data:
+					image_name = save_picture(form.image.data)
+				else:
+					image_name = 'default_ad_image.jpg'
+				post = Post(poster_id=current_user.uuid,title=form.title.data,link=form.link.data,description=form.description.data,posters_needed=form.posters.data,category=form.category.data,image=image_name)
+				current_user.balance-=price
+				db.session.add(post)
+				db.session.commit()
+				flash("Your ad has been successfully posted", 'success')
+				return redirect(url_for('postad'))
 			else:
-				image_name = ''
-			post = Post(poster_id=current_user.uuid,title=form.title.data,link=form.link.data,description=form.description.data,posters_needed=form.posters.data,category=form.category.data,image=image_name)
-			current_user.balance-=price
-			db.session.add(post)
-			db.session.commit()
-			flash("Your ad has been successfully posted", 'success')
-			return redirect(url_for('postad'))
-		else:
-			flash("You don't have enough balance to complete this action.", 'info')
-			return render_template('postad.html', title='Post Ad', form=form)
+				flash("You don't have enough balance to complete this action.", 'info')
+				return render_template('postad.html', title='Post Ad', form=form)
+		elif post_id != '':
+			post = Post.query.filter_by(uuid=post_id).first()
+			if (current_user.balance >= price):
+				post.title = form.title.data
+				post.link = form.link.data
+				post.category = form.category.data
+				post.description = form.description.data
+				post.posters_needed = form.posters.data
+				if form.image.data:
+					post.image = save_picture(form.image.data)
+				else:
+					post.image = 'default_ad_image.jpg'
+				current_user.balance-=price
+				db.session.commit()
+				flash('Your post has been updated successfully', 'success')
+				return redirect(url_for('userposts'))
+			else:
+				flash("You don't have enough balance to complete this action.", 'info')
+				return render_template('postad.html/post.uuid', title='Post Ad', form=form)
+		
+	elif request.method == "GET" and post_id!='':
+		post = Post.query.filter_by(uuid=post_id).first()
+		form.title.data = post.title
+		form.link.data = post.link
+		form.category.data = post.category
+		form.description.data = post.description
+		form.posters.data = post.posters_needed
+	
+	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	return render_template('postad.html', title='Post Ad', form=form, shared=len(picked_ads), posted=len(shared_ads))
 
-	return render_template('postad.html', title='Post Ad', form=form)
+@app.route('/userposts')
+@login_required
+def userposts():
+	page = request.args.get('page', 1, type=int)
+	posts = Post.query.filter_by(poster_id=current_user.uuid).order_by(Post.id.desc()).paginate(page=page,per_page=8)
+	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	return render_template('userposts.html', title='My ads', posts=posts, shared=len(picked_ads), posted=len(shared_ads))
+
+@app.route('/usersuspendpost/<string:post_id>')
+@login_required
+def usersuspendpost(post_id):
+	post = Post.query.filter_by(uuid=post_id).first()
+	if post.post_status == 'open':
+		post.post_status = 'suspended'	
+		flash("Post suspended and won't be seen by users", 'info')
+	elif post.post_status == 'suspended':
+		post.post_status = 'open'
+		flash("Post opened and can be seen by users", 'info')
+	db.session.commit()
+	return redirect(url_for('userposts'))
+
+@app.route('/userviewpost/<string:post_id>')
+@login_required
+def userviewpost(post_id):
+	post = Post.query.filter_by(uuid=post_id).first()
+	return render_template('userviewpost.html', title=post.title, post=post)
 
 '''
 @app.route('/passwordreset', methods=['GET','POST'])

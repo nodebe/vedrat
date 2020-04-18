@@ -7,7 +7,7 @@
                 <div class="col-md-4">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item mr-1 font-weight-bold"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item mr-1 font-weight-bold"><a href="/">Home</a></li>
                             <li class="breadcrumb-item ml-1 font-weight-bold active" aria-current="page">
                                 Dashboard
                             </li>
@@ -92,7 +92,7 @@
                     <span>Referral Link: <span id="referText">localhost:5000/index/{{current_user.uuid}}</span><button class="las la-copy bg-primary p-1 text-light" title="click to copy" onclick="clickToCopy('#referText')"></button></span>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-sm-6 col-md-6 col-xl-4 grid-margin stretch-card">
+                    <div class="col-12 col-sm-6 col-md-6 mb-3 col-xl-3 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Referrals</h4>
@@ -115,13 +115,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-6 col-md-6 col-xl-4 grid-margin stretch-card">
+                    <div class="col-12 col-sm-6 mb-3 col-md-6 col-xl-3 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Placed ads</h4>
+                                <h4 class="card-title">Revenue</h4>
                                 <p class="text-small">{{shared}} ads shared</p>
                                 <div class="d-flex justify-content-between align-items-baseline">
-                                    <h2 class="text-dark font-weight-bold">N{{280 * shared}}<span class="text-muted text-small">/ per month</span></h2>
+                                    <h2 class="text-dark font-weight-bold">N{{280 * shared}}</h2>
                                     <!-- <div class="text-success font-weight-bold d-flex justify-content-between align-items-center">
                                         <span class="text-small">10.8%</span>
                                     </div> -->
@@ -131,64 +131,77 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-sm-6 col-md-6 col-xl-4 grid-margin stretch-card">
+                    <div class="col-12 col-sm-6 mb-3 col-md-6 col-xl-3 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Revenue</h4>
+                                <h4 class="card-title">Balance</h4>
+                                <p class="text-small">Working balance</p>
+                                <div class="d-flex justify-content-between align-items-baseline">
+                                    <h2 class="text-dark font-weight-bold">N{{current_user.balance}}</h2>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 mb-3  col-md-6 col-xl-3 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Total</h4>
                                 <p class="text-small">Total balance</p>
                                 <div class="d-flex justify-content-between align-items-baseline">
-                                    <h2 class="text-dark font-weight-bold">N{{current_user.balance + refer_balance + (280 * shared)}}<span class="text-muted text-small">/ per month</span></h2>
+                                    <h2 class="text-dark font-weight-bold">N{{current_user.balance + refer_balance + (280 * shared)}}</h2>
                                 </div>
 
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row mt-4">
-	                <div class="col">
-	                        <div class="card-header border-bottom">
-	                            <div class="d-flex align-items-center">
-	                                <div>
-	                                    <h6 class="card-title mb-0">Latest Ads</h6>
-	                                </div>
-	                            </div>
-	                        </div>
-	                    <ul class="p-0 mt-4">
-	                    	{% if posts == [] %}
-						        <p class="text-light text-center bg-info p-3">No ads available. 
-						            <a href="/postad" class="text-dark" style="text-decoration: underline;">Post an ad</a>
-						        </p>
-						    {% else %}
-	                    	{% for post in posts %}
-	                        <li class="d-flex justify-content-between align-items-center rounded p-3 border mb-3">
-	                            <div class="d-flex flex-grow-1 align-items-start">
-	                                <div class="mr-3"><img src="../static/img/100x100.png" alt="" class="img-sm rounded"></div>
-	                                <div>
-	                                    <h6 class="d-flex align-items-center mb-2"><span>MarketSpot Template</span></h6>
-	                                    <div class="text-small"><span class="mr-3"><span class="text-muted">Version: </span> <span>1.0</span></span><span class="release"><span class="text-muted">Release Date: </span> <span>30 Feb 2020</span></span>
-	                                    </div>
-	                                </div>
-	                            </div>
-	                            <div class="btn-group card-option">
-	                                <button type="button" class="btn shadow-none ">
-	                                    <i class="las la-cloud-download-alt h4 mb-0"></i>
-	                                </button>
-	                                <button type="button" class="btn shadow-none px-0 dropdown-toggle no-arrow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	                                    <i class="las la-ellipsis-h h4 mb-0"></i>
-	                                </button>
-	                                <ul class="list-unstyled card-option dropdown-menu dropdown-menu-right">
-	                                    <li class="dropdown-item reload-card"><a href="#!"><i class="las la-sync-alt"></i> reload</a></li>
-	                                    <li class="dropdown-item close-card"><a href="#!"><i class="las la-trash"></i> remove</a></li>
-	                                </ul>
-	                            </div>
-	                        </li>
-	                        {% endfor %}
-	                        {% endif %}
-	                    </ul>
-	            	</div>
+                <div class="row mb-4 mt-5 d-flex justify-content-between align-items-center">
+                    <div class="col-md-12">
+                        <h5 class="mb-0">Latest Ads</h5><hr>
+                    </div>
+                </div>
+                <div class="row">
+                        {% if posts == [] %}
+                            <p class="text-light text-center bg-info col-12 p-3">No ads available. 
+                                <a href="/postad" class="text-dark">Post your ad</a>
+                            </p>
+                        {% else %}
+                        {% for post in posts %}
+                    <div class="col-md-3">
+                        <div class="card item-card h-100 border-0">
+                            <div class="item-card__image rounded">
+                                <img src="../static/img/vedrat/{{post.image}}" class="img-fluid rounded" alt="{{post.image}}">
+                            </div>
+                            <!-- end: Item card image -->
+                            <div class="card-body px-0 pt-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="item-title">
+                                        <h3 class="h5 mb-0 text-truncate" title="{{post.title}}">{{post.title}}</h3>
+                                    </div>
+                                    <div class="item-price">
+                                        <span>{{post.posters_applied}}</span>
+                                    </div>
+                                </div>
+                                <!-- end: Card info -->
+                                <div class="d-flex justify-content-between align-items-center item-meta">
+                                    <div class="short-description mb-0">
+                                        <p class="mb-0 extension-text text-justify">{{post.description | truncate(50)}}</p>
+                                        <a href="/userviewpost/{{post.uuid}}"><button type="button" class="btn btn-primary col-5 mt-2 text-small">View</button></a>
+                                        <a href="/reportpost/{{post.uuid}}"><button type="button" class="btn btn-danger col-6 mt-2 mr-2 text-small">Report</button></a>
+                                    </div>
+                                </div>
+                                <!-- end: Card meta -->
+                            </div>
+                            <!-- edn:Card body -->
+                        </div>
+                    </div>
+                        {% endfor %}
+                        {% endif %}
+                        <!-- end: Card -->
         		</div>
-            </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock body %}
