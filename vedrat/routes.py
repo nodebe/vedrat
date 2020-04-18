@@ -8,7 +8,7 @@ from flask import render_template, url_for, flash, redirect, request, session
 from flask_mail import Mail, Message
 from vedrat import app, db#, mail
 from vedrat.utils import unique_id, save_picture
-from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm
+from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm, PostForm
 from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, logout_user, login_required
 from vedrat.models import User, Contact, Post, FAQ, PickedPost#, Transactiondb
@@ -76,9 +76,33 @@ def logout():
 def userdashboard():
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
 	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	page = request.args.get('page', 1, type=int)
+	posts = Post.query.order_by(Post.id.desc()).paginate(page=page,per_page=8).items
+	referred_1 = current_user.referred_plan_1
+	referred_2 = current_user.referred_plan_2
+	if referred_1 >= 10:
+		refer_balance_1 = (referred_1 * 300) + 3000
+	elif referred_1 >= 20:
+		refer_balance_1 = (referred_1 * 300) + 7000
+	elif referred_1 >= 50:
+		refer_balance_1 = (referred_1 * 300) + 20000
+	else:
+		refer_balance_1 = referred_1 * 300
+
+	if referred_2 >= 10:
+		refer_balance_2 = (referred_2 * 500) + 5000
+	elif referred_2 >= 20:
+		refer_balance_2 = (referred_2 * 500) + 12000
+	elif referred_2 >= 50:
+		refer_balance_2 = (referred_2 * 500) + 36000
+	else:
+		refer_balance_2 = referred_2 * 300
+
+	refer_balance = refer_balance_1+refer_balance_2
+
 	if current_user.plan=='0':
 		flash('Please visit the payment page to pay for a plan and start earning', 'info')
-	return render_template('userdashboard.html', title='Dashboard', shared=len(picked_ads), posted=len(shared_ads))
+	return render_template('userdashboard.html', title='Dashboard', shared=len(picked_ads), posted=len(shared_ads), refer_balance=refer_balance, posts=posts)
 
 @app.route('/usersettings', methods=['GET','POST'])
 @login_required
@@ -122,6 +146,37 @@ def changepassword():
 	else:
 		flash('Your password does not match', 'info')
 		return redirect(url_for('usersettings'))
+
+@app.route('/report/<string:post_id>')
+def report(post_id):
+	post = Post.query.filter_by(uuid=post_id).all()
+	post.report += 1
+	if post.report >= 5:
+		post.post_status = 'blocked'
+	db.session.commit()
+
+@app.route('/postad', methods=["GET","POST"])
+@login_required
+def postad():
+	form = PostForm()
+	if form.validate_on_submit():
+		price = form.posters.data * 280
+		if (current_user.balance >= price):
+			if form.image.data:
+				image_name = save_picture(form.image.data)
+			else:
+				image_name = ''
+			post = Post(poster_id=current_user.uuid,title=form.title.data,link=form.link.data,description=form.description.data,posters_needed=form.posters.data,category=form.category.data,image=image_name)
+			current_user.balance-=price
+			db.session.add(post)
+			db.session.commit()
+			flash("Your ad has been successfully posted", 'success')
+			return redirect(url_for('postad'))
+		else:
+			flash("You don't have enough balance to complete this action.", 'info')
+			return render_template('postad.html', title='Post Ad', form=form)
+
+	return render_template('postad.html', title='Post Ad', form=form)
 
 '''
 @app.route('/passwordreset', methods=['GET','POST'])

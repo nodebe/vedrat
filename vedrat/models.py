@@ -49,6 +49,7 @@ class Post(db.Model):
 	posters_applied = db.Column(db.Integer)
 	post_status = db.Column(db.String(10), default='open')
 	category = db.Column(db.String(20), nullable=False)
+	report = db.Column(db.Integer, default=0)
 
 class PickedPost(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

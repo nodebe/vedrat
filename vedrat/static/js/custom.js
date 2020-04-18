@@ -43,6 +43,19 @@ $(document).ready(function () {
     $("li a").removeClass("active");
     $(this).addClass("active");
   });
+
+
+  $("#posters").keyup(function(){
+    $('#billing').text(300 * $('#posters').val())
+  })
+
+    $("#posters").mouseleave(function(){
+    $('#billing').text(300 * $('#posters').val())
+  })
+
+    $("#posters").mouseenter(function(){
+    $('#billing').text(300 * $('#posters').val())
+  })
 }); // Anchor link scrolling,use by adding "data-scroll"
 
 document.addEventListener("DOMContentLoaded", function () {

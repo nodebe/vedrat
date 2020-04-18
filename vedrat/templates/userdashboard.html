@@ -95,13 +95,21 @@
                     <div class="col-12 col-sm-6 col-md-6 col-xl-4 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Customers</h4>
-                                <p class="text-small">+5.27% Since last month</p>
+                                <h4 class="card-title">Referrals</h4>
+                                <p class="text-small">
+                                	{% if current_user.plan != '0' %}
+                                		{{current_user.referred_plan_1 + current_user.referred_plan_2}} users referred
+                                	{% else %}
+                                		Join a plan to earn from referrals
+                                	{% endif %}
+                            	</p>
                                 <div class="d-flex justify-content-between align-items-baseline">
-                                    <h2 class="text-dark font-weight-bold">3,455<span class="text-muted text-small">/ per month</span></h2>
-                                    <div class="text-danger font-weight-bold d-flex justify-content-between align-items-center">
+                                    <h2 class="text-dark font-weight-bold">
+                                    	N{{refer_balance}}
+                                    </h2>
+                                    <!-- <div class="text-danger font-weight-bold d-flex justify-content-between align-items-center">
                                         <span class=" text-small">40.8%</span>
-                                    </div>
+                                    </div> -->
                                 </div>
 
                             </div>
@@ -110,13 +118,13 @@
                     <div class="col-12 col-sm-6 col-md-6 col-xl-4 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Orders</h4>
-                                <p class="text-small">-1.08% Since last month</p>
+                                <h4 class="card-title">Placed ads</h4>
+                                <p class="text-small">{{shared}} ads shared</p>
                                 <div class="d-flex justify-content-between align-items-baseline">
-                                    <h2 class="text-dark font-weight-bold">5,122<span class="text-muted text-small">/ per month</span></h2>
-                                    <div class="text-success font-weight-bold d-flex justify-content-between align-items-center">
+                                    <h2 class="text-dark font-weight-bold">N{{280 * shared}}<span class="text-muted text-small">/ per month</span></h2>
+                                    <!-- <div class="text-success font-weight-bold d-flex justify-content-between align-items-center">
                                         <span class="text-small">10.8%</span>
-                                    </div>
+                                    </div> -->
                                 </div>
 
                             </div>
@@ -127,237 +135,58 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Revenue</h4>
-                                <p class="text-small">+5.27% Since last month</p>
+                                <p class="text-small">Total balance</p>
                                 <div class="d-flex justify-content-between align-items-baseline">
-                                    <h2 class="text-dark font-weight-bold">7,522<span class="text-muted text-small">/ per month</span></h2>
-                                    <div class="text-success font-weight-bold d-flex justify-content-between align-items-center">
-                                        <span class=" text-small">40.8%</span>
-                                    </div>
+                                    <h2 class="text-dark font-weight-bold">N{{current_user.balance + refer_balance + (280 * shared)}}<span class="text-muted text-small">/ per month</span></h2>
                                 </div>
 
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="card my-4">
-                            <div class="card-header border-bottom">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h6 class="card-title mb-0">Tickets</h6>
-                                    </div>
-                                    <div class="ml-auto">
-                                        <div class="form-group  m-0">
-                                            <select id="inputState" class="form-control form-control-sm">
-                                                <option selected="">Open</option>
-                                                <option>Closed</option>
-                                                <option>New</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body pt-3">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="py-3 pl-0 border-0 pt-2">
-                                                    Assigned
-                                                </th>
-                                                <th class="py-3 border-0 pt-2">
-                                                    Product
-                                                </th>
-                                                <th class="py-3 border-0 pt-2">
-                                                    Priority
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="assets/img/avatar-2.jpg" alt="profile" class="img-sm rounded-circle">
-                                                        <div class="ml-3">
-                                                            <p class="mb-0">Sophia Brown</p>
-                                                            <p class="mb-0 text-muted text-small">Product Designer</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-
-                                                    Web App
-                                                </td>
-                                                <td>
-                                                    <label class="badge badge-soft-success text-success">Low</label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="assets/img/avatar.jpg" alt="profile" class="img-sm rounded-circle">
-                                                        <div class="ml-3">
-                                                            <p class="mb-0">Rachel Newton</p>
-                                                            <p class="mb-0 text-muted text-small">Mobile Developer</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    Mobile App
-                                                </td>
-                                                <td>
-                                                    <label class="badge badge-soft-warning text-warning">Medium</label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="assets/img/avatar-2.jpg" alt="profile" class="img-sm rounded-circle">
-                                                        <div class="ml-3">
-                                                            <p class="mb-0">Marcus Stevens</p>
-                                                            <p class="mb-0 text-muted text-small">Core Developer</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    Plugin
-                                                </td>
-                                                <td>
-                                                    <label class="badge badge-soft-danger text-danger">High</label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="assets/img/avatar.jpg" alt="profile" class="img-sm rounded-circle">
-                                                        <div class="ml-3">
-                                                            <p class="mb-0">Theresa Becker</p>
-                                                            <p class="mb-0 text-muted text-small">Product Designer</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    Web App
-                                                </td>
-                                                <td>
-                                                    <label class="badge badge-soft-success text-success">Low</label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="assets/img/avatar-2.jpg" alt="profile" class="img-sm rounded-circle">
-                                                        <div class="ml-3">
-                                                            <p class="mb-0">Jessie Ortiz</p>
-                                                            <p class="mb-0 text-muted text-small">Web Developer</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    SAAS App
-                                                </td>
-                                                <td>
-                                                    <label class="badge badge-soft-danger text-danger">High</label>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="card mb-4">
-                            <div class="card-header border-bottom">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h6 class="card-title mb-0">Latest Sales</h6>
-                                    </div>
-                                    <div class="ml-auto">
-                                        <div class="form-group  m-0">
-                                            <select id="inputState" class="form-control form-control-sm">
-                                                <option selected="">Mart</option>
-                                                <option>Januar</option>
-                                                <option>Februar</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body bg-light border-bottom">
-                                <div class="row align-items-center">
-                                    <div class="col-xs-12 col-md-6">
-                                        <h5 class="mb-0 font-light">Februar 2020</h5>
-                                        <span class="font-14 text-muted">Sales Report</span>
-                                    </div>
-                                    <div class="col-xs-12 col-md-6 align-self-center h3 text-primary text-right m-0">
-                                        $3,690
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body pt-3">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th class="border-top-0">NAME</th>
-                                                <th class="border-top-0">STATUS</th>
-                                                <th class="border-top-0">DATE</th>
-                                                <th class="border-top-0">PRICE</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>MarketSpot</td>
-                                                <td>
-                                                    <span class="badge badge-soft-success text-cuccess">Sale</span>
-                                                </td>
-                                                <td>Februar 25, 2020</td>
-                                                <td><span class="font-medium">$18</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>MarketSpot</td>
-                                                <td>
-                                                    <span class="badge badge-soft-success text-cuccess">Support</span>
-                                                </td>
-                                                <td>April 14, 2020</td>
-                                                <td><span class="font-medium">$25</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Foodpicky</td>
-                                                <td>
-                                                    <span class="badge badge-soft-danger text-danger">Tax</span>
-                                                </td>
-                                                <td>Februar 20, 2020</td>
-                                                <td><span class="font-medium">$50</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Kupon Theme</td>
-                                                <td>
-                                                    <span class="badge badge-soft-danger text-danger">Refund</span>
-                                                </td>
-                                                <td class="label">April 20, 2020</td>
-                                                <td><span class="font-medium">-$24</span></td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>Kupon Theme</td>
-                                                <td>
-                                                    <span class="badge badge-soft-success text-cuccess">Refund</span>
-                                                </td>
-                                                <td>April 15, 2020</td>
-                                                <td><span class="font-medium">-$18</span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="row mt-4">
+	                <div class="col">
+	                        <div class="card-header border-bottom">
+	                            <div class="d-flex align-items-center">
+	                                <div>
+	                                    <h6 class="card-title mb-0">Latest Ads</h6>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    <ul class="p-0 mt-4">
+	                    	{% if posts == [] %}
+						        <p class="text-light text-center bg-info p-3">No ads available. 
+						            <a href="/postad" class="text-dark" style="text-decoration: underline;">Post an ad</a>
+						        </p>
+						    {% else %}
+	                    	{% for post in posts %}
+	                        <li class="d-flex justify-content-between align-items-center rounded p-3 border mb-3">
+	                            <div class="d-flex flex-grow-1 align-items-start">
+	                                <div class="mr-3"><img src="../static/img/100x100.png" alt="" class="img-sm rounded"></div>
+	                                <div>
+	                                    <h6 class="d-flex align-items-center mb-2"><span>MarketSpot Template</span></h6>
+	                                    <div class="text-small"><span class="mr-3"><span class="text-muted">Version: </span> <span>1.0</span></span><span class="release"><span class="text-muted">Release Date: </span> <span>30 Feb 2020</span></span>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <div class="btn-group card-option">
+	                                <button type="button" class="btn shadow-none ">
+	                                    <i class="las la-cloud-download-alt h4 mb-0"></i>
+	                                </button>
+	                                <button type="button" class="btn shadow-none px-0 dropdown-toggle no-arrow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                                    <i class="las la-ellipsis-h h4 mb-0"></i>
+	                                </button>
+	                                <ul class="list-unstyled card-option dropdown-menu dropdown-menu-right">
+	                                    <li class="dropdown-item reload-card"><a href="#!"><i class="las la-sync-alt"></i> reload</a></li>
+	                                    <li class="dropdown-item close-card"><a href="#!"><i class="las la-trash"></i> remove</a></li>
+	                                </ul>
+	                            </div>
+	                        </li>
+	                        {% endfor %}
+	                        {% endif %}
+	                    </ul>
+	            	</div>
+        		</div>
             </div>
         </div>
     </div>
