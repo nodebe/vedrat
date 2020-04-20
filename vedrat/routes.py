@@ -77,7 +77,7 @@ def userdashboard():
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
 	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
 	page = request.args.get('page', 1, type=int)
-	posts = Post.query.filter_by(post_status='open').order_by(Post.id.desc()).paginate(page=page,per_page=8).items
+	posts = Post.query.filter_by(post_status='open').order_by(Post.id.desc()).paginate(page=page,per_page=8)
 	referred_1 = current_user.referred_plan_1
 	referred_2 = current_user.referred_plan_2
 	if referred_1 >= 10:
@@ -201,11 +201,14 @@ def postad(post_id):
 		
 	elif request.method == "GET" and post_id!='':
 		post = Post.query.filter_by(uuid=post_id).first()
-		form.title.data = post.title
-		form.link.data = post.link
-		form.category.data = post.category
-		form.description.data = post.description
-		form.posters.data = post.posters_needed
+		if post.poster_id == current_user.uuid:
+			form.title.data = post.title
+			form.link.data = post.link
+			form.category.data = post.category
+			form.description.data = post.description
+			form.posters.data = post.posters_needed
+		else:
+			return redirect(url_for('userdashboard'))
 	
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
 	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
