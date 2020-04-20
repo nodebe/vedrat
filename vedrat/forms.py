@@ -92,3 +92,10 @@ class PostForm(FlaskForm):
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False
 		super(PostForm, self).__init__(*args, **kwargs)
+
+class PostSearchForm(FlaskForm):
+	category = SelectField('Category', choices=categories)
+
+	def __init__(self, *args, **kwargs):
+		kwargs['csrf_enabled'] = False
+		super(PostSearchForm, self).__init__(*args, **kwargs)

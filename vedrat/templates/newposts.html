@@ -7,9 +7,9 @@
                 <div class="col-md-4">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item mr-1 font-weight-bold"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item mr-1 font-weight-bold"><a href="/">Home</a></li>
                             <li class="breadcrumb-item ml-1 font-weight-bold active" aria-current="page">
-                                Settings
+                                Dashboard
                             </li>
                         </ol>
                     </nav>
@@ -88,85 +88,83 @@
                 </div>
             </aside>
             <div class="col-lg-9">
-                <div class="row">
-                    <div class="col">
-                        <div class="card mb-4">
-                            <div class="card-header border-bottom">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h6 class="card-title mb-0">Profile Settings</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body pt-3">
-                                <form role="form" class="form-width" method="POST">
-                                    {{ form.hidden_tag() }}
-                                	{% from 'includes/_formhelpers.html' import render_field %}
-                                        <div class="form-group">
-                                    		{{render_field(form.fullname, class_='form-control', placeholder='Full Name')}}
-                                            <i class="fa fa-user iconalign"></i>
-                                        </div>
-                                    <div class="row">
-                                        <div class="form-group col-md-6">
-                                            {{render_field(form.email, class_='form-control', placeholder='Email')}}
-                                            <i class="fa fa-user iconalign"></i> </div>
-                                        <div class="form-group col-md-6">
-                                            {{render_field(form.phone, class_='form-control', placeholder='Phone Number')}}
-                                            <i class="fa fa-phone iconalign"></i> </div>
-                                    </div>
-                                    <div class="form-group">
-                                        {{render_field(form.acc_name, class_='form-control', placeholder='Account Name')}}
-                                        <i class="fa fa-user iconalign"></i> </div>
-                                    <div class="row">
-                                        <div class="col-md-6 form-group">
-                                            {{render_field(form.bank_name, class_='form-control', placeholder='Bank Name')}}
-                                        </div>
-                                        <div class="col-md-6 form-group">
-                                            {{render_field(form.acc_number, class_='form-control', type='number', placeholder='Account Number')}}
-                                    	</div>
-                                    </div>
-	                                    <div class="form-group">
-	                                        <button class="btn btn-primary" type="submit">Update</button>
-	                                    </div>
-                                </form>
-                            </div>
+                <form role="form" class="form-width" method="POST">
+                    {{ form.hidden_tag() }}
+                	{% from 'includes/_formhelpers.html' import render_field %}
+                	<h3>Search ads by category</h3>
+                        <div class="form-group col-md-6">
+                    		{{render_field(form.category, class_='form-control')}}
+                            <i class="fa fa-user iconalign"></i>
                         </div>
+                        <div class="form-group ml-2">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                </form><hr>
+                <div class="row mb-4 d-flex justify-content-between align-items-center">
+                    <div class="col-md-12">
+                        <h5 class="mb-0">Latest Ads</h5><hr>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <div class="card mb-4">
-                            <div class="card-header border-bottom">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h6 class="card-title mb-0">Password Change</h6>
+                        {% if posts.items == [] %}
+                            <p class="text-light text-center bg-info col-12 p-3">No ads available. 
+                                <a href="/postad" class="text-dark">Post your ad</a>
+                            </p>
+                        {% else %}
+                        {% for post in posts.items %}
+                    <div class="col-md-3">
+                        <div class="card item-card h-100 border-0">
+                            <div class="item-card__image rounded">
+                                <img src="../static/img/vedrat/{{post.image}}" class="img-fluid rounded" alt="{{post.image}}">
+                            </div>
+                            <!-- end: Item card image -->
+                            <div class="card-body px-0 pt-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="item-title">
+                                        <h3 class="h5 mb-0 text-truncate" title="{{post.title}}">{{post.title}}</h3>
+                                    </div>
+                                    <div class="item-price">
+                                        <span>{{post.posters_applied}}</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card-body pt-3">
-                                <form role="form" class="form-width" action="/changepassword" method="POST">
-                                {% from 'includes/_formhelpers.html' import render_field %}
-                                <div class="form-group">
-                                        	{{render_field(pform.oldpassword, class_='form-control', placeholder='Current Password')}}
-                                            <i class="fa fa-lock iconalign"></i> </div>
-                                <div class="row">
-                                        <div class="form-group col-md-6">
-                                        	{{render_field(pform.newpassword, class_='form-control', placeholder='New Password')}}
-                                            <i class="fa fa-lock iconalign"></i> </div>
-                                        <div class="form-group col-md-6">
-                                        	{{render_field(pform.confirmnewpassword, class_='form-control', placeholder='Confirm Password')}}
-                                            <i class="fa fa-lock iconalign"></i> </div>
+                                <!-- end: Card info -->
+                                <div class="d-flex justify-content-between align-items-center item-meta">
+                                    <div class="short-description mb-0">
+                                        <p class="mb-0 extension-text text-justify">{{post.description | truncate(50)}}</p>
+                                        <a href="/userviewpost/{{post.uuid}}"><button type="button" class="btn btn-primary col-5 mt-2 text-small">View</button></a>
+                                        <a href="/reportpost/{{post.uuid}}"><button type="button" class="btn btn-danger col-6 mt-2 mr-2 text-small">Report</button></a>
                                     </div>
-	                                    <div class="form-group">
-	                                        <button class="btn btn-primary" type="submit">Submit</button>
-	                                    </div>
-                                </form>
+                                </div>
+                                <!-- end: Card meta -->
                             </div>
+                            <!-- edn:Card body -->
                         </div>
+                    </div>
+                        {% endfor %}
+                        {% endif %}
+                        <!-- end: Card -->
+        		</div>
+                <div class="px-3 py-2">
+                    <nav aria-label="pagin">
+                        <ul class="pagination mt-2">
+                            {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                              {% if posts.page == page_num %}
+                                <li class="page-item">
+                                  <a class="page-link bg-success text-white" href="{{ url_for('userposts', page=page_num) }}">{{ page_num }}</a>
+                                </li>
+                                {% elif page_num==None %}
+                                <li class="page-item disabled">
+                                  <a class="page-link text-success">...</a>
+                                </li>
+                                {% else %}
+                                  <a class="page-link text-success" href="{{ url_for('userposts', page=page_num) }}">{{ page_num }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </nav>
                 </div>
-            </div>
-            </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock body %}

@@ -8,7 +8,7 @@ from flask import render_template, url_for, flash, redirect, request, session
 from flask_mail import Mail, Message
 from vedrat import app, db#, mail
 from vedrat.utils import unique_id, save_picture
-from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm, PostForm
+from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm, PostForm, PostSearchForm
 from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, logout_user, login_required
 from vedrat.models import User, Contact, Post, FAQ, PickedPost#, Transactiondb
@@ -257,6 +257,20 @@ def userdeletepost(post_id):
 		return redirect(url_for('userposts'))
 	else:
 		return redirect(url_for('userdashboard'))
+
+@app.route('/newposts', methods=['GET','POST'])
+@login_required
+def newposts():
+	form = PostSearchForm()
+	page = request.args.get('page', 1, type=int)
+	posts = Post.query.filter_by(post_status='open').order_by(Post.id.desc()).paginate(page=page,per_page=8)
+
+	if form.validate_on_submit():
+		posts = Post.query.filter_by(post_status='open').filter_by(category=form.category.data).order_by(Post.id.desc()).paginate(page=page,per_page=8)
+
+	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	return render_template('newposts.html', title='New posts', form=form, shared=len(picked_ads), posted=len(shared_ads), posts=posts)
 
 '''
 @app.route('/passwordreset', methods=['GET','POST'])
