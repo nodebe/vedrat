@@ -246,14 +246,17 @@ def userviewpost(post_id):
 @login_required
 def userdeletepost(post_id):
 	post = Post.query.filter_by(uuid=post_id).first()
-	initial_price = (300 * post.posters_needed) - 10 * (post.posters_needed - 1)
-	current_price = (300 * post.posters_applied) - 10 * (post.posters_applied - 1)
-	user_balance = initial_price - current_price
-	current_user.balance+=user_balance
-	db.session.delete(post)
-	db.session.commit()
-	flash('Post deleted successfully.','info')
-	return redirect(url_for('userposts'))
+	if post.poster_id == current_user.uuid or current_user.user_status == 'admin':
+		initial_price = (300 * post.posters_needed) - 10 * (post.posters_needed - 1)
+		current_price = (300 * post.posters_applied) - 10 * (post.posters_applied - 1)
+		user_balance = initial_price - current_price
+		current_user.balance+=user_balance
+		db.session.delete(post)
+		db.session.commit()
+		flash('Post deleted successfully.','info')
+		return redirect(url_for('userposts'))
+	else:
+		return redirect(url_for('userdashboard'))
 
 '''
 @app.route('/passwordreset', methods=['GET','POST'])
