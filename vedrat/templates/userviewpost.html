@@ -114,12 +114,17 @@
                                     <a href="/userapplypost/{{post.uuid}}" type="button" class="btn btn-sm btn-success">Apply</a>
                                     {% if post.poster_id == current_user.uuid or current_user.user_status == 'admin' %}
                                     <a href="/postad/{{post.uuid}}" type="button" class="btn btn-sm btn-info">Edit</a>
-                                    <a href="/userdeletepost/{{post.uuid}}" type="button" class="btn btn-sm btn-danger">Delete</a>
+                                    <a onclick="functionAlert()" type="button" class="btn btn-sm btn-danger text-white">Delete</a>
                                     {% endif %}
                                     </div>
                                 </div>
                                     <p class="text-small col-12">{{post.posters_applied}}/{{post.posters_needed}} applied</p>
                             </div>
+                        </div>
+                        <div id = "confirmbox">
+                           <div class = "message">Are you sure to delete this post?</div>
+                           <a href='/userdeletepost/{{post.uuid}}'><button class = "yes">Yes</button></a>
+                           <button class = "yes">Cancel</button>
                         </div>
                     </div>
                 </div>

@@ -160,7 +160,7 @@ def reportpost(post_id):
 @app.route('/postad', methods=["GET","POST"])
 @app.route('/postad/<string:post_id>', methods=["GET","POST"])
 @login_required
-def postad(post_id):
+def postad(post_id=''):
 	form = PostForm()
 	if form.validate_on_submit():
 		price = (300 * form.posters.data) - 10 * (form.posters.data - 1)
@@ -241,6 +241,19 @@ def usersuspendpost(post_id):
 def userviewpost(post_id):
 	post = Post.query.filter_by(uuid=post_id).first()
 	return render_template('userviewpost.html', title=post.title, post=post)
+
+@app.route('/userdeletepost/<string:post_id>')
+@login_required
+def userdeletepost(post_id):
+	post = Post.query.filter_by(uuid=post_id).first()
+	initial_price = (300 * post.posters_needed) - 10 * (post.posters_needed - 1)
+	current_price = (300 * post.posters_applied) - 10 * (post.posters_applied - 1)
+	user_balance = initial_price - current_price
+	current_user.balance+=user_balance
+	db.session.delete(post)
+	db.session.commit()
+	flash('Post deleted successfully.','info')
+	return redirect(url_for('userposts'))
 
 '''
 @app.route('/passwordreset', methods=['GET','POST'])
