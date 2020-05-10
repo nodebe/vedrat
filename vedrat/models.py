@@ -22,6 +22,8 @@ class User(db.Model, UserMixin):
 	account_status = db.Column(db.String(10), default='open')
 	date_of_payment = db.Column(db.DateTime)
 	ad_collected_on_day = db.Column(db.Integer, default=0)
+	ad_collected_date = db.Column(db.String(12))
+	can_post = db.Column(db.Integer, default=0)
 	referred_plan_1 = db.Column(db.Integer, default=0)
 	referred_plan_2 = db.Column(db.Integer, default=0)
 	user_status = db.Column(db.String(10), nullable=False, default='member')
@@ -53,10 +55,12 @@ class Post(db.Model):
 
 class PickedPost(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
+	uuid = db.Column(db.String(10))
 	post_id = db.Column(db.String(10), nullable=False)
 	picker_id = db.Column(db.String(10), nullable=False)
 	main_link = db.Column(db.Text, nullable=False)
-	short_link = db.Column(db.String(20), nullable=False)
+	web_link = db.Column(db.String(40), nullable=False)
+	description = db.Column(db.Text)
 	clicks = db.Column(db.Integer, default=0)
 
 class FAQ(db.Model):

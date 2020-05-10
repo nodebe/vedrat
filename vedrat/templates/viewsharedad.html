@@ -102,35 +102,17 @@
                                 <div class="blog-date d-flex justify-content-start align-items-center mb-2">
                                     <a href="#!" class="label font-weight-bold">{{post.category}}</a>
                                 </div>
-                                <h2 class="h3 mb-2">
-                                    <a href="#" class="blog-title text-dark">{{post.title}}</a>
-                                </h2>
-
-                                <p class="lead">
-                                    {{post.description}}
-                                </p>
+<div id="postText"><h2 class="h3 mb-2"><a href="#" class="blog-title text-dark">{{post.title}}</a></h2>
+    <p class="lead">{{post.description}}
+        <br> Visit: {{picked.web_link}}</p></div>
                                 <div class="card-footer border-0 d-flex justify-content-between align-items-center mt-2 px-0 py-3">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        {% if current_user.plan == '0' %}
-                                        <p class="small">Please <a href="/userpayment">subscribe</a> to a plan to apply for this post</p>
-                                        {% else %}
-                                            {% if current_user.can_post == 1 %}
-                                                <a href="/userapplypost/{{post.uuid}}" type="button" class="btn btn-sm btn-success">Apply</a>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% if post.poster_id == current_user.uuid or current_user.user_status == 'admin' %}
-                                    <a href="/postad/{{post.uuid}}" type="button" class="btn btn-sm btn-info">Edit</a>
-                                    <a onclick="functionAlert()" type="button" class="btn btn-sm btn-danger text-white">Delete</a>
-                                    {% endif %}
+                                    <button class="btn btn-sm btn-success" onclick="clickToCopy('#postText')">Copy <i class="las la-copy"></i></button>
+                                    <a href="https://www.facebook.com" target="_blank" class="btn btn-sm btn-primary">Post <i class="lab la-facebook-f"></i></a>
                                     </div>
                                 </div>
-                                    <p class="text-small col-12">{{post.posters_applied}}/{{post.posters_needed}} applied</p>
+                                    <p class="text-small col-12">{{post.posters_applied}}/{{post.posters_needed}} applied</p><!--  -->
                             </div>
-                        </div>
-                        <div id = "confirmbox">
-                           <div class = "message">Are you sure to delete this post?</div>
-                           <a href='/userdeletepost/{{post.uuid}}'><button class = "yes">Yes</button></a>
-                           <button class = "yes">Cancel</button>
                         </div>
                     </div>
                 </div>

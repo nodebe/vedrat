@@ -7,7 +7,7 @@ from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, session
 from flask_mail import Mail, Message
 from vedrat import app, db#, mail
-from vedrat.utils import unique_id, save_picture
+from vedrat.utils import unique_id, save_picture, date_stuff
 from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm, PostForm, PostSearchForm
 from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, logout_user, login_required
@@ -78,6 +78,12 @@ def userdashboard():
 	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
 	page = request.args.get('page', 1, type=int)
 	posts = Post.query.filter_by(post_status='open').order_by(Post.id.desc()).paginate(page=page,per_page=8)
+
+	if current_user.ad_collected_date != date_stuff():
+		current_user.ad_collected_on_day = 0
+		current_user.can_post = 1
+		db.session.commit()
+
 	referred_1 = current_user.referred_plan_1
 	referred_2 = current_user.referred_plan_2
 	if referred_1 >= 10:
@@ -272,6 +278,56 @@ def newposts():
 	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
 	return render_template('newposts.html', title='New posts', form=form, shared=len(picked_ads), posted=len(shared_ads), posts=posts)
 
+@app.route('/sharedads')
+@login_required
+def sharedads():
+	page = request.args.get('page', 1, type=int)
+	picked_posts = PickedPost.query.filter_by(picker_id=current_user.uuid).order_by(PickedPost.id.desc()).paginate(page=page,per_page=8)
+	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	return render_template('sharedads.html', title='Shared ads', shared=len(picked_posts.items), posted=len(shared_ads), posts=picked_posts)
+
+@app.route('/userapplypost/<string:post_id>')
+@login_required
+def userapplypost(post_id):
+	if current_user.can_post == 1:
+		post = Post.query.filter_by(uuid=post_id).first()
+
+		date = date_stuff()
+
+		current_user.ad_collected_date = date
+		current_user.ad_collected_on_day += 1
+		post.posters_applied += 1
+
+		#deciding if a user can post or not based on his plan
+		if current_user.referred_plan_2 and current_user.ad_collected_on_day >= 2:
+			current_user.can_post = 0
+		elif current_user.referred_plan_1 and current_user.ad_collected_on_day >= 1:
+			current_user.can_post = 0
+
+		short_link_id = str(unique_id())
+		short_linker = 'http://127.0.0.1:5000/ad?post/'+ short_link_id
+
+		picked = PickedPost(post_id=post_id,picker_id=current_user.uuid,main_link=post.link,web_link=short_linker, description=post.description, uuid=short_link_id)
+
+		db.session.add(picked)
+		db.session.commit()
+
+		picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+		shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+		return render_template('userapplypost.html', title=post.title, shared=len(picked_ads), posted=len(shared_ads), post=post,picked=picked)
+	else:
+		return redirect(url_for('sharedads'))
+
+
+@app.route('/viewsharedad/<string:uuid>')
+def viewsharedad(uuid):
+	picked_post = PickedPost.query.filter_by(uuid=uuid).first()
+	post = Post.query.filter_by(uuid=picked_post.post_id).first()
+
+	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	return render_template('viewsharedad.html', title=post.title, shared=len(picked_ads), posted=len(shared_ads), post=post, picked=picked_post)
+
 '''
 @app.route('/passwordreset', methods=['GET','POST'])
 def passwordreset():
@@ -329,17 +385,4 @@ def vmess(uuid):
 		return render_template('vmess.html', message=message)
 	else:
 		return redirect(url_for('signin'))
-
-@app.route('/delete/<string:uuid>', methods=['GET','POST'])
-@login_required
-def delete(uuid):
-	if current_user.user_status == 'admin':
-		message = Contact.query.filter_by(uuid=uuid).first()
-		# delete_me(r"static/img", ebook.thumbnail)
-		db.session.delete(message)
-		db.session.commit()
-		flash('The message has been deleted successfully', 'success')
-		return redirect(url_for('vmessages'))
-	else:
-		return redirect(url_for('signin'))
-'''
+		'''

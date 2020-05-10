@@ -9,7 +9,7 @@
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item mr-1 font-weight-bold"><a href="#">Home</a></li>
                             <li class="breadcrumb-item ml-1 font-weight-bold active" aria-current="page">
-                                Post ad
+                                My posts
                             </li>
                         </ol>
                     </nav>
@@ -90,64 +90,96 @@
                     <div class="col-lg-9">
                         <div class="row">
                             <div class="col">
-                                <div class="card mb-5">
-                                    <div class="card-header border-bottom">
+                                <!-- my items table -->
+                                <div class="card product_item_list mb-4">
+                                    <div class="card-header py-3 border-bottom">
                                         <div class="d-flex align-items-center">
                                             <div>
-                                                <h6 class="card-title mb-0">Add New Post</h6>
+                                                <h6 class="card-title mb-0">Shared Posts</h6>
                                             </div>
+
                                         </div>
                                     </div>
-                                    <div class="card-body">
-                                    	<form role="form" class="form-width" method="POST" enctype="multipart/form-data">
-                                    	{{ form.hidden_tag() }}
-                                    	{% from 'includes/_formhelpers.html' import render_field %}
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            {{render_field(form.title, class_='form-control')}}
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            {{render_field(form.link, class_='form-control')}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">{{render_field(form.category, class_='form-control')}}
-                                                </div>
-                                                <div class="form-group">
-                                                    {{render_field(form.description, class_='form-control', rows='3', minLength='10',maxLength='250')}}
-                                                </div>
-                                                <h6 class="mt-4 mb-3">Upload photo</h6>
-                                                <div class="input-group mb-3">
-                                                    <div class="custom-file">		{{render_field(form.image, class_='form-control-file border')}}
-                                                    </div>
-                                                </div>
-                                                <br />
-                                                <h4 class="text-black mb-3">Pricing</h4><hr>
-                                                <div class="form-group">
-                                                    {{render_field(form.posters, class_='form-control', type='number', min='5')}}
-                                                </div>
-                                                <div class="form-group">
-                                                	Billing: N<span id="billing"></span>
-                                                </div>
-                                                <div class="form-actions my-4">
-                                                    <button type="submit" class="btn btn-primary width-150">
-                                                        Share Post
-                                                    </button>
-                                                </div>
-                                            </div>
+                                    <div class="card-body pt-4">
+                                    	{% if posts.items == [] %}
+				                            <p class="text-light text-center bg-info p-3">No posts shared. 
+				                                <a href="/newposts" class="text-dark">Search post by category</a>
+				                            </p>
+				                        {% else %}
+                                        <div class="table-responsive">
+                                            <table class="table table-hover m-b-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="border-0 text-center">Ad Title</th>
+                                                        <th class="border-0 text-center" data-breakpoints="sm xs">Link</th>
+                                                        <th class="border-0 text-center" data-breakpoints="xs">Earned</th>
+                                                        <th class="border-0 text-center" data-breakpoints="sm xs md">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                	{% for post in posts.items %}
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <h6 class="text-muted">{{post.description | truncate(30)}}</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span class="text-muted">{{post.web_link}}</span>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {% if post.clicks >= 1%}
+                                                            <h6  class="text-muted">N280</h6>
+                                                            {% else %}
+                                                            <h6  class="text-muted">N0</h6>
+                                                            {% endif %}
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                                <a href="/viewsharedad/{{post.uuid}}"type="button" class="btn btn-sm btn-primary" title="view post"><i class="las la-eye"></i></a>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    </form>
+                                        {% endif %}
+                                        <hr>
+                                        <div class="px-3 py-2">
+                                            <nav aria-label="pagin">
+                                                <ul class="pagination mt-2">
+								                    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+								                      {% if posts.page == page_num %}
+								                        <li class="page-item">
+								                          <a class="page-link bg-success text-white" href="{{ url_for('sharedads', page=page_num) }}">{{ page_num }}</a>
+								                        </li>
+								                        {% elif page_num==None %}
+								                        <li class="page-item disabled">
+								                          <a class="page-link text-success">...</a>
+								                        </li>
+								                        {% else %}
+								                          <a class="page-link text-success" href="{{ url_for('sharedads', page=page_num) }}">{{ page_num }}</a>
+								                        {% endif %}
+								                    {% endfor %}
+								                </ul>
+                                            </nav>
+                                        </div>
                                     </div>
                                 </div>
+                                <!-- end: My items table-->
+
                             </div>
                         </div>
                     </div>
         </div>
     </div>
 </div>
+
 {% endblock body %}
+<!-- 
+        <div id = "confirmbox">
+           <div class = "message">Are you sure to suspend this post?</div>
+           <a href='/usersuspendpost/{{post.uuid}}'><button class = "yes">Yes</button></a>
+           <button class = "yes">Cancel</button>
+        </div> -->

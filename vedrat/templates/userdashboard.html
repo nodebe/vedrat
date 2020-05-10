@@ -89,7 +89,12 @@
             </aside>
             <div class="col-lg-9">
                 <div class="card mb-3 p-2">
-                    <span>Referral Link: <span id="referText">localhost:5000/index/{{current_user.uuid}}</span><button class="las la-copy bg-primary p-1 text-light" title="click to copy" onclick="clickToCopy('#referText')"></button></span>
+                    <span>Referral Link: 
+                       {% if current_user.plan != '0' %} 
+                        <span id="referText">localhost:5000/index/{{current_user.uuid}}</span><button class="las la-copy bg-primary p-1 text-light" title="click to copy" onclick="clickToCopy('#referText')"></button></span>
+                        {% else %}
+                            Please <a href="/userpayment">subscribe</a> to a plan to get your referral link
+                        {% endif %}
                 </div>
                 <div class="row">
                     <div class="col-12 col-sm-6 col-md-6 mb-3 col-xl-3 grid-margin stretch-card">
@@ -100,7 +105,7 @@
                                 	{% if current_user.plan != '0' %}
                                 		{{current_user.referred_plan_1 + current_user.referred_plan_2}} users referred
                                 	{% else %}
-                                		Join a plan to earn from referrals
+                                		Join a plan to earn
                                 	{% endif %}
                             	</p>
                                 <div class="d-flex justify-content-between align-items-baseline">

@@ -28,6 +28,13 @@ def save_picture(form_picture):
 	j.save(picture_path_100)
 	
 	return picture_fn
+
+def date_stuff():
+	date = dt.now()
+	post_date = date.strftime('%Y-%m-%d')
+
+	return (str(post_date))
+
 '''
 def verify_user(reference):
 	verify = Transaction.verify(reference=reference)
