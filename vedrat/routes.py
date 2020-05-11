@@ -297,11 +297,13 @@ def userapplypost(post_id):
 		current_user.ad_collected_date = date
 		current_user.ad_collected_on_day += 1
 		post.posters_applied += 1
+		print(current_user.ad_collected_on_day)
 
 		#deciding if a user can post or not based on his plan
-		if current_user.referred_plan_2 and current_user.ad_collected_on_day >= 2:
+		if current_user.plan=='2' and current_user.ad_collected_on_day == 2:
+			print('can_post should change'+str(current_user.ad_collected_on_day))
 			current_user.can_post = 0
-		elif current_user.referred_plan_1 and current_user.ad_collected_on_day >= 1:
+		elif current_user.plan=='1' and current_user.ad_collected_on_day == 1:
 			current_user.can_post = 0
 
 		short_link_id = str(unique_id())

@@ -110,15 +110,19 @@
                                             <table class="table table-hover m-b-0">
                                                 <thead>
                                                     <tr>
+                                                        <th class="border-0 text-center">ID</th>
                                                         <th class="border-0 text-center">Ad Title</th>
                                                         <th class="border-0 text-center" data-breakpoints="sm xs">Link</th>
                                                         <th class="border-0 text-center" data-breakpoints="xs">Earned</th>
-                                                        <th class="border-0 text-center" data-breakpoints="sm xs md">Action</th>
+                                                        <th class="border-0 text-center" data-breakpoints="sm xs md">View</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                 	{% for post in posts.items %}
                                                     <tr>
+                                                        <td class="text-center">
+                                                            <h6 class="text-muted">{{post.id}}</h6>
+                                                        </td>
                                                         <td class="text-center">
                                                             <h6 class="text-muted">{{post.description | truncate(30)}}</h6>
                                                         </td>
