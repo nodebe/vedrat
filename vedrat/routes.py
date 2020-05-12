@@ -8,7 +8,7 @@ from flask import render_template, url_for, flash, redirect, request, session
 from flask_mail import Mail, Message
 from vedrat import app, db#, mail
 from vedrat.utils import unique_id, save_picture, date_stuff
-from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm, PostForm, PostSearchForm
+from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm, PostForm, PostSearchForm, FAQForm
 from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, logout_user, login_required
 from vedrat.models import User, Contact, Post, FAQ, PickedPost#, Transactiondb
@@ -138,6 +138,7 @@ def usersettings():
 	return render_template('settings.html', title='Settings', shared=len(picked_ads), posted=len(shared_ads), form=form, pform=passwordform)
 
 @app.route('/changepassword', methods=['POST'])
+@login_required
 def changepassword():
 	pform = PasswordChangeForm()
 	if pform.validate_on_submit():
@@ -154,6 +155,7 @@ def changepassword():
 		return redirect(url_for('usersettings'))
 
 @app.route('/reportpost/<string:post_id>')
+@login_required
 def reportpost(post_id):
 	post = Post.query.filter_by(uuid=post_id).first()
 	post.report += 1
@@ -320,6 +322,7 @@ def userapplypost(post_id):
 
 
 @app.route('/viewsharedad/<string:uuid>')
+@login_required
 def viewsharedad(uuid):
 	picked_post = PickedPost.query.filter_by(uuid=uuid).first()
 	post = Post.query.filter_by(uuid=picked_post.post_id).first()
@@ -327,6 +330,32 @@ def viewsharedad(uuid):
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
 	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
 	return render_template('viewsharedad.html', title=post.title, shared=len(picked_ads), posted=len(shared_ads), post=post, picked=picked_post)
+
+@app.route('/faq')
+def faq():
+	faqs = FAQ.query.all()
+
+	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	return render_template('faq.html', title='Frequently Asked Questions', shared=len(picked_ads), posted=len(shared_ads), faqs=faqs)
+
+@app.route('/postfaq', methods=['GET','POST'])
+@login_required
+def postfaq():
+	if current_user.user_status == 'admin':
+		form = FAQForm()
+		if form.validate_on_submit():
+			addfaq = FAQ(question=form.question.data,answer=form.answer.data)
+			db.session.add(addfaq)
+			db.session.commit()
+			flash('Faq added successfully', 'success')
+			return redirect(url_for('postfaq'))
+
+		picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+		shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+		return render_template('postfaq.html', title='Post FAQ', shared=len(picked_ads), posted=len(shared_ads), form=form)
+	else:
+		return redirect(url_for('userdashboard'))
 
 '''
 @app.route('/passwordreset', methods=['GET','POST'])

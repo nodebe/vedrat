@@ -1,0 +1,187 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="wrapper">
+    <div class="breadcrumb-wrap">
+        <div class="container py-3">
+            <div class="row d-flex justify-content-md-between justify-content-sm-center">
+                <div class="col-md-4">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item mr-1 font-weight-bold"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item ml-1 font-weight-bold active" aria-current="page">
+                                FAQ
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <aside class="col-lg-3 pt-4 pt-lg-0">
+                <div class="row">
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card mb-4">
+                            <div class="card-body px-3 py-2">
+                                <div class="d-sm-flex flex-row flex-wrap text-center text-sm-left align-items-center">
+                                    <img src="../static/img/100x100.png" class="img-lg rounded-circle" alt="profile image">
+                                    <div class="ml-sm-2 ml-md-0 ml-xl-2 mt-2 mt-sm-0 mt-md-2 mt-xl-0">
+                                        <h6 class="mb-0">{{current_user.fullname}}</h6>
+                                        <p class="text-muted mb-1" style="font-size: 12px;">{{current_user.email}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <ul class="nav flex-column dash-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userdashboard">
+                                <div><i class="las la-arrow-right"></i>Dashboard</div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/newposts">
+                                <div><i class="las la-file"></i>View new ads</div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/sharedads">
+                                <div><i class="las la-cloud-download-alt"></i>My shared ads</div>
+                                <div class="d-flex  align-items-center">
+                                    <p class="mb-0 text-small">{{shared}}</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userposts">
+                                <div><i class="las la-file"></i>My ads</div>
+                                <div class="d-flex  align-items-center">
+                                    <p class="mb-0 text-small text-primary">{{posted}}</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/postad">
+                                <div><i class="las la-plus"></i>Post new ad</div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/usersettings">
+                                <div><i class="las la-cog"></i>Settings</div>
+
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userpayment">
+                                <div><i class="las la-receipt"></i>Payment</div>
+                                <div class="d-flex  align-items-center">
+                                    <p class="mb-0 text-small text-success">
+
+                                    </p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+            <div class="col-lg-9">
+                <h2>How can we help?</h2>
+                <p class="lead">If you need help with anything please visit our <a href="/contact">contact</a> Center.</p>
+                <h2>How it works</h2>
+                <p class="lead">Vedrat is an online plaform where business owners and organisers can leverage the social media pages of other users to advertise their products and services.</p>
+                <p class="lead">There are two plans which users can subscribe to:</p>
+                <h4>Plan 1</h4>
+                    <p class="lead">User registers with N3000. In this plan you can only apply for one ad a day and get paid N280 daily and earn N7000.</p>
+                <h4>Plan 2</h4>
+                    <p class="lead">User registers with N5000. In this plan you can only apply for two ads a day and get paid N560 daily and earn N14000.</p>
+
+                <div id="purchase" class="pt-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="mt-5">Which payment provider do you accept?</h4>
+                            <p>We currently accept payments via Paystack.</p>
+                        </div>
+                        <!--end: col -->
+                        <div class="col-md-6">
+                            <h4 class="mt-5">Can I upgrade my subscription later?</h4>
+                            <p>Yes, you can upgrade your subscription, but your current subscription has to expire which happens 25 days after you subscribe and withdraw your earnings.</p>
+                        </div>
+                        <!--end: col -->
+                    </div>
+                    <!--/end:row-->
+                    <hr class="divider divider-fade py-4">
+                    <div class="row">
+                        <div class="col mb-3">
+                            <h3 class="mt-5">Can I post the ads on multiple social media platforms?</h3>
+                            <p>Yes, you can post the ads on multiple platforms, but it is most preferable to post on the facebook social media platform.</p>
+                        </div>
+                    </div>
+                    <div id="licence" class="">
+                        <div id="faq-accordion" class="mb-5">
+                            <div class="card mb-2 mb-md-3">
+                                <a href="#accordion-1" data-toggle="collapse" role="button" aria-expanded="false" class="p-3 p-md-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 mr-2">How do I contact support?</h6>
+                                        <i class="las la-arrow-right icon"></i>
+                                    </div>
+                                </a>
+                                <div class="collapse" id="accordion-1" data-parent="#faq-accordion">
+                                    <div class="px-3 px-md-4 pb-3 pb-md-4">
+                                        Visit <a href="/contact">Contact</a> to send message to our support channels
+                                    </div>
+                                </div>
+                            </div>
+                            {% for faq in faqs %}
+                            <div class="card mb-2 mb-md-3">
+                                <a href="#accordion-{{faq.id + 1}}" data-toggle="collapse" role="button" aria-expanded="false" class="p-3 p-md-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 mr-2">{{faq.question}}</h6>
+                                        <i class="las la-arrow-right icon"></i>
+                                    </div>
+                                </a>
+                                <div class="collapse" id="accordion-{{faq.id + 1}}" data-parent="#faq-accordion">
+                                    <div class="px-3 px-md-4 pb-3 pb-md-4">
+                                        {{faq.answer}}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <h3 class="mt-5">Referral System</h3>
+                            <h4>Referrals in Plan 1</h4>
+                            <ul>
+                                <li>For every of your referral you earn N300.</li> 
+                                <li>For 10 of your referrals you get N3000.</li> 
+                                <li>For 20 of your referrals you get N7000.</li>
+                                <li>For 50 of your referrals you get N20000.</li>
+                            </ul>
+                            <p class="text-small text-muted">If you have 20 referrals in plan 1:<br>
+                                N300 * 20 = N6000 + N3000(for 10 referrals) + N7000(for 20 referrals)<br>
+                                Total = N16000
+                            </p>
+                            <h4>Referrals in Plan 2</h4>
+                            <ul>
+                                <li>For every of your referral you earn N500.</li> 
+                                <li>For 10 of your referrals you get N5000.</li> 
+                                <li>For 20 of your referrals you get N12000.</li>
+                                <li>For 50 of your referrals you get N32000.</li>
+                            </ul>
+                            <p class="text-small text-muted">If you have 20 referrals in plan 2:<br>
+                                N500 * 20 = N10000 + N5000(for 10 referrals) + N12000(for 20 referrals)<br>
+                                Total = N27000
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
