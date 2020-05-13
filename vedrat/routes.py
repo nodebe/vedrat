@@ -24,7 +24,10 @@ paystack.transaction.list()'''
 @app.route('/')
 @app.route('/index')
 def index():
-	return render_template('index.html', title='Home')
+	popular_posts = Post.query.order_by(Post.posters_applied.desc()).limit(4).all()
+	new_posts = Post.query.order_by(Post.id.desc()).limit(4).all()
+
+	return render_template('index.html', title='Home', popular_posts=popular_posts, new_posts=new_posts)
 
 @app.route('/index/<string:referrer_id>')
 def index_referrer(referrer_id):
@@ -41,8 +44,9 @@ def signup():
 		referrer_id = ''
 	form = UserRegForm()
 	if form.validate_on_submit():
+		uuid = unique_id
 		hashed_password = sha256.encrypt(str(form.password.data))
-		user = User(fullname=form.fullname.data,email=form.email.data,password=hashed_password, referrer=referrer_id)
+		user = User(fullname=form.fullname.data,email=form.email.data,password=hashed_password, referrer=referrer_id, uuid=uuid)
 		db.session.add(user)
 		db.session.commit()
 		flash('Your account has been created successfully.', 'success')

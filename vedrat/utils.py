@@ -35,6 +35,7 @@ def date_stuff():
 
 	return (str(post_date))
 
+
 '''
 def verify_user(reference):
 	verify = Transaction.verify(reference=reference)
