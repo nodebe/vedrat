@@ -6,6 +6,7 @@ from PIL import Image
 from resizeimage import resizeimage
 from datetime import datetime as dt
 from datetime import timedelta
+from flask_login import current_user
 #from paystackapi.transaction import Transaction
 
 def unique_id():
@@ -35,6 +36,31 @@ def date_stuff():
 
 	return (str(post_date))
 
+def referral_earning():
+
+	referred_1 = current_user.referred_plan_1
+	referred_2 = current_user.referred_plan_2
+	if referred_1 >= 10:
+		refer_balance_1 = (referred_1 * 300) + 3000
+	elif referred_1 >= 20:
+		refer_balance_1 = (referred_1 * 300) + 7000
+	elif referred_1 >= 50:
+		refer_balance_1 = (referred_1 * 300) + 20000
+	else:
+		refer_balance_1 = referred_1 * 300
+
+	if referred_2 >= 10:
+		refer_balance_2 = (referred_2 * 500) + 5000
+	elif referred_2 >= 20:
+		refer_balance_2 = (referred_2 * 500) + 12000
+	elif referred_2 >= 50:
+		refer_balance_2 = (referred_2 * 500) + 36000
+	else:
+		refer_balance_2 = referred_2 * 500
+
+	refer_balance = refer_balance_1+refer_balance_2
+
+	return refer_balance
 
 '''
 def verify_user(reference):

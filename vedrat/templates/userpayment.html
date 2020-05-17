@@ -1,0 +1,193 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="wrapper">
+    <div class="breadcrumb-wrap">
+        <div class="container py-3">
+            <div class="row d-flex justify-content-md-between justify-content-sm-center">
+                <div class="col-md-4">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item mr-1 font-weight-bold"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item ml-1 font-weight-bold active" aria-current="page">
+                                My posts
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <aside class="col-lg-3 pt-4 pt-lg-0">
+                <div class="row">
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card mb-4">
+                            <div class="card-body px-3 py-2">
+                                <div class="d-sm-flex flex-row flex-wrap text-center text-sm-left align-items-center">
+                                    <img src="{{ avatars.gravatar(current_user.email) }}" class="img-lg rounded-circle" alt="profile image">
+                                    <div class="ml-sm-2 ml-md-0 ml-xl-2 mt-2 mt-sm-0 mt-md-2 mt-xl-0">
+                                        <h6 class="mb-0">{{current_user.fullname}}</h6>
+                                        <p class="text-muted mb-1" style="font-size: 12px;">{{current_user.email}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <ul class="nav flex-column dash-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userdashboard">
+                                <div><i class="las la-arrow-right"></i>Dashboard</div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/newposts">
+                                <div><i class="las la-file"></i>View new ads</div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/sharedads">
+                                <div><i class="las la-cloud-download-alt"></i>My shared ads</div>
+                                <div class="d-flex  align-items-center">
+                                    <p class="mb-0 text-small">{{shared}}</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userposts">
+                                <div><i class="las la-file"></i>My ads</div>
+                                <div class="d-flex  align-items-center">
+                                    <p class="mb-0 text-small text-primary">{{posted}}</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/postad">
+                                <div><i class="las la-plus"></i>Post new ad</div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/usersettings">
+                                <div><i class="las la-cog"></i>Settings</div>
+
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userpayment">
+                                <div><i class="las la-receipt"></i>Payment</div>
+                                <div class="d-flex  align-items-center">
+                                    <p class="mb-0 text-small text-success">
+
+                                    </p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+            <div class="row col-md-9">
+            <div class="container">
+                <div class="row d-flex align-items-start justify-content-center text-center">
+                    <div class="col-md-10">
+                        <h1 class="display-3">Vedrat Payment Channel</h1>
+                        <p class="lead">Pay for a plan that is comfortable with your pocket</p>
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-5 mt-3">
+                    <div class="col-auto">
+                        <nav class="nav btn-group" role="tablist"> <a href="#pricing-monthly" class="btn btn-outline-primary active show" id="pricing-monthly-tab" data-toggle="tab" aria-controls="pricing-monthly">Deposit</a> <a href="#pricing-yearly" class="btn btn-outline-primary" id="pricing-yearly-tab" data-toggle="tab" aria-controls="pricing-yearly">Withdraw</a> </nav>
+                    </div>
+                    <!--end of col-->
+                </div>
+                <!--end of row-->
+                <div class="tab-content my-5">
+                    <div class="tab-pane fade active show" id="pricing-monthly" role="tab" aria-selected="true">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="pricing-v1 card bg-dark text-white px-5 p-4 mt-0 mb-4 position-relative hover-box-shadow">
+                                    <h3 class="font-weight-bold mb-0 text-primary">Plan A </h3>
+                                    <hr>
+                                    <h3 class="price pt-2 h1">N3000 <span class="text-small text-muted">per month</span></h3>
+                                    <p class="small">Earn N7000</p>
+                                    <p class="text-small">Make more money from referrals and earn upto N74000.</p>
+                                    <div class="price-btn"> <a class="btn btn-outline-primary" href="/pay_plan_a">Pay</a>
+                                    </div>
+                                </div>
+                                <!--end card-->
+                            </div>
+                            <!--end of col-->
+                            <div class="col-md-6 col-lg-4">
+                                <div class="pricing-v2 card bg-dark text-white px-5 p-4 mt-0 mb-4 position-relative hover-box-shadow">
+                                    <h3 class="font-weight-bold mb-0 text-primary">Plan B </h3>
+                                    <hr>
+                                    <h3 class="price pt-2 h1">N5000 <span class="text-small text-muted">per month</span></h3>
+                                    <p class="small">Earn N14000</p>
+                                    <p class="text-small">Make more money from referrals and earn upto N74000.</p>
+                                    <div class="price-btn"> <a class="btn btn-primary" href="/pay_plan_b">Pay</a>
+                                    </div>
+                                </div>
+                                <!--end card-->
+                            </div>
+                            <!--end of col-->
+                            <div class="col-md-6 col-lg-4">
+                                <div class="pricing-v1 card bg-dark text-white px-5 p-4 mt-0 mb-4 position-relative hover-box-shadow">
+                                    <h4 class="font-weight-bold mb-0 text-primary">Deposit Balance </h4>
+                                    <hr>
+                                    <form role="form" class="form-width" method="POST" action="/wb_deposit">
+                                    {{ form.hidden_tag() }}
+                                    {% from 'includes/_formhelpers.html' import render_field %}
+                                        <div class="form-group">
+                                            {{render_field(form.amount, class_='form-control', placeholder='Amount to deposit', type='number', min='3000')}}
+                                            <i class="fa fa-user iconalign"></i>
+                                        </div>
+                                    <p class="text-small">This money is put into your working balance. You can use it to place adverts on the platform</p>
+                                        <div class="form-group">
+                                            {% if current_user.plan != '0' %}
+                                            <button class="btn btn-outline-primary" type="submit">Pay</button>
+                                            {% else %}
+                                            <span class="text-small text-info">Please subscribe to a plan to be able to use this feature</span>
+                                            {% endif %}
+                                        </div>
+                                    </form>
+                                </div>
+                                <!--end card-->
+                            </div>
+                            <!--end of col-->
+                        </div>
+                        <!--end of row-->
+                    </div>
+                    <!--end:tabs-->
+                    <div class="tab-pane fade" id="pricing-yearly" role="tab" aria-selected="false">
+                        <div class="row d-flex justify-content-center">
+                            {% if current_user.is_authenticated %}
+                            <p>Withdraw Balance: N{{refer_balance+current_user.ad_earning}}</p>
+                            {% else %}
+                            <p>Please <a href='/signin'>login</a> to view balance</p>
+                            {% endif %}
+                        </div>
+                        {% if current_user.is_authenticated %}
+                            <div class="row d-flex justify-content-center">
+                                <a href="/withdraw_balance" type="button" class="btn btn-primary">Withdraw</a>
+                            </div>
+                        {% endif %}
+                            <!--end of col-->
+                        </div>
+                        <!--end of row-->
+                    </div>
+                    <!--end:tabs-->
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
+<!-- 
+        <div id = "confirmbox">
+           <div class = "message">Are you sure to suspend this post?</div>
+           <a href='/usersuspendpost/{{post.uuid}}'><button class = "yes">Yes</button></a>
+           <button class = "yes">Cancel</button>
+        </div> -->

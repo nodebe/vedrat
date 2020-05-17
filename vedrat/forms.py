@@ -45,11 +45,18 @@ class ContactForm(FlaskForm):
 		super(ContactForm, self).__init__(*args, **kwargs)
 
 class PasswordResetForm(FlaskForm):
-	email = StringField('Email', validators=[Email('Please fill in a valid email address')])
+	email = StringField('', validators=[Email('Please fill in a valid email address')])
 
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False
 		super(PasswordResetForm, self).__init__(*args, **kwargs)
+
+class DepositForm(FlaskForm):
+	amount = IntegerField('', validators=[DataRequired('Please fill in the amount you would like to deposit'), NumberRange(min=3000, message='minimum amount  is N3000')])
+
+	def __init__(self, *args, **kwargs):
+		kwargs['csrf_enabled'] = False
+		super(DepositForm, self).__init__(*args, **kwargs)
 
 class PasswordChangeForm(FlaskForm):
 	oldpassword = PasswordField('',
@@ -87,7 +94,7 @@ class PostForm(FlaskForm):
 	category = SelectField('Category <span class="text-muted">*</span>', choices=categories)
 	description = TextAreaField('Short Description <span class="text-muted">*</span>', validators=[DataRequired('Please fill in a short description of your post'), Length(min=10, max=250)])
 	image = FileField('', validators=[FileAllowed(['jpg','png', 'jpeg','JPG','JPEG','PNG'])])
-	posters = IntegerField('Posters needed <span class="text-muted">*</span>', validators=[NumberRange(min=5, message='minimum amount posters is 5')])
+	posters = IntegerField('Posters needed <span class="text-muted">*</span>', validators=[NumberRange(min=5, message='minimum amount of posters is 5')])
 	
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False

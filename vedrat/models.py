@@ -19,13 +19,17 @@ class User(db.Model, UserMixin):
 	acc_name = db.Column(db.String(70), default='')
 	plan = db.Column(db.String(1), default='0')
 	balance = db.Column(db.Integer, default=0)
+	verify_id_code = db.Column(db.String(16), default='0')
 	account_status = db.Column(db.String(10), default='open')
 	date_of_payment = db.Column(db.DateTime)
 	ad_collected_on_day = db.Column(db.Integer, default=0)
 	ad_collected_date = db.Column(db.String(12))
+	ad_earning = db.Column(db.Integer, default=0)
 	can_post = db.Column(db.Integer, default=0)
+	refer_earning = db.Column(db.Integer, default=0)
 	referred_plan_1 = db.Column(db.Integer, default=0)
 	referred_plan_2 = db.Column(db.Integer, default=0)
+
 	user_status = db.Column(db.String(10), nullable=False, default='member')
 	
 	def __repr__(self):

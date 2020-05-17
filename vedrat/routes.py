@@ -6,20 +6,19 @@ import flask
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, session
 from flask_mail import Mail, Message
-from vedrat import app, db#, mail
-from vedrat.utils import unique_id, save_picture, date_stuff
-from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm, PostForm, PostSearchForm, FAQForm
+from vedrat import app, db, mail
+from vedrat.utils import unique_id, save_picture, date_stuff, referral_earning
+from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm, PostForm, PostSearchForm, FAQForm, DepositForm
 from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, logout_user, login_required
 from vedrat.models import User, Contact, Post, FAQ, PickedPost#, Transactiondb
 from datetime import datetime as dt
-'''from paystackapi.paystack import Paystack
+from paystackapi.paystack import Paystack
 from paystackapi.transaction import Transaction
-from google_currency import convert
 
-paystack_secret_key = 'sk_test_f9c2c409686a868572173088df9edc9cafa55598'
+paystack_secret_key = 'sk_test_37408e2ede43f221bed5b6ab0d7ed78913f2b6dc'
 paystack = Paystack(secret_key = paystack_secret_key)
-paystack.transaction.list()'''
+#paystack.transaction.list()
 
 @app.route('/')
 @app.route('/index')
@@ -44,7 +43,7 @@ def signup():
 		referrer_id = ''
 	form = UserRegForm()
 	if form.validate_on_submit():
-		uuid = unique_id
+		uuid = unique_id()
 		hashed_password = sha256.encrypt(str(form.password.data))
 		user = User(fullname=form.fullname.data,email=form.email.data,password=hashed_password, referrer=referrer_id, uuid=uuid)
 		db.session.add(user)
@@ -88,31 +87,9 @@ def userdashboard():
 		current_user.can_post = 1
 		db.session.commit()
 
-	referred_1 = current_user.referred_plan_1
-	referred_2 = current_user.referred_plan_2
-	if referred_1 >= 10:
-		refer_balance_1 = (referred_1 * 300) + 3000
-	elif referred_1 >= 20:
-		refer_balance_1 = (referred_1 * 300) + 7000
-	elif referred_1 >= 50:
-		refer_balance_1 = (referred_1 * 300) + 20000
-	else:
-		refer_balance_1 = referred_1 * 300
-
-	if referred_2 >= 10:
-		refer_balance_2 = (referred_2 * 500) + 5000
-	elif referred_2 >= 20:
-		refer_balance_2 = (referred_2 * 500) + 12000
-	elif referred_2 >= 50:
-		refer_balance_2 = (referred_2 * 500) + 36000
-	else:
-		refer_balance_2 = referred_2 * 300
-
-	refer_balance = refer_balance_1+refer_balance_2
-
 	if current_user.plan=='0':
 		flash('Please visit the payment page to pay for a plan and start earning', 'info')
-	return render_template('userdashboard.html', title='Dashboard', shared=len(picked_ads), posted=len(shared_ads), refer_balance=refer_balance, posts=posts)
+	return render_template('userdashboard.html', title='Dashboard', shared=len(picked_ads), posted=len(shared_ads), posts=posts)
 
 @app.route('/usersettings', methods=['GET','POST'])
 @login_required
@@ -311,7 +288,7 @@ def userapplypost(post_id):
 			current_user.can_post = 0
 
 		short_link_id = str(unique_id())
-		short_linker = 'http://127.0.0.1:5000/ad?post/'+ short_link_id
+		short_linker = 'http://127.0.0.1:5000/ad_post/'+ short_link_id
 
 		picked = PickedPost(post_id=post_id,picker_id=current_user.uuid,main_link=post.link,web_link=short_linker, description=post.description, uuid=short_link_id)
 
@@ -361,7 +338,7 @@ def postfaq():
 	else:
 		return redirect(url_for('userdashboard'))
 
-'''
+
 @app.route('/passwordreset', methods=['GET','POST'])
 def passwordreset():
 	form = PasswordResetForm()
@@ -371,17 +348,27 @@ def passwordreset():
 			new_password = unique_id()
 			hashed_password = sha256.encrypt(str(new_password))
 			user.password = hashed_password
-			db.session.commit()
 			#send email with new_password
-			msg = Message('Password Reset for vedrat Goldmines', sender='noreply@vedratgoldmines.com', recipients=[user.email])
-			msg.body = "%s"%(new_password)
+			msg = Message(subject='Password Reset | vedrat', recipients=[user.email])
+			msg.html = "Your new password is <b>%s</b>"%(new_password)
 			mail.send(msg)
+			db.session.commit()
 			flash('Password reset Successful, Check your Email for your new password', 'success')
 			return redirect(url_for('signin'))
 		else:
 			flash('Password reset Unsuccessful, Invalid Email', 'danger')
 	return render_template('passwordreset.html', form=form)
-'''
+
+
+@app.route('/ad_post/<string:url>')
+def ad_post(url):
+    link_ad = PickedPost.query.filter_by(uuid=url).first()
+    picker = User.query.filter_by(uuid=link_ad.picker_id).first()
+    if link_ad.clicks == 0:
+    	picker.ad_earning+=280
+    link_ad.clicks+=1
+    db.session.commit()
+    return redirect(link_ad.main_link)
 
 @app.route('/contact', methods=['GET','POST'])
 def contact():
@@ -397,6 +384,74 @@ def contact():
 		flash('Your message has been posted successfully. We will get back to you through an email message', 'success')
 		return redirect(url_for('contact'))
 	return render_template('contact.html', title='Contact', form=form)
+
+@app.route('/userpayment')
+def userpayment():
+	if current_user.is_authenticated:
+		form = DepositForm()
+		refer_balance = referral_earning()
+		picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+		shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+		return render_template('userpayment.html', title='Payment', shared=len(picked_ads), posted=len(shared_ads),refer_balance=refer_balance, form=form)
+	else:
+		return render_template('userpayment.html', title='Payment', shared=0, posted=0)
+
+@app.route('/pay_plan_<string:plan_id>')
+@login_required
+def pay_plan(plan_id):
+	transaction_id = plan_id.upper()+'_'+current_user.uuid+'_'+unique_id()
+	current_user.verify_id_code = transaction_id
+	db.session.commit() 
+	if plan_id == 'a':
+		response = Transaction.initialize(reference=transaction_id,amount=300000, email=current_user.email)
+		return redirect(response['data']['authorization_url'])
+	elif plan_id == 'b':
+		response = Transaction.initialize(reference=transaction_id,amount=500000, email=current_user.email)
+		return redirect(response['data']['authorization_url'])
+	return redirect('userpayment')
+
+@app.route('/verify_transaction')
+@login_required
+def verify_transaction():
+	verify = Transaction.verify(reference=current_user.verify_id_code)
+	referred_by = current_user.referrer
+	if referred_by != '':
+		referrer = User.query.filter_by(uuid=referred_by).first()
+	if verify['data']['status'] == 'success':
+		if current_user.verify_id_code.startswith('WB'):
+			current_user.balance += verify['data']['requested_amount']/100
+		else:
+			current_user.date_of_payment = dt.strptime(verify['data']['transaction_date'], '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%Y-%m-%d')
+			if verify['data']['requested_amount'] == 300000:
+				current_user.plan = 1
+				if referred_by != '':
+					referrer.refer_earning += 300
+					referrer.referred_plan_1 += 1
+			elif verify['data']['requested_amount'] == 500000:
+				current_user.plan = 2
+				if referrer != '':
+					referrer.refer_earning += 500
+					referrer.referred_plan_2 += 1
+		db.session.commit()
+		flash('You have successfully subscribed!', 'success')
+		return redirect(url_for('userdashboard'))
+	else:
+		flash('Your subscription was not successful!', 'info')
+		return redirect(url_for('userpayment'))
+
+@app.route('/wb_deposit', methods=['POST'])
+@login_required
+def wb_deposit():
+	form = DepositForm()
+	if form.validate_on_submit():
+		transaction_id = 'WB'+'_'+current_user.uuid+'_'+unique_id()
+		current_user.verify_id_code = transaction_id
+		db.session.commit()
+		response = Transaction.initialize(reference=transaction_id,amount=form.amount.data*100, email=current_user.email)
+		return redirect(response['data']['authorization_url'])
+	else:
+		flash('Deposit not approved', 'warning')
+		return redirect(url_for('userpayment'))
 
 '''
 @app.route('/vmessage', methods=['GET','POST'])

@@ -9,6 +9,7 @@
                                 <h4 class="card-title mt-3 text-center">Create Account</h4>
                                 <hr class="divider divider-fade">
                                 <form method="POST">
+                                {{ form.hidden_tag() }}
               					{% from 'includes/_formhelpers.html' import render_field %}
                                     <div class="form-group input-group">
                                         <div class="input-group-prepend">
