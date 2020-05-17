@@ -282,9 +282,9 @@ def userapplypost(post_id):
 		post.posters_applied += 1
 
 		#deciding if a user can post or not based on his plan
-		if current_user.plan=='2' and current_user.ad_collected_on_day == 2:
+		if current_user.plan=='B' and current_user.ad_collected_on_day == 2:
 			current_user.can_post = 0
-		elif current_user.plan=='1' and current_user.ad_collected_on_day == 1:
+		elif current_user.plan=='A' and current_user.ad_collected_on_day == 1:
 			current_user.can_post = 0
 
 		short_link_id = str(unique_id())
@@ -399,15 +399,18 @@ def userpayment():
 @app.route('/pay_plan_<string:plan_id>')
 @login_required
 def pay_plan(plan_id):
-	transaction_id = plan_id.upper()+'_'+current_user.uuid+'_'+unique_id()
-	current_user.verify_id_code = transaction_id
-	db.session.commit() 
-	if plan_id == 'a':
-		response = Transaction.initialize(reference=transaction_id,amount=300000, email=current_user.email)
-		return redirect(response['data']['authorization_url'])
-	elif plan_id == 'b':
-		response = Transaction.initialize(reference=transaction_id,amount=500000, email=current_user.email)
-		return redirect(response['data']['authorization_url'])
+	if current_user.plan == '0':
+		transaction_id = plan_id.upper()+'_'+current_user.uuid+'_'+unique_id()
+		current_user.verify_id_code = transaction_id
+		db.session.commit() 
+		if plan_id == 'a':
+			response = Transaction.initialize(reference=transaction_id,amount=300000, email=current_user.email)
+			return redirect(response['data']['authorization_url'])
+		elif plan_id == 'b':
+			response = Transaction.initialize(reference=transaction_id,amount=500000, email=current_user.email)
+			return redirect(response['data']['authorization_url'])
+	else:
+		flash('You are already subscribed to a plan ' + str(current_user.plan), 'warning')
 	return redirect('userpayment')
 
 @app.route('/verify_transaction')
@@ -423,12 +426,12 @@ def verify_transaction():
 		else:
 			current_user.date_of_payment = dt.strptime(verify['data']['transaction_date'], '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%Y-%m-%d')
 			if verify['data']['requested_amount'] == 300000:
-				current_user.plan = 1
+				current_user.plan = 'A'
 				if referred_by != '':
 					referrer.refer_earning += 300
 					referrer.referred_plan_1 += 1
 			elif verify['data']['requested_amount'] == 500000:
-				current_user.plan = 2
+				current_user.plan = 'B'
 				if referrer != '':
 					referrer.refer_earning += 500
 					referrer.referred_plan_2 += 1

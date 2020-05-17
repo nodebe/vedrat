@@ -19,75 +19,7 @@
     </div>
     <div class="container">
         <div class="row">
-            <aside class="col-lg-3 pt-4 pt-lg-0">
-                <div class="row">
-                    <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card mb-4">
-                            <div class="card-body px-3 py-2">
-                                <div class="d-sm-flex flex-row flex-wrap text-center text-sm-left align-items-center">
-                                    <img src="{{ avatars.gravatar(current_user.email) }}" class="img-lg rounded-circle" alt="profile image">
-                                    <div class="ml-sm-2 ml-md-0 ml-xl-2 mt-2 mt-sm-0 mt-md-2 mt-xl-0">
-                                        <h6 class="mb-0">{{current_user.fullname}}</h6>
-                                        <p class="text-muted mb-1" style="font-size: 12px;">{{current_user.email}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <ul class="nav flex-column dash-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userdashboard">
-                                <div><i class="las la-arrow-right"></i>Dashboard</div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/newposts">
-                                <div><i class="las la-file"></i>View new ads</div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/sharedads">
-                                <div><i class="las la-cloud-download-alt"></i>My shared ads</div>
-                                <div class="d-flex  align-items-center">
-                                    <p class="mb-0 text-small">{{shared}}</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userposts">
-                                <div><i class="las la-file"></i>My ads</div>
-                                <div class="d-flex  align-items-center">
-                                    <p class="mb-0 text-small text-primary">{{posted}}</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/postad">
-                                <div><i class="las la-plus"></i>Post new ad</div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/usersettings">
-                                <div><i class="las la-cog"></i>Settings</div>
-
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userpayment">
-                                <div><i class="las la-receipt"></i>Payment</div>
-                                <div class="d-flex  align-items-center">
-                                    <p class="mb-0 text-small text-success">
-
-                                    </p>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </aside>
-            <div class="row col-md-9">
+            <div class="row col-md-12">
             <div class="container">
                 <div class="row d-flex align-items-start justify-content-center text-center">
                     <div class="col-md-10">
@@ -112,7 +44,8 @@
                                     <h3 class="price pt-2 h1">N3000 <span class="text-small text-muted">per month</span></h3>
                                     <p class="small">Earn N7000</p>
                                     <p class="text-small">Make more money from referrals and earn upto N74000.</p>
-                                    <div class="price-btn"> <a class="btn btn-outline-primary" href="/pay_plan_a">Pay</a>
+                                    <div class="price-btn"> 
+                                        <a class="btn btn-outline-primary" href="/pay_plan_a">Pay</a>
                                     </div>
                                 </div>
                                 <!--end card-->
@@ -135,6 +68,7 @@
                                 <div class="pricing-v1 card bg-dark text-white px-5 p-4 mt-0 mb-4 position-relative hover-box-shadow">
                                     <h4 class="font-weight-bold mb-0 text-primary">Deposit Balance </h4>
                                     <hr>
+                                    {% if current_user.is_authenticated %}
                                     <form role="form" class="form-width" method="POST" action="/wb_deposit">
                                     {{ form.hidden_tag() }}
                                     {% from 'includes/_formhelpers.html' import render_field %}
@@ -151,6 +85,18 @@
                                             {% endif %}
                                         </div>
                                     </form>
+                                    {% else %}
+                                    <form role="form" class="form-width" method="POST" action="#">
+                                        <div class="form-group">
+                                            <input type="number" class="form-control" placeholder="Amount to deposit" min="3000">
+                                            <i class="fa fa-user iconalign"></i>
+                                        </div>
+                                        <p class="text-small">This money is put into your working balance. You can use it to place adverts on the platform</p>
+                                        <div class="form-group">
+                                            <a href='/userdashboard' type="button" class="btn btn-outline-primary" type="submit">Pay</a>
+                                        </div>
+                                    </form>
+                                    {% endif %}
                                 </div>
                                 <!--end card-->
                             </div>
