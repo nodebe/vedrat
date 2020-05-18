@@ -33,11 +33,15 @@ def save_picture(form_picture):
 def date_stuff():
 	date = dt.now()
 	post_date = date.strftime('%Y-%m-%d')
-
 	return (str(post_date))
 
-def referral_earning():
+def date_compare():
+	date = current_user.date_of_payment
+	adjusted = date + timedelta(days=2)
+	date = adjusted.strftime('%Y-%m-%d')
+	return date
 
+def referral_earning():
 	referred_1 = current_user.referred_plan_1
 	referred_2 = current_user.referred_plan_2
 	if referred_1 >= 10:
@@ -62,10 +66,4 @@ def referral_earning():
 
 	return refer_balance
 
-'''
-def verify_user(reference):
-	verify = Transaction.verify(reference=reference)
-	if verify['data']['status'] == 'success':
-		return 'success'
-'''
 from vedrat.models import User

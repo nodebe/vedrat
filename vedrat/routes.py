@@ -7,11 +7,11 @@ from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, session
 from flask_mail import Mail, Message
 from vedrat import app, db, mail
-from vedrat.utils import unique_id, save_picture, date_stuff, referral_earning
+from vedrat.utils import unique_id, save_picture, date_stuff, referral_earning, date_compare
 from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm, PostForm, PostSearchForm, FAQForm, DepositForm
 from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, logout_user, login_required
-from vedrat.models import User, Contact, Post, FAQ, PickedPost#, Transactiondb
+from vedrat.models import User, Contact, Post, FAQ, PickedPost, Withdrawals
 from datetime import datetime as dt
 from paystackapi.paystack import Paystack
 from paystackapi.transaction import Transaction
@@ -82,6 +82,8 @@ def userdashboard():
 	page = request.args.get('page', 1, type=int)
 	posts = Post.query.filter_by(post_status='open').order_by(Post.id.desc()).paginate(page=page,per_page=8)
 
+	refer_balance = referral_earning()
+
 	if current_user.ad_collected_date != date_stuff():
 		current_user.ad_collected_on_day = 0
 		current_user.can_post = 1
@@ -89,7 +91,7 @@ def userdashboard():
 
 	if current_user.plan=='0':
 		flash('Please visit the payment page to pay for a plan and start earning', 'info')
-	return render_template('userdashboard.html', title='Dashboard', shared=len(picked_ads), posted=len(shared_ads), posts=posts)
+	return render_template('userdashboard.html', title='Dashboard', shared=len(picked_ads), posted=len(shared_ads), posts=posts, refer_balance=refer_balance)
 
 @app.route('/usersettings', methods=['GET','POST'])
 @login_required
@@ -430,11 +432,13 @@ def verify_transaction():
 				if referred_by != '':
 					referrer.refer_earning += 300
 					referrer.referred_plan_1 += 1
+					current_user.referrer = ''
 			elif verify['data']['requested_amount'] == 500000:
 				current_user.plan = 'B'
 				if referrer != '':
 					referrer.refer_earning += 500
 					referrer.referred_plan_2 += 1
+					current_user.referrer = ''
 		db.session.commit()
 		flash('You have successfully subscribed!', 'success')
 		return redirect(url_for('userdashboard'))
@@ -455,6 +459,40 @@ def wb_deposit():
 	else:
 		flash('Deposit not approved', 'warning')
 		return redirect(url_for('userpayment'))
+
+@app.route('/withdraw_balance')
+@login_required
+def withdraw_balance():
+	if current_user.date_of_payment != None:
+		withdraw_date = date_compare()
+		new_date = dt.now().strftime('%Y-%m-%d')
+		if new_date >= withdraw_date:
+			try:
+				withdraw_amount = current_user.ad_earning + referral_earning()
+				withdraw = Withdrawals(uuid_of_user=current_user.uuid,bank_name=current_user.bank_name,acc_number=current_user.acc_number,acc_name=current_user.acc_name, amount=withdraw_amount, status='pending')
+				current_user.referred_plan_1 = 0
+				current_user.referred_plan_2 = 0
+				current_user.ad_earning = 0
+				current_user.refer_earning = 0
+				current_user.plan = '0'
+				current_user.date_of_payment = None
+				db.session.add(withdraw)
+				db.session.commit()
+				flash('You will be credited within the next 24 hours', 'success')
+				return redirect(url_for('userpayment'))
+			except Exception as e:
+				flash('Error on our side. please try again later' + str(e), 'warning')
+				return redirect(url_for('userpayment'))
+		else:
+			d1 = dt.strptime(withdraw_date, '%Y-%m-%d')
+			d2 = dt.strptime(new_date, '%Y-%m-%d')
+			flash('You have {} more days until you make a withdrawal '.format(abs((d1-d2).days)), 'info')
+			return redirect(url_for('userpayment'))
+	else:
+		flash('You have to be subscribed to a plan', 'info')
+		return redirect(url_for('userpayment'))
+
+
 
 '''
 @app.route('/vmessage', methods=['GET','POST'])

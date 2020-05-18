@@ -72,8 +72,11 @@ class FAQ(db.Model):
 	question = db.Column(db.Text, nullable=False)
 	answer = db.Column(db.Text, nullable=False)
 
-'''class Transactiondb(db.Model):
+class Withdrawals(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	user_id = db.Column(db.String(10), nullable=False)
-	transaction_id = db.Column(db.String, nullable=False, default=unique_id, unique=True)
-	pay_for = db.Column(db.String(10), nullable=False)'''
+	uuid_of_user = db.Column(db.String(10), nullable=False)
+	bank_name = db.Column(db.String(90), nullable=False)
+	acc_number = db.Column(db.Integer, nullable=False)
+	acc_name = db.Column(db.String(70), nullable=False)
+	amount = db.Column(db.Integer, nullable=False)
+	status = db.Column(db.String(8), default='pending')
