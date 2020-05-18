@@ -466,28 +466,32 @@ def withdraw_balance():
 	if current_user.date_of_payment != None:
 		withdraw_date = date_compare()
 		new_date = dt.now().strftime('%Y-%m-%d')
-		if new_date >= withdraw_date:
-			try:
-				withdraw_amount = current_user.ad_earning + referral_earning()
-				withdraw = Withdrawals(uuid_of_user=current_user.uuid,bank_name=current_user.bank_name,acc_number=current_user.acc_number,acc_name=current_user.acc_name, amount=withdraw_amount, status='pending')
-				current_user.referred_plan_1 = 0
-				current_user.referred_plan_2 = 0
-				current_user.ad_earning = 0
-				current_user.refer_earning = 0
-				current_user.plan = '0'
-				current_user.date_of_payment = None
-				db.session.add(withdraw)
-				db.session.commit()
-				flash('You will be credited within the next 24 hours', 'success')
-				return redirect(url_for('userpayment'))
-			except Exception as e:
-				flash('Error on our side. please try again later' + str(e), 'warning')
+		if current_user.bank_name!='' and current_user.acc_name!='' and current_user.acc_number!='':
+			if new_date >= withdraw_date:
+				try:
+					withdraw_amount = current_user.ad_earning + referral_earning()
+					withdraw = Withdrawals(uuid_of_user=current_user.uuid,bank_name=current_user.bank_name,acc_number=current_user.acc_number,acc_name=current_user.acc_name, amount=withdraw_amount, status='pending')
+					current_user.referred_plan_1 = 0
+					current_user.referred_plan_2 = 0
+					current_user.ad_earning = 0
+					current_user.refer_earning = 0
+					current_user.plan = '0'
+					current_user.date_of_payment = None
+					db.session.add(withdraw)
+					db.session.commit()
+					flash('You will be credited within the next 24 hours', 'success')
+					return redirect(url_for('userpayment'))
+				except Exception as e:
+					flash('Error on our side. please try again later' + str(e), 'warning')
+					return redirect(url_for('userpayment'))
+			else:
+				d1 = dt.strptime(withdraw_date, '%Y-%m-%d')
+				d2 = dt.strptime(new_date, '%Y-%m-%d')
+				flash('You have {} more days till you can make a withdrawal '.format(abs((d1-d2).days)), 'info')
 				return redirect(url_for('userpayment'))
 		else:
-			d1 = dt.strptime(withdraw_date, '%Y-%m-%d')
-			d2 = dt.strptime(new_date, '%Y-%m-%d')
-			flash('You have {} more days until you make a withdrawal '.format(abs((d1-d2).days)), 'info')
-			return redirect(url_for('userpayment'))
+			flash('Please update your bank information', 'info')
+			return redirect(url_for('usersettings'))
 	else:
 		flash('You have to be subscribed to a plan', 'info')
 		return redirect(url_for('userpayment'))
