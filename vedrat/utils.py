@@ -30,6 +30,12 @@ def save_picture(form_picture):
 	
 	return picture_fn
 
+def delete_picture(pic_name):
+	picture_path = os.path.join(app.root_path, 'static/img/vedrat', pic_name)
+	picture_path_100 = os.path.join(app.root_path, 'static/img/vedrat/100', pic_name)
+	os.remove(picture_path_100)
+	os.remove(picture_path)
+
 def date_stuff():
 	date = dt.now()
 	post_date = date.strftime('%Y-%m-%d')

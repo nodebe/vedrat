@@ -52,7 +52,7 @@ class Post(db.Model):
 	uuid = db.Column(db.String(10), nullable=False, default=unique_id, unique=True)
 	poster_id = db.Column(db.String(10), nullable=False)
 	title = db.Column(db.String(50), nullable=False)
-	image = db.Column(db.String(20), nullable=False)
+	image = db.Column(db.String(100), nullable=False)
 	link = db.Column(db.Text)
 	description = db.Column(db.Text, nullable=False)
 	posters_needed = db.Column(db.Integer, nullable=False)

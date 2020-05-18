@@ -7,7 +7,7 @@ from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, session
 from flask_mail import Mail, Message
 from vedrat import app, db, mail
-from vedrat.utils import unique_id, save_picture, date_stuff, referral_earning, date_compare
+from vedrat.utils import unique_id, save_picture, date_stuff, referral_earning, date_compare, delete_picture
 from vedrat.forms import UserRegForm, UserLogForm, PasswordResetForm, ContactForm, PasswordChangeForm, SettingsForm, PostForm, PostSearchForm, FAQForm, DepositForm
 from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, logout_user, login_required
@@ -160,7 +160,7 @@ def postad(post_id=''):
 				if form.image.data:
 					image_name = save_picture(form.image.data)
 				else:
-					image_name = 'default_ad_image.jpg'
+					image_name = 'default_ad_image.png'
 				post = Post(poster_id=current_user.uuid,title=form.title.data,link=form.link.data,description=form.description.data,posters_needed=form.posters.data,category=form.category.data,image=image_name)
 				current_user.balance-=price
 				db.session.add(post)
@@ -172,17 +172,34 @@ def postad(post_id=''):
 				return render_template('postad.html', title='Post Ad', form=form)
 		elif post_id != '':
 			post = Post.query.filter_by(uuid=post_id).first()
-			if (current_user.balance >= price):
+			new_price = (300 * form.posters.data) - 10 * (form.posters.data - 1)
+			initial_price = (300 * post.posters_needed) - 10 * (post.posters_needed - 1)
+			if (form.posters.data > post.posters_needed):
+				official_price = new_price - initial_price
+				price_tag = 'remove'
+			elif(form.posters.data < post.posters_needed):
+				official_price = initial_price - new_price
+				price_tag = 'add'
+			else:
+				official_price = 0
+				price_tag = 'same'
+
+			if (current_user.balance >= official_price):
 				post.title = form.title.data
 				post.link = form.link.data
 				post.category = form.category.data
 				post.description = form.description.data
 				post.posters_needed = form.posters.data
+				if post.image != 'default_ad_image.png':
+					delete_picture(post.image)
 				if form.image.data:
 					post.image = save_picture(form.image.data)
 				else:
-					post.image = 'default_ad_image.jpg'
-				current_user.balance-=price
+					post.image = 'default_ad_image.png'
+				if price_tag == 'remove':
+					current_user.balance-=official_price
+				elif price_tag == 'add':
+					current_user.balance+=official_price
 				db.session.commit()
 				flash('Your post has been updated successfully', 'success')
 				return redirect(url_for('userposts'))
