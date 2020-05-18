@@ -334,10 +334,7 @@ def viewsharedad(uuid):
 @app.route('/faq')
 def faq():
 	faqs = FAQ.query.all()
-
-	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
-	return render_template('faq.html', title='Frequently Asked Questions', shared=len(picked_ads), posted=len(shared_ads), faqs=faqs)
+	return render_template('faq.html', title='Frequently Asked Questions',faqs=faqs)
 
 @app.route('/postfaq', methods=['GET','POST'])
 @login_required
