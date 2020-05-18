@@ -43,7 +43,7 @@ def date_stuff():
 
 def date_compare():
 	date = current_user.date_of_payment
-	adjusted = date + timedelta(days=0)
+	adjusted = date + timedelta(days=25)
 	date = adjusted.strftime('%Y-%m-%d')
 	return date
 
