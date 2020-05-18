@@ -435,7 +435,7 @@ def verify_transaction():
 					current_user.referrer = ''
 			elif verify['data']['requested_amount'] == 500000:
 				current_user.plan = 'B'
-				if referrer != '':
+				if referred_by != '':
 					referrer.refer_earning += 500
 					referrer.referred_plan_2 += 1
 					current_user.referrer = ''
@@ -496,7 +496,29 @@ def withdraw_balance():
 		flash('You have to be subscribed to a plan', 'info')
 		return redirect(url_for('userpayment'))
 
+@app.route('/withdrawals_list')
+@login_required
+def withdrawals_list():
+	if current_user.user_status == 'admin':
+		page = request.args.get('page', 1, type=int)
+		withdrawals = Withdrawals.query.order_by(Withdrawals.id.desc()).paginate(page=page,per_page=10)
+		picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+		shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+		return render_template('withdrawals_list.html', title='Withdrawals', shared=len(picked_ads), posted=len(shared_ads),withdrawals=withdrawals)
+	else:
+		return redirect(url_for('userdashboard'))
 
+@app.route('/verify_withdraw/<string:uuid>')
+@login_required
+def verify_withdraw(uuid):
+	if current_user.user_status == 'admin':
+		withdraw = Withdrawals.query.filter_by(uuid=uuid).first()
+		withdraw.status = 'paid'
+		db.session.commit()
+		flash('Updated successfully', 'success')
+		return redirect(url_for('withdrawals_list'))
+	else:
+		return redirect(url_for('userdashboard'))
 
 '''
 @app.route('/vmessage', methods=['GET','POST'])

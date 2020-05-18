@@ -95,53 +95,56 @@
                                     <div class="card-header py-3 border-bottom">
                                         <div class="d-flex align-items-center">
                                             <div>
-                                                <h6 class="card-title mb-0">Shared Posts</h6>
+                                                <h6 class="card-title mb-0">Withdrawal List</h6>
                                             </div>
 
                                         </div>
                                     </div>
                                     <div class="card-body pt-4">
-                                    	{% if posts.items == [] %}
-				                            <p class="text-light text-center bg-info p-3">No posts shared. 
-				                                <a href="/newposts" class="text-dark">Search post by category</a>
+                                    	{% if withdrawals.items == [] %}
+				                            <p class="text-light text-center bg-info p-3">No withdrawals made.
 				                            </p>
 				                        {% else %}
                                         <div class="table-responsive">
                                             <table class="table table-hover m-b-0">
                                                 <thead>
                                                     <tr>
-                                                        <th class="border-0 text-center">Date</th>
-                                                        <th class="border-0 text-center">Ad Description</th>
-                                                        <th class="border-0 text-center" data-breakpoints="sm xs">Link</th>
-                                                        <th class="border-0 text-center" data-breakpoints="xs">Earned</th>
-                                                        <th class="border-0 text-center" data-breakpoints="sm xs md">View</th>
+                                                        <th class="border-0 text-center">ID</th>
+                                                        <th class="border-0 text-center">Bank name</th>
+                                                        <th class="border-0 text-center" data-breakpoints="sm xs">Account name</th>
+                                                        <th class="border-0 text-center" data-breakpoints="xs">Account number</th>
+                                                        <th class="border-0 text-center" data-breakpoints="xs">Amount</th>
+                                                        <th class="border-0 text-center" data-breakpoints="xs">Status</th>
+                                                        <th class="border-0 text-center" data-breakpoints="sm xs md">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                	{% for post in posts.items %}
+                                                	{% for withdraw in withdrawals.items %}
                                                     <tr>
                                                         <td class="text-center">
-                                                            <h6 class="text-muted">{{post.date}}</h6>
+                                                            <h6 class="text-muted">{{withdraw.id}}</h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="text-muted">{{post.description | truncate(30)}}</h6>
+                                                            <h6 class="text-muted">{{withdraw.bank_name}}</h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <span class="text-muted">{{post.web_link}}</span>
+                                                            <span class="text-muted">{{withdraw.acc_name}}</span>
                                                         </td>
                                                         <td class="text-center">
-                                                            {% if post.clicks >= 1%}
-                                                            <h6  class="text-muted">N280</h6>
-                                                            {% else %}
-                                                            <h6  class="text-muted">N0</h6>
-                                                            {% endif %}
+                                                            <span class="text-muted">{{withdraw.acc_number}}</span>
                                                         </td>
-
+                                                        <td class="text-center">
+                                                            <span class="text-muted">{{withdraw.amount}}</span>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span class="text-muted">{{withdraw.status}}</span>
+                                                        </td>
                                                         <td class="text-center">
                                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                                <a href="/viewsharedad/{{post.uuid}}"type="button" class="btn btn-sm btn-primary" title="view post"><i class="las la-eye"></i></a>
+                                                                {% if withdraw.status == 'pending' %}
+                                                                <a href="/verify_withdraw/{{withdraw.uuid}}"type="button" class="btn btn-sm btn-danger" title="verify pay"><i class="las la-thumbs-up"></i></a>
+                                                                {% endif %}
                                                             </div>
-
                                                         </td>
                                                     </tr>
                                                     {% endfor %}
@@ -153,8 +156,8 @@
                                         <div class="px-3 py-2">
                                             <nav aria-label="pagin">
                                                 <ul class="pagination mt-2">
-								                    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-								                      {% if posts.page == page_num %}
+								                    {% for page_num in withdrawals.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+								                      {% if withdrawals.page == page_num %}
 								                        <li class="page-item">
 								                          <a class="page-link bg-success text-white" href="{{ url_for('sharedads', page=page_num) }}">{{ page_num }}</a>
 								                        </li>

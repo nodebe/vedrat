@@ -1,10 +1,14 @@
 from vedrat import db, login_manager
 from vedrat.utils import unique_id
 from flask_login import UserMixin
+from datetime import datetime as dt
 
 @login_manager.user_loader
 def load_user(user_id):
 	return User.query.get(int(user_id))
+
+date = dt.now()
+post_date = date.strftime('%Y-%m-%d')
 
 class User(db.Model, UserMixin):
 	id = db.Column(db.Integer, primary_key=True)
@@ -64,6 +68,7 @@ class PickedPost(db.Model):
 	picker_id = db.Column(db.String(10), nullable=False)
 	main_link = db.Column(db.Text, nullable=False)
 	web_link = db.Column(db.String(40), nullable=False)
+	date = db.Column(db.String(11), default=post_date)
 	description = db.Column(db.Text)
 	clicks = db.Column(db.Integer, default=0)
 
@@ -74,9 +79,10 @@ class FAQ(db.Model):
 
 class Withdrawals(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
+	uuid = db.Column(db.String(10), nullable=False, default=unique_id)
 	uuid_of_user = db.Column(db.String(10), nullable=False)
 	bank_name = db.Column(db.String(90), nullable=False)
-	acc_number = db.Column(db.String(15), nullable=False)
+	acc_number = db.Column(db.String(15), default='3086500011')
 	acc_name = db.Column(db.String(70), nullable=False)
 	amount = db.Column(db.Integer, nullable=False)
 	status = db.Column(db.String(8), default='pending')
