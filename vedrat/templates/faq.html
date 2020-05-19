@@ -8,7 +8,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item mr-1 font-weight-bold"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="/userdashboard">Dashboard</a></li>
+                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="{{url_for('users.userdashboard')}}">Dashboard</a></li>
                             <li class="breadcrumb-item ml-1 font-weight-bold active" aria-current="page">
                                 FAQ
                             </li>
@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h2>How can we help?</h2>
-                <p class="lead">If you need help with anything please visit our <a href="/contact">contact</a> Center.</p>
+                <p class="lead">If you need help with anything please visit our <a href="{{url_for('main.contact')}}">contact</a> Center.</p>
                 <h2>How it works</h2>
                 <p class="lead">Vedrat is an online plaform where business owners and organisers can leverage the social media pages of other users to advertise their products and services.</p>
                 <p class="lead">There are two plans which users can subscribe to:</p>
@@ -63,7 +63,7 @@
                                 </a>
                                 <div class="collapse" id="accordion-1" data-parent="#faq-accordion">
                                     <div class="px-3 px-md-4 pb-3 pb-md-4">
-                                        Visit <a href="/contact">Contact</a> to send message to our support channels
+                                        Visit <a href="{{url_for('main.contact')}}">Contact</a> to send message to our support channels
                                     </div>
                                 </div>
                             </div>

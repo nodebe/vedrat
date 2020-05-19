@@ -8,7 +8,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item mr-1 font-weight-bold"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="/userdashboard">Dashboard</a></li>
+                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="{{url_for('users.userdashboard')}}">Dashboard</a></li>
                             <li class="breadcrumb-item ml-1 font-weight-bold active" aria-current="page">
                                 Post FAQ
                             </li>
@@ -39,17 +39,17 @@
                 <div class="mb-4">
                     <ul class="nav flex-column dash-nav">
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userdashboard">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.userdashboard')}}">
                                 <div><i class="las la-arrow-right"></i>Dashboard</div>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/newposts">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('posts.newposts')}}">
                                 <div><i class="las la-file"></i>View new ads</div>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/sharedads">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('posts.sharedads')}}">
                                 <div><i class="las la-cloud-download-alt"></i>My shared ads</div>
                                 <div class="d-flex  align-items-center">
                                     <p class="mb-0 text-small">{{shared}}</p>
@@ -57,7 +57,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userposts">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.userposts')}}">
                                 <div><i class="las la-file"></i>My ads</div>
                                 <div class="d-flex  align-items-center">
                                     <p class="mb-0 text-small text-primary">{{posted}}</p>
@@ -65,18 +65,18 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/postad">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('posts.postad')}}">
                                 <div><i class="las la-plus"></i>Post new ad</div>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/usersettings">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.usersettings')}}">
                                 <div><i class="las la-cog"></i>Settings</div>
 
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userpayment">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('payments.userpayment')}}">
                                 <div><i class="las la-wallet"></i>Payment</div>
                                 <div class="d-flex  align-items-center">
                                     <p class="mb-0 text-small text-success">

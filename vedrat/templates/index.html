@@ -14,7 +14,7 @@
                             <div class="row">
                                 <div class="col-md-7">
                                     <div class="input-group mb-3">
-                                            <a href="/signup" class="btn btn-primary" type="button">Register <i class="las la-user-plus"></i></a>
+                                            <a href="{{url_for('users.signup')}}" class="btn btn-primary" type="button">Register <i class="las la-user-plus"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -36,12 +36,12 @@
                     <div class="col-md-3">
                         <div class="card item-card h-100 border-0">
                             <div class="item-card__image rounded">
-                                <a href="/userviewpost/{{post.uuid}}">
+                                <a href="{{url_for('posts.userviewpost', post_id=post.uuid)}}">
                                     <img src="../static/img/vedrat/{{post.image}}" class="img-fluid rounded" alt="{{post.title}}">
                                 </a>
                                 <div class="hover-icons">
                                     <ul class="list-unstyled">
-                                        <li><a href="/userviewpost/{{post.uuid}}" data-toggle="tooltip" data-placement="left" title="Demo"><i class="las la-desktop"></i></a></li>
+                                        <li><a href="{{url_for('posts.userviewpost', post_id=post.uuid)}}" data-toggle="tooltip" data-placement="left" title="Demo"><i class="las la-desktop"></i></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -83,12 +83,12 @@
                     <div class="col-md-3">
                         <div class="card item-card h-100 border-0">
                             <div class="item-card__image rounded">
-                                <a href="/userviewpost/{{post.uuid}}" class="swap-link">
+                                <a href="{{url_for('posts.userviewpost', post_id=post.uuid)}}" class="swap-link">
                                     <img src="../static/img/vedrat/{{post.image}}" class="img-fluid rounded" alt="{{post.title}}">
                                 </a>
                                 <div class="hover-icons">
                                     <ul class="list-unstyled">
-                                        <li><a href="/userviewpost/{{post.uuid}}"><i class="las la-desktop"></i></a></li>
+                                        <li><a href="{{url_for('posts.userviewpost', post_id=post.uuid)}}"><i class="las la-desktop"></i></a></li>
                                     </ul>
                                 </div>
                             </div>

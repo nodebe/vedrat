@@ -7,8 +7,8 @@
                 <div class="col-md-4">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="/userdashboard">Dashboard</a></li>
+                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="{{url_for('main.index')}}">Home</a></li>
+                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="{{url_for('users.userdashboard')}}">Dashboard</a></li>
                             <li class="breadcrumb-item ml-1 font-weight-bold active" aria-current="page">
                                 My posts
                             </li>
@@ -39,17 +39,17 @@
                 <div class="mb-4">
                     <ul class="nav flex-column dash-nav">
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userdashboard">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.userdashboard')}}">
                                 <div><i class="las la-arrow-right"></i>Dashboard</div>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/newposts">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('posts.newposts')}}">
                                 <div><i class="las la-file"></i>View new ads</div>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/sharedads">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('posts.sharedads')}}">
                                 <div><i class="las la-cloud-download-alt"></i>My shared ads</div>
                                 <div class="d-flex  align-items-center">
                                     <p class="mb-0 text-small">{{shared}}</p>
@@ -57,7 +57,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userposts">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.userposts')}}">
                                 <div><i class="las la-file"></i>My ads</div>
                                 <div class="d-flex  align-items-center">
                                     <p class="mb-0 text-small text-primary">{{posted}}</p>
@@ -65,18 +65,18 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/postad">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('posts.postad')}}">
                                 <div><i class="las la-plus"></i>Post new ad</div>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/usersettings">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.usersettings')}}">
                                 <div><i class="las la-cog"></i>Settings</div>
 
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userpayment">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('payments.userpayment')}}">
                                 <div><i class="las la-wallet"></i>Payment</div>
                                 <div class="d-flex  align-items-center">
                                     <p class="mb-0 text-small text-success">
@@ -104,7 +104,7 @@
                                     <div class="card-body pt-4">
                                     	{% if posts.items == [] %}
 				                            <p class="text-light text-center bg-info p-3">No posts shared. 
-				                                <a href="/newposts" class="text-dark">Search post by category</a>
+				                                <a href="{{url_for('posts.newposts')}}" class="text-dark">Search post by category</a>
 				                            </p>
 				                        {% else %}
                                         <div class="table-responsive">
@@ -140,7 +140,7 @@
 
                                                         <td class="text-center">
                                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                                <a href="/viewsharedad/{{post.uuid}}"type="button" class="btn btn-sm btn-primary" title="view post"><i class="las la-eye"></i></a>
+                                                                <a href="{{url_for('users.viewsharedad', uuid=post.uuid)}}"type="button" class="btn btn-sm btn-primary" title="view post"><i class="las la-eye"></i></a>
                                                             </div>
 
                                                         </td>
@@ -157,14 +157,14 @@
 								                    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
 								                      {% if posts.page == page_num %}
 								                        <li class="page-item">
-								                          <a class="page-link bg-success text-white" href="{{ url_for('sharedads', page=page_num) }}">{{ page_num }}</a>
+								                          <a class="page-link bg-success text-white" href="{{ url_for('posts.sharedads', page=page_num) }}">{{ page_num }}</a>
 								                        </li>
 								                        {% elif page_num==None %}
 								                        <li class="page-item disabled">
 								                          <a class="page-link text-success">...</a>
 								                        </li>
 								                        {% else %}
-								                          <a class="page-link text-success" href="{{ url_for('sharedads', page=page_num) }}">{{ page_num }}</a>
+								                          <a class="page-link text-success" href="{{ url_for('posts.sharedads', page=page_num) }}">{{ page_num }}</a>
 								                        {% endif %}
 								                    {% endfor %}
 								                </ul>

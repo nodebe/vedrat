@@ -20,36 +20,36 @@
     <header class="nav-wrap bg-dark fixed-top">
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-dark px-lg-0">
-                <a class="navbar-brand mr-3 swap-link" href="/index">Ved<span class="text-primary">Rat</span></a>
+                <a class="navbar-brand mr-3 swap-link" href="{{url_for('main.index')}}">Ved<span class="text-primary">Rat</span></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item swap-link"> <a href="/index" class="nav-link">Home</a> </li>
-                        <li class="nav-item swap-link"> <a href="/userpayment" class="nav-link">Pricing</a> </li>
-                        <li class="nav-item swap-link"> <a href="/blog" class="nav-link">Blog</a> </li>
-                        <li class="nav-item swap-link"> <a href="/faq" class="nav-link">FAQ</a> </li>
-                        <li class="nav-item swap-link"> <a href="/contact" class="nav-link">Contact</a> </li>
+                        <li class="nav-item swap-link"> <a href="{{url_for('main.index')}}" class="nav-link">Home</a> </li>
+                        <li class="nav-item swap-link"> <a href="{{url_for('payments.userpayment')}}" class="nav-link">Pricing</a> </li>
+                        <li class="nav-item swap-link"> <a href="#" class="nav-link">Blog</a> </li>
+                        <li class="nav-item swap-link"> <a href="{{url_for('main.faq')}}" class="nav-link">FAQ</a> </li>
+                        <li class="nav-item swap-link"> <a href="{{url_for('main.contact')}}" class="nav-link">Contact</a> </li>
                     </ul>
                     <ul class="navbar-nav">
                         {% if current_user.is_authenticated %}
                         <li class="nav-item dropdown megamenu">
                             <a class="nav-link dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown" aria-expanded="false"><i class="las la-user mr-2" style="font-size:22px;"></i></a>
                             <div class="dropdown-menu dropdown-menu-right" role="menu">
-                                <a class="dropdown-item swap-link" href="/userdashboard"> Dashboard</a>
+                                <a class="dropdown-item swap-link" href="{{url_for('users.userdashboard')}}"> Dashboard</a>
                                 {% if current_user.user_status == 'admin' %}
-                                    <a class="dropdown-item swap-link" href="/postfaq"> Post FAQ</a>
-                                    <a class="dropdown-item swap-link" href="/withdrawals_list"> Withdrawals List</a>
+                                    <a class="dropdown-item swap-link" href="{{url_for('admin.postfaq')}}"> Post FAQ</a>
+                                    <a class="dropdown-item swap-link" href="{{url_for('admin.withdrawals_list')}}"> Withdrawals List</a>
                                 {% endif %}
-                                <a class="dropdown-item swap-link" href="/logout"><i class="las la-sign-out-alt bg-danger-alt text-danger p-1 rounded"></i> Logout</a>
+                                <a class="dropdown-item swap-link" href="{{url_for('users.logout')}}"><i class="las la-sign-out-alt bg-danger-alt text-danger p-1 rounded"></i> Logout</a>
                             </div>
                         </li>
                         {% else %}
-                        <li class="nav-item swap-link"> <a href="\signin" class="nav-link">Login</a> </li>
+                        <li class="nav-item swap-link"> <a href="{{url_for('users.signin')}}" class="nav-link">Login</a> </li>
                         <li class="nav-item d-flex align-items-center">
                         <li class="nav-item">
-                            <a class="nav-link btn btn-primary swap-link text-white" href="/signup" role="button">Sign up</a>
+                            <a class="nav-link btn btn-primary swap-link text-white" href="{{url_for('users.signup')}}" role="button">Sign up</a>
                         </li>
                         </li>
                         {% endif %}
@@ -77,23 +77,22 @@
                     <aside class="col-md">
                         <h6 class="title">Company</h6>
                         <ul class="list-unstyled">
-                            <li> <a href="/terms">Rules and terms</a></li>
+                            <li> <a href="#">Rules and terms</a></li>
                         </ul>
                     </aside>
                     <aside class="col-md">
                         <h6 class="title">Help</h6>
                         <ul class="list-unstyled">
-                            <li> <a href="/contact">Contact us</a></li>
-                            <li> <a href="/faq">FAQ</a></li>
+                            <li> <a href="{{url_for('main.contact')}}">Contact us</a></li>
+                            <li> <a href="{{url_for('main.faq')}}">FAQ</a></li>
                         </ul>
                     </aside>
                     <aside class="col-md">
                         <h6 class="title">Account</h6>
                         <ul class="list-unstyled">
-                            <li> <a href="/signin"> User Login </a></li>
-                            <li> <a href="/signup"> User register </a></li>
-                            <li> <a href="/usersettings"> Account Setting </a></li>
-                            <li> <a href="/userposts"> User Posts </a></li>
+                            <li> <a href="{{url_for('users.signin')}}"> User Login </a></li>
+                            <li> <a href="{{url_for('users.signup')}}"> User register </a></li>
+                            <li> <a href="{{url_for('users.usersettings')}}"> Account Setting </a></li>
                         </ul>
                     </aside>
                 </div>
@@ -108,7 +107,7 @@
                     <div class="row no-gutters d-flex justify-content-between align-items-center">
                         <div class="col-5 col-md-4 affiliate d-flex align-items-center">
                             <div class="aff-btn">
-                                <a href="/affiliate" class="btn btn-primary btn-sm">
+                                <a href="{{url_for('main.faq')}}" class="btn btn-primary btn-sm">
                                     Referrals
                                 </a>
                             </div>
@@ -143,8 +142,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <span class="pr-2">© 2020 Vedrat</span>
-                        <span class="pr-2"><a href="#">Privacy policy</a></span>
-                        <span class="pr-2"><a href="/terms">Terms of use</a></span>
+                        <span class="pr-2"><a href="#">Terms of use</a></span>
                     </div>
                     <div class="col-md-6 text-md-right">
                         <a href="#" class="mr-2"><img src="../static/img/payment/footer-visa.svg" width="42"></a>

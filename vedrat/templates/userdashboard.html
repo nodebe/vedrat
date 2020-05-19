@@ -7,7 +7,7 @@
                 <div class="col-md-4">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item mr-1 font-weight-bold"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item mr-1 font-weight-bold"><a href="{{url_for('main.index')}}">Home</a></li>
                             <li class="breadcrumb-item ml-1 font-weight-bold active" aria-current="page">
                                 Dashboard
                             </li>
@@ -38,17 +38,17 @@
                 <div class="mb-4">
                     <ul class="nav flex-column dash-nav">
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userdashboard">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.userdashboard')}}">
                                 <div><i class="las la-arrow-right"></i>Dashboard</div>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/newposts">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('posts.newposts')}}">
                                 <div><i class="las la-file"></i>View new ads</div>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/sharedads">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('posts.sharedads')}}">
                                 <div><i class="las la-cloud-download-alt"></i>My shared ads</div>
                                 <div class="d-flex  align-items-center">
                                     <p class="mb-0 text-small">{{shared}}</p>
@@ -56,7 +56,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userposts">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.userposts')}}">
                                 <div><i class="las la-file"></i>My ads</div>
                                 <div class="d-flex  align-items-center">
                                     <p class="mb-0 text-small text-primary">{{posted}}</p>
@@ -64,18 +64,18 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/postad">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('posts.postad')}}">
                                 <div><i class="las la-plus"></i>Post new ad</div>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/usersettings">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.usersettings')}}">
                                 <div><i class="las la-cog"></i>Settings</div>
 
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="/userpayment">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('payments.userpayment')}}">
                                 <div><i class="las la-wallet"></i>Payment</div>
                                 <div class="d-flex  align-items-center">
                                     <p class="mb-0 text-small text-success">
@@ -86,14 +86,13 @@
                         </li>
                     </ul>
                 </div>
-            </aside>
-            <div class="col-lg-9">
+            </aside>            <div class="col-lg-9">
                 <div class="card mb-3 p-2">
                     <span>Referral Link: 
                        {% if current_user.plan != '0' %} 
                         <span id="referText">localhost:5000/index/{{current_user.uuid}}</span><button class="las la-copy bg-primary p-1 text-light" title="click to copy" onclick="clickToCopy('#referText')"></button></span>
                         {% else %}
-                            Please <a href="/userpayment">subscribe</a> to a plan to get your referral link
+                            Please <a href="{{url_for('payments.userpayment')}}">subscribe</a> to a plan to get your referral link
                         {% endif %}
                 </div>
                 <div class="row">
@@ -166,7 +165,7 @@
                 <div class="row">
                         {% if posts == [] %}
                             <p class="text-light text-center bg-info col-12 p-3">No ads available. 
-                                <a href="/postad" class="text-dark">Post your ad</a>
+                                <a href="{{url_for('posts.postad')}}" class="text-dark">Post your ad</a>
                             </p>
                         {% else %}
                         {% for post in posts.items %}
@@ -189,8 +188,8 @@
                                 <div class="d-flex justify-content-between align-items-center item-meta">
                                     <div class="short-description mb-0">
                                         <p class="mb-0 extension-text text-justify">{{post.description | truncate(50)}}</p>
-                                        <a href="/userviewpost/{{post.uuid}}"><button type="button" class="btn btn-primary col-5 mt-2 text-small">View</button></a>
-                                        <a href="/reportpost/{{post.uuid}}"><button type="button" class="btn btn-danger col-6 mt-2 mr-2 text-small">Report</button></a>
+                                        <a href="{{url_for('posts.userviewpost', post_id=post.uuid)}}"><button type="button" class="btn btn-primary col-5 mt-2 text-small">View</button></a>
+                                        <a href="{{url_for('posts.reportpost', post_id=post.uuid)}}"><button type="button" class="btn btn-danger col-6 mt-2 mr-2 text-small">Report</button></a>
                                     </div>
                                 </div>
                                 <!-- end: Card meta -->
@@ -208,14 +207,14 @@
                             {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
                               {% if posts.page == page_num %}
                                 <li class="page-item">
-                                  <a class="page-link bg-success text-white" href="{{ url_for('userposts', page=page_num) }}">{{ page_num }}</a>
+                                  <a class="page-link bg-success text-white" href="{{ url_for('users.userdashboard', page=page_num) }}">{{ page_num }}</a>
                                 </li>
                                 {% elif page_num==None %}
                                 <li class="page-item disabled">
                                   <a class="page-link text-success">...</a>
                                 </li>
                                 {% else %}
-                                  <a class="page-link text-success" href="{{ url_for('userposts', page=page_num) }}">{{ page_num }}</a>
+                                  <a class="page-link text-success" href="{{ url_for('users.userdashboard', page=page_num) }}">{{ page_num }}</a>
                                 {% endif %}
                             {% endfor %}
                         </ul>

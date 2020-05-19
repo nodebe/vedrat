@@ -14,7 +14,7 @@ db = SQLAlchemy(app)
 share = Share(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager(app)
-login_manager.login_view = 'signin'
+login_manager.login_view = 'users.signin'
 login_manager.login_message_category = 'info'
 avatars = Avatars(app)
 
@@ -30,4 +30,14 @@ app.config['MAIL_PASSWORD'] = 'Vedrat_nigeria1#'
 app.config['MAIL_DEFAULT_SENDER'] = 'vedratnigeria@gmail.com'
 mail = Mail(app)
 
-from vedrat import routes
+from vedrat.users.routes import users
+from vedrat.posts.routes import posts
+from vedrat.payments.routes import payments
+from vedrat.main.routes import main
+from vedrat.admin.routes import admin
+
+app.register_blueprint(users)
+app.register_blueprint(posts)
+app.register_blueprint(payments)
+app.register_blueprint(main)
+app.register_blueprint(admin)
