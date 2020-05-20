@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, request, abort
 from vedrat import app, db
-from vedrat.utils import unique_id
-from vedrat.admin.forms import FAQForm
+from vedrat.utils import unique_id, save_blog_picture
+from vedrat.admin.forms import FAQForm, AddBlogPostForm
 #from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, login_required
-from vedrat.models import FAQ, Withdrawals, PickedPost, Post
+from vedrat.models import FAQ, Withdrawals, PickedPost, Post, Blogpost
 
 admin = Blueprint('admin', __name__)
 
@@ -27,8 +27,8 @@ def postfaq():
 			shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
 			return render_template('postfaq.html', title='Post FAQ', shared=len(picked_ads), posted=len(shared_ads), form=form)
 		except Exception as e:
-			flash(error_message + str(e), 'warning')
-			return redirect(url_for('users.userdashboard'))
+			flash(error_message, 'warning')
+			return redirect(url_for('admin.postfaq'))
 	else:
 		abort(404)
 
@@ -56,6 +56,30 @@ def verify_withdraw(uuid):
 	else:
 		abort(404)
 
+@admin.route('/addblogpost', methods=['POST','GET'])
+@login_required
+def addblogpost():
+	if current_user.user_status == 'admin':
+			form = AddBlogPostForm()
+			if form.validate_on_submit():
+				try:
+					if form.image.data:
+						image_name = save_blog_picture(form.image.data)
+					else:
+						image_name = 'default_ad_image.png'
+					post = Blogpost(title=form.title.data,subject=form.subject.data,image=image_name,post=form.post.data,poster=form.poster.data)
+					db.session.add(post)
+					db.session.commit()
+					flash('Posted successfully', 'success')
+					return redirect(url_for('main.blogview'))
+				except Exception as e:
+					flash(error_message + str(e), 'warning')
+					return redirect(url_for('admin.addblogpost'))
+			picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+			shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+			return render_template('addblogpost.html', title='Add blog post', form=form)
+	else:
+		abort(404)
 '''
 @admin.route('/vmessage', methods=['GET','POST'])
 @login_required

@@ -1,9 +1,9 @@
 import flask
 from flask import Blueprint, render_template, url_for, flash, redirect, request, session
 from vedrat import app, db
-from vedrat.main.forms import ContactForm
+from vedrat.main.forms import ContactForm, BlogreplyForm
 from flask_login import current_user
-from vedrat.models import Contact, Post, FAQ
+from vedrat.models import Contact, Post, FAQ, Blogpost, Blogreply
 
 main = Blueprint('main', __name__)
 
@@ -44,3 +44,28 @@ def contact():
 	except Exception as e:
 		flash(error_message, 'warning')
 	return render_template('contact.html', title='Contact', form=form)
+
+@main.route('/blogview')
+def blogview():
+	page = request.args.get('page', 1, type=int)
+	blog_posts = Blogpost.query.order_by(Blogpost.id.desc()).paginate(page=page,per_page=6)
+
+	return render_template('blogview.html', title='Blog', posts=blog_posts)
+
+@main.route('/singleblogview/<string:post_id>', methods=['GET', 'POST'])
+def singleblogview(post_id):
+	form = BlogreplyForm()
+	post = Blogpost.query.filter_by(uuid=post_id).first()
+	post.read+=1
+	db.session.commit()
+	try:
+		if form.validate_on_submit():
+			reply = Blogreply(uuid_of_post=post_id,fullname=form.fullname.data,email=form.email.data,message=form.message.data)
+			db.session.add(reply)
+			db.session.commit()
+			flash('Your reply has been submitted.', 'success')
+			return redirect(url_for('main.singleblogview', post_id=post_id))
+	except Exception as e:
+		flash(error_message, 'warning')
+		return redirect(url_for('singleblogview', post_id=post_id))
+	return render_template('singleblogview.html', title='Blog', post=post, form=form)

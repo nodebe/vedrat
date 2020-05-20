@@ -86,3 +86,22 @@ class Withdrawals(db.Model):
 	acc_name = db.Column(db.String(70), nullable=False)
 	amount = db.Column(db.Integer, nullable=False)
 	status = db.Column(db.String(8), default='pending')
+
+class Blogpost(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	uuid = db.Column(db.String(10), nullable=False, default=unique_id)
+	title = db.Column(db.String(150), nullable=False)
+	subject = db.Column(db.String(15))
+	image = db.Column(db.String(100), nullable=False, default='default_ad_image.png')
+	date_of_post = db.Column(db.DateTime, default=dt.now())
+	post = db.Column(db.Text, nullable=False)
+	poster = db.Column(db.String(30), nullable=False, default='Vedrat admin')
+	read = db.Column(db.Integer, default=0)
+
+class Blogreply(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	uuid_of_post = db.Column(db.String(10), nullable=False)
+	fullname = db.Column(db.String(20), nullable=False)
+	email = db.Column(db.String(50), nullable=False)
+	message = db.Column(db.Text, nullable=False)
+	read = db.Column(db.String(1), default='0')

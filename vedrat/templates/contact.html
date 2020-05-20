@@ -31,6 +31,7 @@
                         </div>
                         <div class="card-body pt-3">
                             <form id="contact-form" class="mt-4" method="POST" role="form">
+                                {{ form.hidden_tag() }}
               					{% from 'includes/_formhelpers.html' import render_field %}
                                 <div class="messages"></div>
                                 <div class="controls">

@@ -30,6 +30,21 @@ def save_picture(form_picture):
 	
 	return picture_fn
 
+def save_blog_picture(form_picture):
+	random_hex = secrets.token_hex(8)
+	_, f_ext = os.path.splitext(form_picture.filename)
+	picture_fn = random_hex + f_ext
+	picture_path = os.path.join(app.root_path, 'static/img/vedrat/blog', picture_fn)
+	picture_path_950 = os.path.join(app.root_path, 'static/img/vedrat/blog/950', picture_fn)
+	
+	i = Image.open(form_picture)
+	i = resizeimage.resize_cover(i, [520, 400], validate=False)
+	j = resizeimage.resize_cover(i, [950, 500], validate=False)
+	i.save(picture_path)
+	j.save(picture_path_950)
+	
+	return picture_fn
+
 def delete_picture(pic_name):
 	picture_path = os.path.join(app.root_path, 'static/img/vedrat', pic_name)
 	picture_path_100 = os.path.join(app.root_path, 'static/img/vedrat/100', pic_name)
