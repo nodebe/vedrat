@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, flash, redirect, request
+from flask import Blueprint, render_template, url_for, flash, redirect, request, abort
 from vedrat import app, db
 from vedrat.utils import unique_id, save_picture, delete_picture
 from vedrat.posts.forms import PostForm, PostSearchForm
@@ -96,12 +96,11 @@ def postad(post_id=''):
 			form.description.data = post.description
 			form.posters.data = post.posters_needed
 		else:
-			return redirect(url_for('users.userdashboard'))
+			abort(403)
 	
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
 	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
 	return render_template('postad.html', title='Post Ad', form=form, shared=len(picked_ads), posted=len(shared_ads))
-
 
 @posts.route('/usersuspendpost/<string:post_id>')
 @login_required
@@ -129,24 +128,18 @@ def userviewpost(post_id):
 @posts.route('/userdeletepost/<string:post_id>')
 @login_required
 def userdeletepost(post_id):
-	try:
-		post = Post.query.filter_by(uuid=post_id).first()
-		if post.poster_id == current_user.uuid or current_user.user_status == 'admin':
-			initial_price = (300 * post.posters_needed) - 10 * (post.posters_needed - 1)
-			current_price = (300 * post.posters_applied) - 10 * (post.posters_applied - 1)
-			user_balance = initial_price - current_price
-			current_user.balance+=user_balance
-			db.session.delete(post)
-			db.session.commit()
-			flash('Post deleted successfully.','info')
-			return redirect(url_for('users.userposts'))
-		else:
-			return redirect(url_for('users.userdashboard'))
-	except Exception as e:
-		flash(error_message, 'warning')
+	post = Post.query.filter_by(uuid=post_id).first()
+	if post.poster_id == current_user.uuid or current_user.user_status == 'admin':
+		initial_price = (300 * post.posters_needed) - 10 * (post.posters_needed - 1)
+		current_price = (300 * post.posters_applied) - 10 * (post.posters_applied - 1)
+		user_balance = initial_price - current_price
+		current_user.balance+=user_balance
+		db.session.delete(post)
+		db.session.commit()
+		flash('Post deleted successfully.','info')
 		return redirect(url_for('users.userposts'))
-
-
+	else:
+		abort(403)
 
 @posts.route('/newposts', methods=['GET','POST'])
 @login_required

@@ -1,5 +1,4 @@
-import flask
-from flask import Blueprint, render_template, url_for, flash, redirect, request
+from flask import Blueprint, render_template, url_for, flash, redirect, request, abort
 from vedrat import app, db
 from vedrat.utils import unique_id
 from vedrat.admin.forms import FAQForm
@@ -31,7 +30,7 @@ def postfaq():
 			flash(error_message + str(e), 'warning')
 			return redirect(url_for('users.userdashboard'))
 	else:
-		return redirect(url_for('users.userdashboard'))
+		abort(404)
 
 @admin.route('/withdrawals_list')
 @login_required
@@ -43,7 +42,7 @@ def withdrawals_list():
 		shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
 		return render_template('withdrawals_list.html', title='Withdrawals', shared=len(picked_ads), posted=len(shared_ads),withdrawals=withdrawals)
 	else:
-		return redirect(url_for('users.userdashboard'))
+		abort(404)
 
 @admin.route('/verify_withdraw/<string:uuid>')
 @login_required
@@ -55,7 +54,7 @@ def verify_withdraw(uuid):
 		flash('Updated successfully', 'success')
 		return redirect(url_for('admin.withdrawals_list'))
 	else:
-		return redirect(url_for('users.userdashboard'))
+		abort(404)
 
 '''
 @admin.route('/vmessage', methods=['GET','POST'])
@@ -65,7 +64,7 @@ def vmessages():
 		messages = Contact.query.all()
 		return render_template('vmessages.html', messages=messages)
 	else:
-		return redirect(url_for('users.signin'))
+		abort(403)
 
 @admin.route('/vmess/<string:uuid>', methods=['GET','POST'])
 @login_required
@@ -76,5 +75,5 @@ def vmess(uuid):
 		db.session.commit()
 		return render_template('vmess.html', message=message)
 	else:
-		return redirect(url_for('users.signin'))
+		abort(403)
 		'''

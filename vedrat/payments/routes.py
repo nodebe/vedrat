@@ -30,7 +30,7 @@ def pay_plan(plan_id):
 				response = Transaction.initialize(reference=transaction_id,amount=500000, email=current_user.email)
 				return redirect(response['data']['authorization_url'])
 		except Exception as e:
-			flash(error_message, 'warning')
+			flash('Please check your internet connection!', 'warning')
 			return redirect('userpayment')
 	else:
 		flash('You are already subscribed to a plan ' + str(current_user.plan), 'warning')
@@ -83,7 +83,7 @@ def wb_deposit():
 			response = Transaction.initialize(reference=transaction_id,amount=form.amount.data*100, email=current_user.email)
 			return redirect(response['data']['authorization_url'])
 		except Exception as e:
-			flash(error_message, 'warning')
+			flash('Please check your internet connection!', 'warning')
 			return redirect(url_for('payments.userpayment'))
 	else:
 		flash('Deposit not approved', 'warning')
