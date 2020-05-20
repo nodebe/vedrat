@@ -18,7 +18,7 @@ class AddBlogPostForm(FlaskForm):
 	subject = SelectField('Subject', choices=blogpostsubject, validators=[DataRequired()])
 	image = FileField('Image', validators=[FileAllowed(['jpg','png', 'jpeg','JPG','JPEG','PNG'])])
 	post = TextAreaField('Body', validators=[DataRequired()])
-	poster = StringField('Poster', validators=[Length(max=30)])
+	poster = StringField('Poster', validators=[Length(max=30), DataRequired()])
 
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False

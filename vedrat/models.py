@@ -95,7 +95,7 @@ class Blogpost(db.Model):
 	image = db.Column(db.String(100), nullable=False, default='default_ad_image.png')
 	date_of_post = db.Column(db.DateTime, default=dt.now())
 	post = db.Column(db.Text, nullable=False)
-	poster = db.Column(db.String(30), nullable=False, default='Vedrat admin')
+	poster = db.Column(db.String(30), nullable=False, default='Vedrat Admin')
 	read = db.Column(db.Integer, default=0)
 
 class Blogreply(db.Model):
