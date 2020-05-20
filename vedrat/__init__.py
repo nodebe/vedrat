@@ -35,9 +35,11 @@ from vedrat.posts.routes import posts
 from vedrat.payments.routes import payments
 from vedrat.main.routes import main
 from vedrat.admin.routes import admin
+from vedrat.errors.handlers import errors
 
 app.register_blueprint(users)
 app.register_blueprint(posts)
 app.register_blueprint(payments)
 app.register_blueprint(main)
 app.register_blueprint(admin)
+app.register_blueprint(errors)
