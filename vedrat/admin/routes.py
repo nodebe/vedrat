@@ -4,7 +4,7 @@ from vedrat.utils import unique_id, save_blog_picture
 from vedrat.admin.forms import FAQForm, AddBlogPostForm
 #from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, login_required
-from vedrat.models import FAQ, Withdrawals, PickedPost, Post, Blogpost
+from vedrat.models import FAQ, Withdrawals, PickedPost, Post, Blogpost, Contact
 
 admin = Blueprint('admin', __name__)
 
@@ -80,24 +80,36 @@ def addblogpost():
 			return render_template('addblogpost.html', title='Add blog post', form=form)
 	else:
 		abort(404)
-'''
-@admin.route('/vmessage', methods=['GET','POST'])
+
+@admin.route('/vmessages', methods=['GET','POST'])
 @login_required
 def vmessages():
 	if current_user.user_status == 'admin':
-		messages = Contact.query.all()
-		return render_template('vmessages.html', messages=messages)
+		page = request.args.get('page', 1, type=int)
+		messages = Contact.query.order_by(Contact.id.desc()).paginate(page=page,per_page=10)
+		return render_template('vmessages.html', messages=messages, title='Messages')
 	else:
 		abort(403)
 
-@admin.route('/vmess/<string:uuid>', methods=['GET','POST'])
+@admin.route('/vmess/<string:message_id>', methods=['GET','POST'])
 @login_required
-def vmess(uuid):
+def vmess(message_id):
 	if current_user.user_status == 'admin':
-		message = Contact.query.filter_by(uuid=uuid).first()
-		message.read = 1
+		message = Contact.query.get_or_404(message_id)
+		message.read = '1'
 		db.session.commit()
-		return render_template('vmess.html', message=message)
+		return render_template('vmess.html', message=message, title='Message '+message_id)
 	else:
 		abort(403)
-		'''
+
+@admin.route('/admindeletemessage/<string:message_id>')
+@login_required
+def admindeletemessage(message_id):
+	if current_user.user_status == 'admin':
+		message = Contact.query.filter_by(id=message_id).first()
+		db.session.delete(message)
+		db.session.commit()
+		flash('Message deleted.', 'success')
+		return redirect(url_for('admin.vmessages'))
+	else:
+		abort(403)

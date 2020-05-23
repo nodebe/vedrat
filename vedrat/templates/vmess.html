@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="wrapper">
+    <div class="breadcrumb-wrap">
+        <div class="container py-3">
+            <div class="row d-flex justify-content-md-between justify-content-sm-center">
+                <div class="col-md-4">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="{{url_for('main.index')}}">Home</a></li>
+                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="{{url_for('admin.vmessages')}}">Messages</a></li>
+                            <li class="breadcrumb-item ml-1 font-weight-bold active" aria-current="page">
+                                Message {{message.id}}
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-9">
+                    <div class="blog-post mb-5 mt-6">
+                        <div class="blog-post--header mb-3">
+                            <div class="meta-info">
+                                <ul class="list-unstyled list-inline">
+                                    <li class="post-author list-inline-item">
+                                        By <a href="#" tabindex="0">{{message.fullname}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <h3>{{message.subject}}</h3>
+                        <p>
+                            {{message.message}}
+                        </p>
+                        <a href="mailto:{{message.email}}" class="btn btn-primary" type="button">Reply</a>
+                        <a onclick="functionAlert()" type="button" class="btn btn-danger text-white">Delete</a>
+                    </div>
+                    <div id = "confirmbox">
+                       <div class = "message">Are you sure to delete this message?</div>
+                       <a href="{{url_for('admin.admindeletemessage', message_id=message.id)}}"><button class = "yes">Yes</button></a>
+                       <button class = "yes">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}
