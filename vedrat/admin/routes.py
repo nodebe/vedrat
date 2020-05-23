@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, request, abort
 from vedrat import app, db
 from vedrat.utils import unique_id, save_blog_picture
-from vedrat.admin.forms import FAQForm, AddBlogPostForm
+from vedrat.admin.forms import FAQForm, AddBlogPostForm, WithdrawListSearchForm
 #from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, login_required
 from vedrat.models import FAQ, Withdrawals, PickedPost, Post, Blogpost, Contact
@@ -32,15 +32,18 @@ def postfaq():
 	else:
 		abort(404)
 
-@admin.route('/withdrawals_list')
+@admin.route('/withdrawals_list', methods=['GET','POST'])
 @login_required
 def withdrawals_list():
 	if current_user.user_status == 'admin':
+		form = WithdrawListSearchForm()
 		page = request.args.get('page', 1, type=int)
 		withdrawals = Withdrawals.query.order_by(Withdrawals.id.desc()).paginate(page=page,per_page=10)
+		if form.validate_on_submit():
+			withdrawals = Withdrawals.query.filter_by(status=form.status.data).order_by(Withdrawals.id.desc()).paginate(page=page,per_page=10)
 		picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
 		shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
-		return render_template('withdrawals_list.html', title='Withdrawals', shared=len(picked_ads), posted=len(shared_ads),withdrawals=withdrawals)
+		return render_template('withdrawals_list.html', title='Withdrawals', shared=len(picked_ads), posted=len(shared_ads),withdrawals=withdrawals,form=form)
 	else:
 		abort(404)
 

@@ -89,6 +89,18 @@
                 </div>
             </aside>
                     <div class="col-lg-9">
+                <form role="form" class="form-width" method="POST">
+                    {{ form.hidden_tag() }}
+                    {% from 'includes/_formhelpers.html' import render_field %}
+                    <h3>Search by Status</h3>
+                        <div class="form-group col-md-6">
+                            {{render_field(form.status, class_='form-control')}}
+                            <i class="fa fa-user iconalign"></i>
+                        </div>
+                        <div class="form-group ml-2">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                </form><hr>
                         <div class="row">
                             <div class="col">
                                 <!-- my items table -->
@@ -103,7 +115,7 @@
                                     </div>
                                     <div class="card-body pt-4">
                                     	{% if withdrawals.items == [] %}
-				                            <p class="text-light text-center bg-info p-3">No withdrawals made.
+				                            <p class="text-light text-center bg-info p-3">No withdrawals.
 				                            </p>
 				                        {% else %}
                                         <div class="table-responsive">

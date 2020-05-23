@@ -4,6 +4,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length
 
 blogpostsubject = (['Withdrawal','Withdrawal'],['Deposit','Deposit'],['News','News'])
+status = (['paid','Paid'],['pending','Pending'])
 
 class FAQForm(FlaskForm):
 	question = StringField('Question', validators=[DataRequired()])
@@ -23,3 +24,10 @@ class AddBlogPostForm(FlaskForm):
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False
 		super(AddBlogPostForm, self).__init__(*args, **kwargs)
+
+class WithdrawListSearchForm(FlaskForm):
+	status = SelectField('Category', choices=status)
+
+	def __init__(self, *args, **kwargs):
+		kwargs['csrf_enabled'] = False
+		super(WithdrawListSearchForm, self).__init__(*args, **kwargs)
