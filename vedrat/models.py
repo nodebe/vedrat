@@ -33,7 +33,6 @@ class User(db.Model, UserMixin):
 	refer_earning = db.Column(db.Integer, default=0)
 	referred_plan_1 = db.Column(db.Integer, default=0)
 	referred_plan_2 = db.Column(db.Integer, default=0)
-
 	user_status = db.Column(db.String(10), nullable=False, default='member')
 	
 	def __repr__(self):

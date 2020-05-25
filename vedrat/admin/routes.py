@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, request, abort
 from vedrat import app, db
 from vedrat.utils import unique_id, save_blog_picture
-from vedrat.admin.forms import FAQForm, AddBlogPostForm, WithdrawListSearchForm
+from vedrat.admin.forms import FAQForm, AddBlogPostForm, WithdrawListSearchForm, UserEditForm, BlockedUsersForm
 #from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, login_required
-from vedrat.models import FAQ, Withdrawals, PickedPost, Post, Blogpost, Contact
+from vedrat.models import FAQ, Withdrawals, PickedPost, Post, Blogpost, Contact, User
 
 admin = Blueprint('admin', __name__)
 
@@ -114,5 +114,63 @@ def admindeletemessage(message_id):
 		db.session.commit()
 		flash('Message deleted.', 'success')
 		return redirect(url_for('admin.vmessages'))
+	else:
+		abort(403)
+
+@admin.route('/adminusersview', methods=['GET','POST'])
+@login_required
+def adminusersview():
+	if current_user.user_status == 'admin':
+		form = BlockedUsersForm()
+		page = request.args.get('page', 1, type=int)
+		users = User.query.order_by(User.id.desc()).paginate(page=page,per_page=10)
+		if form.validate_on_submit():
+			users = User.query.filter_by(account_status=form.status.data).order_by(User.id.desc()).paginate(page=page,per_page=10)
+		picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+		shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+		return render_template('adminusersview.html', title='Users view', users=users, shared=len(picked_ads), posted=len(shared_ads), form=form)
+	else:
+		abort(403)
+
+@admin.route('/vuser/<string:user_id>', methods=['GET','POST'])
+@login_required
+def vuser(user_id):
+	if current_user.user_status == 'admin':
+		user = User.query.get_or_404(user_id)
+		form = UserEditForm()
+		try:
+			if form.validate_on_submit():
+				user.fullname = form.fullname.data
+				user.email = form.email.data
+				user.phone = form.phone.data
+				user.bank_name = form.bank_name.data
+				user.acc_name = form.acc_name.data
+				user.acc_number = form.acc_number.data
+				user.plan = form.plan.data
+				user.balance = form.balance.data
+				user.account_status = form.account_status.data
+				user.ad_earning = form.ad_earning.data
+				user.refer_earning = form.refer_earning.data
+				user.user_status = form.user_status.data
+				db.session.commit()
+				flash('Account updated!', 'success')
+				return redirect(url_for('admin.vuser', user_id=user_id))
+			elif request.method == 'GET':
+				form.fullname.data = user.fullname
+				form.email.data = user.email
+				form.phone.data = user.phone
+				form.bank_name.data = user.bank_name
+				form.acc_name.data = user.acc_name
+				form.acc_number.data = user.acc_number
+				form.plan.data = user.plan
+				form.balance.data = user.balance
+				form.account_status.data = user.account_status
+				form.ad_earning.data = user.ad_earning
+				form.refer_earning.data = user.refer_earning
+				form.user_status.data = user.user_status
+		except Exception as e:
+			flash(error_message + str(e), 'warning')
+			return redirect(url_for('admin.vuser'))
+		return render_template('vuser.html', title='User '+user.fullname, form=form)
 	else:
 		abort(403)

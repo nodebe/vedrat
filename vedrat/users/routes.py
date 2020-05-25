@@ -42,11 +42,14 @@ def signin():
 	if form.validate_on_submit():
 		user = User.query.filter_by(email=form.email.data).first()
 		if user and sha256.verify(form.password.data, user.password):
-			login_user(user)
-			next_page = request.args.get('next')
-			if next_page and current_user.plan=='0' and 'userdashboard' not in next_page:
-				flash('Please visit the payment page to pay for a plan and start earning', 'info')
-			return redirect(next_page) if next_page else redirect(url_for('users.userdashboard'))
+			if user.account_status != 'blocked':
+				login_user(user)
+				next_page = request.args.get('next')
+				if next_page and current_user.plan=='0' and 'userdashboard' not in next_page:
+					flash('Please visit the payment page to pay for a plan and start earning', 'info')
+				return redirect(next_page) if next_page else redirect(url_for('users.userdashboard'))
+			else:
+				flash('Login Unsuccessful. Account Blocked!', 'warning')
 		else: 
 			flash('Login Unsuccessful. Email or password invalid', 'danger')
 	return render_template('signin.html', form=form, title='Login')

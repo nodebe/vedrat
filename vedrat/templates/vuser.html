@@ -8,9 +8,9 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item mr-1 font-weight-bold"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="{{url_for('users.userdashboard')}}">Dashboard</a></li>
+                                <li class="breadcrumb-item mr-1 font-weight-bold"><a href="{{url_for('admin.adminusersview')}}">Users</a></li>
                             <li class="breadcrumb-item ml-1 font-weight-bold active" aria-current="page">
-                                Post ad
+                                View user
                             </li>
                         </ol>
                     </nav>
@@ -88,70 +88,84 @@
                     </ul>
                 </div>
             </aside>
-                    <div class="col-lg-9">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card mb-5">
-                                    <div class="card-header border-bottom">
-                                        <div class="d-flex align-items-center">
-                                            <div>
-                                                <h6 class="card-title mb-0">Add New Post</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                    	<form role="form" class="form-width" method="POST" enctype="multipart/form-data">
-                                    	{{ form.hidden_tag() }}
-                                    	{% from 'includes/_formhelpers.html' import render_field %}
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            {{render_field(form.title, class_='form-control')}}
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            {{render_field(form.link, class_='form-control')}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">{{render_field(form.category, class_='form-control')}}
-                                                </div>
-                                                <div class="form-group">
-                                                    {{render_field(form.description, class_='form-control', rows='3', minLength='10',maxLength='250')}}
-                                                </div>
-                                                <h6 class="mt-4 mb-3">Upload photo</h6>
-                                                <div class="input-group mb-3">
-                                                    <div class="custom-file">		{{render_field(form.image, class_='form-control-file border')}}
-                                                    </div>
-                                                </div>
-                                                <br />
-                                                <h4 class="text-black mb-3">Pricing</h4><hr>
-                                                <div class="form-group">
-                                                    {{render_field(form.posters, class_='form-control', type='number', min='5')}}
-                                                </div>
-                                                <div class="form-group">
-                                                	Billing: N<span id="billing"></span>
-                                                </div>
-                                                {% if current_user.plan != '0' %}
-                                                <div class="form-actions my-4">
-                                                    <button type="submit" class="btn btn-primary width-150">
-                                                        Share Post
-                                                    </button>
-                                                </div>
-                                                {% else %}
-                                                    <p>Please <a href="{{url_for('payments.userpayment')}}">subscribe</a> to a plan to be able to post an ad</p>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </form>
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col">
+                        <div class="card mb-4">
+                            <div class="card-header border-bottom">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h6 class="card-title mb-0">Edit User info</h6>
                                     </div>
                                 </div>
                             </div>
+                            <div class="card-body pt-3">
+                                <form role="form" class="form-width" method="POST">
+                                    {{ form.hidden_tag() }}
+                                	{% from 'includes/_formhelpers.html' import render_field %}
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                    		{{render_field(form.fullname, class_='form-control')}}
+                                            <i class="fa fa-user iconalign"></i>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            {{render_field(form.user_status, class_='form-control')}}
+                                            <i class="fa fa-user iconalign"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            {{render_field(form.email, class_='form-control')}}
+                                            <i class="fa fa-user iconalign"></i> 
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            {{render_field(form.phone, class_='form-control')}}
+                                            <i class="fa fa-phone iconalign"></i> 
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            {{render_field(form.acc_name, class_='form-control')}}
+                                            <i class="fa fa-user iconalign"></i> 
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            {{render_field(form.bank_name, class_='form-control')}}
+                                            <i class="fa fa-user iconalign"></i> 
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            {{render_field(form.acc_number, class_='form-control')}}
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            {{render_field(form.balance, class_='form-control', type='number')}}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            {{render_field(form.plan, class_='form-control')}}
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            {{render_field(form.account_status, class_='form-control')}}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            {{render_field(form.ad_earning, class_='form-control', type='number')}}
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            {{render_field(form.refer_earning, class_='form-control', type='number')}}
+                                        </div>
+                                    </div>
+	                                    <div class="form-group">
+	                                        <button class="btn btn-primary" type="submit">Update</button>
+	                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
