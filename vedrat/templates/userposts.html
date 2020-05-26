@@ -139,7 +139,7 @@
                                                                 {% if post.post_status=='open' %}
                                                                 <a href="{{url_for('posts.usersuspendpost',post_id=post.uuid)}}"type="button" class="btn btn-sm btn-success" title="suspend post"><i class="las la-bell-slash"></i></a>
                                                                 {% elif post.post_status=='suspended' %}
-                                                                <a href="{{url_for('posts.usersuspendpost',uuid=post.uuid)}}" type="button" class="btn btn-sm btn-success" title="suspend post"><i class="las la-bell"></i></a>
+                                                                <a href="{{url_for('posts.usersuspendpost',post_id=post.uuid)}}" type="button" class="btn btn-sm btn-success" title="suspend post"><i class="las la-bell"></i></a>
                                                                 {% else %}
                                                                 <a type="button" class="btn btn-sm btn-success" disabled title="suspend post"><i class="las la-bell-slash"></i></a>
                                                                 {% endif %}

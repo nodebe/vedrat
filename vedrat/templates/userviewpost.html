@@ -119,7 +119,7 @@
                                                 <a href="{{url_for('posts.userapplypost',post_id=post.uuid)}}" type="button" class="btn btn-sm btn-success">Apply</a>
                                             {% endif %}
                                         {% endif %}
-                                    {% if post.poster_id == current_user.uuid or current_user.user_status == 'admin' %}
+                                    {% if post.poster_id == current_user.uuid %}
                                     <a href="{{url_for('posts.postad',post_id=post.uuid)}}" type="button" class="btn btn-sm btn-info">Edit</a>
                                     <a onclick="functionAlert()" type="button" class="btn btn-sm btn-danger text-white">Delete</a>
                                     {% endif %}

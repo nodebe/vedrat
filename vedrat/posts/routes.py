@@ -105,19 +105,26 @@ def postad(post_id=''):
 @posts.route('/usersuspendpost/<string:post_id>')
 @login_required
 def usersuspendpost(post_id):
-	try:
-		post = Post.query.filter_by(uuid=post_id).first()
-		if post.post_status == 'open':
-			post.post_status = 'suspended'	
-			flash("Post suspended and won't be seen by users", 'info')
-		elif post.post_status == 'suspended':
-			post.post_status = 'open'
-			flash("Post opened and can be seen by users", 'info')
-		db.session.commit()
-	except Exception as e:
-		flash(error_message, 'warning')
-	finally:
-		return redirect(url_for('users.userposts'))
+	post = Post.query.filter_by(uuid=post_id).first()
+	if post.poster_id == current_user.uuid or current_user.user_status == 'admin':
+		try:
+			post = Post.query.filter_by(uuid=post_id).first()
+			if post.post_status == 'open':
+				post.post_status = 'suspended'	
+				flash("Post suspended and won't be seen by users", 'info')
+			elif post.post_status == 'suspended':
+				post.post_status = 'open'
+				flash("Post opened and can be seen by users", 'info')
+			db.session.commit()
+		except Exception as e:
+			flash(error_message, 'warning')
+		finally:
+			if current_user.user_status == 'admin':
+				return redirect(url_for('admin.adminpostsview'))
+			return redirect(url_for('users.userposts'))
+	else:
+		abort(403)
+
 
 @posts.route('/userviewpost/<string:post_id>')
 @login_required

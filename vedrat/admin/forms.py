@@ -58,3 +58,10 @@ class BlockedUsersForm(FlaskForm):
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False
 		super(BlockedUsersForm, self).__init__(*args, **kwargs)
+
+class BlockedPostsForm(FlaskForm):
+	status = SelectField('Category', choices=[('blocked','blocked'),('suspended','suspended')])
+
+	def __init__(self, *args, **kwargs):
+		kwargs['csrf_enabled'] = False
+		super(BlockedPostsForm, self).__init__(*args, **kwargs)
