@@ -57,7 +57,6 @@
                                         <div class="col-md-12">
                                             <input type="submit" class="btn btn-primary btn-send" value="Leave Reply" />
                                         </div>
-                                    </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <p class="text-muted mt-3">
@@ -65,6 +64,31 @@
                                             </p>
                                         </div>
                                     </div>
+                                    </div>
+                                    {% if current_user.user_status == 'admin' %}
+                                    <div class="mb-3 mt-5">
+                                        <h3>Comments</h3>
+                                        <ul class="m-0 p-0">
+                                            {% for reply in replies %}
+                                            <li class="media mt-5">
+                                                <a href="#">
+                                                    <img class="img-lg rounded-circle mr-3 " src="../static/img/100x100.png" alt="..." />
+                                                </a>
+                                                <div class="media-body">
+                                                    <h4 class="h6 mb-1">
+                                                        {{reply.fullname}}
+                                                    </h4>
+                                                    <p class="mb-1">
+                                                        {{reply.message}}
+                                                    </p>
+                                                    <a class="text-primary  small" href="mailto:{{reply.email}}">Reply</a>
+                                                    <a type='button' class="btn btn-primary btn-sm" href="{{url_for('admin.readreply', reply_id=reply.id)}}">Read</a>
+                                                </div>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </form>
                     <!-- End Form -->

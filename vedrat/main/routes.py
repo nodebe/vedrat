@@ -56,6 +56,7 @@ def blogview():
 def singleblogview(post_id):
 	form = BlogreplyForm()
 	post = Blogpost.query.filter_by(uuid=post_id).first()
+	replies = Blogreply.query.filter_by(uuid_of_post=post_id).filter_by(read='0').order_by(Blogreply.id.desc())
 	post.read+=1
 	db.session.commit()
 	try:
@@ -68,4 +69,4 @@ def singleblogview(post_id):
 	except Exception as e:
 		flash(error_message, 'warning')
 		return redirect(url_for('singleblogview', post_id=post_id))
-	return render_template('singleblogview.html', title='Blog', post=post, form=form)
+	return render_template('singleblogview.html', title='Blog', post=post, form=form, replies=replies)

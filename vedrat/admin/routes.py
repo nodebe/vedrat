@@ -4,7 +4,7 @@ from vedrat.utils import unique_id, save_blog_picture
 from vedrat.admin.forms import FAQForm, AddBlogPostForm, WithdrawListSearchForm, UserEditForm, BlockedUsersForm, BlockedPostsForm
 #from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, login_required
-from vedrat.models import FAQ, Withdrawals, PickedPost, Post, Blogpost, Contact, User
+from vedrat.models import FAQ, Withdrawals, PickedPost, Post, Blogpost, Contact, User, Blogreply
 
 admin = Blueprint('admin', __name__)
 
@@ -201,5 +201,17 @@ def adminblockpost(post_id):
 			post.post_status = 'open'
 		db.session.commit()
 		return redirect(url_for('admin.adminpostsview'))
+	else:
+		abort(403)
+
+@admin.route('/readreply/<string:reply_id>', methods=['GET','POST'])
+@login_required
+def readreply(reply_id):
+	if current_user.user_status == 'admin':
+		reply = Blogreply.query.get_or_404(reply_id)
+		post = Blogpost.query.filter_by(uuid=reply.uuid_of_post).first()
+		reply.read = '1'
+		db.session.commit()
+		return redirect(url_for('main.singleblogview',post_id=post.uuid))
 	else:
 		abort(403)
