@@ -90,7 +90,7 @@
                 <div class="card mb-3 p-2">
                     <span>Referral Link: 
                        {% if current_user.plan != '0' %} 
-                        <span id="referText">localhost:5000/index/{{current_user.uuid}}</span><button class="las la-copy bg-primary p-1 text-light" title="click to copy" onclick="clickToCopy('#referText')"></button></span>
+                        <span id="referText">www.vedrat.com/index/{{current_user.uuid}}</span><button class="las la-copy bg-primary p-1 text-light" title="click to copy" onclick="clickToCopy('#referText')"></button></span>
                         {% else %}
                             Please <a href="{{url_for('payments.userpayment')}}">subscribe</a> to a plan to get your referral link
                         {% endif %}

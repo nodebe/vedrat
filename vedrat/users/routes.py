@@ -154,7 +154,7 @@ def userapplypost(post_id):
 				current_user.can_post = 0
 
 			short_link_id = str(unique_id())
-			short_linker = 'http://127.0.0.1:5000/ad_post/'+ short_link_id
+			short_linker = 'https://www.vedrat.com/ad_post/'+ short_link_id
 
 			picked = PickedPost(post_id=post_id,picker_id=current_user.uuid,main_link=post.link,web_link=short_linker, description=post.description, uuid=short_link_id)
 

@@ -22,12 +22,12 @@ avatars = Avatars(app)
 #connection to google mail server
 #EMAIL_PASSWORD = os.environ.get('SMTP_PASSWORD')
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_SERVER'] = 'mail.vedrat.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'vedratnigeria@gmail.com'
-app.config['MAIL_PASSWORD'] = 'Vedrat_nigeria1#'
-app.config['MAIL_DEFAULT_SENDER'] = 'vedratnigeria@gmail.com'
+app.config['MAIL_USERNAME'] = 'contact@vedrat.com'
+app.config['MAIL_PASSWORD'] = 'nodywelete1'
+app.config['MAIL_DEFAULT_SENDER'] = 'contact@vedrat.com'
 mail = Mail(app)
 
 from vedrat.users.routes import users
