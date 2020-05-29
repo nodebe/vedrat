@@ -36,7 +36,7 @@ class WithdrawListSearchForm(FlaskForm):
 
 class UserEditForm(FlaskForm):
 	fullname = StringField('Full name', validators=[DataRequired('Please fill in a username'), Length(min=3,max=30)])
-	email = StringField('Email', validators=[Email('Please fill in a valid email address')])
+	email = StringField('Email', validators=[DataRequired('Please fill in a valid email address')])
 	phone = IntegerField('Phone')
 	bank_name = SelectField('Bank name', choices=banks)
 	acc_name = StringField('Account name')
