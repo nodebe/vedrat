@@ -9,7 +9,7 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '760e2033fe2af98da7c5971ca7adf726'
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:nodywelete1@localhost/vedratdbs"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://vifwotfpaolyrj:fd6dd854b9b2514ea5808d6c3b0e43681be01f5f44d81c8a852743587091e5ce@ec2-34-230-149-169.compute-1.amazonaws.com:5432/d22fn23q8n1e53"
 db = SQLAlchemy(app)
 share = Share(app)
 migrate = Migrate(app, db)
