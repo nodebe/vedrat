@@ -15,7 +15,7 @@ error_message = 'Error on our side, try again later!'
 def signup():
 	if current_user.is_authenticated:
 		return redirect(url_for('users.userdashboard'))
-	if session['referrer_id']:
+	if "referrer_id" in session:
 		referrer_id = session['referrer_id']
 	else:
 		referrer_id = ''
