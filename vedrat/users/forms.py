@@ -56,7 +56,7 @@ class SettingsForm(FlaskForm):
 	phone = IntegerField('')
 	bank_name = SelectField('', choices=banks)
 	acc_name = StringField('')
-	acc_number = IntegerField('')
+	acc_number = StringField('')
 
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False
