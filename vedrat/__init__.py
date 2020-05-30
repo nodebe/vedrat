@@ -8,10 +8,9 @@ from flask_avatars import Avatars
 import os
 
 app = Flask(__name__)
-DATABASE_URL = "postgres://vifwotfpaolyrj:fd6dd854b9b2514ea5808d6c3b0e43681be01f5f44d81c8a852743587091e5ce@ec2-34-230-149-169.compute-1.amazonaws.com:5432/d22fn23q8n1e53"
-database_url = "postgresql://postgres:nodywelete1@localhost/vedratdbs"
-app.config['SECRET_KEY'] = '760e2033fe2af98da7c5971ca7adf726'
-app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+#database_url = "postgresql://postgres:nodywelete1@localhost/vedratdbs"
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 share = Share(app)
 migrate = Migrate(app, db)
@@ -22,13 +21,12 @@ avatars = Avatars(app)
 
 
 #connection to google mail server
-#EMAIL_PASSWORD = os.environ.get('SMTP_PASSWORD')
 
 app.config['MAIL_SERVER'] = 'mail.vedrat.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'contact@vedrat.com'
-app.config['MAIL_PASSWORD'] = 'nodywelete1'
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = 'contact@vedrat.com'
 mail = Mail(app)
 
