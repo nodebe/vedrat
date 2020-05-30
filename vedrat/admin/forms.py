@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SelectField, IntegerField
+from wtforms import StringField, TextAreaField, SelectField, IntegerField, DateField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length, ValidationError, Email
 
@@ -47,6 +47,7 @@ class UserEditForm(FlaskForm):
 	ad_earning = IntegerField('Ad earning')
 	refer_earning = IntegerField('Refer earning')
 	user_status = SelectField('User status', choices=[('member','member'),('admin','admin')])
+	date_of_payment = DateField('Date of payment')
 
 	def __init__(self, *args, **kwargs):
 		kwargs['csrf_enabled'] = False

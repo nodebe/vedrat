@@ -152,6 +152,7 @@ def vuser(user_id):
 				user.ad_earning = form.ad_earning.data
 				user.refer_earning = form.refer_earning.data
 				user.user_status = form.user_status.data
+				user.date_of_payment = form.date_of_payment.data
 				db.session.commit()
 				flash('Account updated!', 'success')
 				return redirect(url_for('admin.vuser', user_id=user_id))
@@ -168,6 +169,7 @@ def vuser(user_id):
 				form.ad_earning.data = user.ad_earning
 				form.refer_earning.data = user.refer_earning
 				form.user_status.data = user.user_status
+				form.date_of_payment.data = user.date_of_payment
 		except Exception as e:
 			flash(error_message + str(e), 'warning')
 			return redirect(url_for('admin.vuser'))
