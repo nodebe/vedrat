@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, request, session
 from flask_mail import Mail, Message
 from vedrat import app, db, mail
-from vedrat.utils import unique_id, date_stuff, referral_earning
+from datetime import datetime as dt
+from vedrat.utils import unique_id, date_stuff, referral_earning, date_compare
 from vedrat.users.forms import UserRegForm, UserLogForm, PasswordResetForm, PasswordChangeForm, SettingsForm
 from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, logout_user, login_required
@@ -68,6 +69,10 @@ def userdashboard():
 	posts = Post.query.filter_by(post_status='open').order_by(Post.id.desc()).paginate(page=page,per_page=8)
 
 	refer_balance = referral_earning()
+	withdraw_date = date_compare()
+
+	if dt.now().strftime('%Y-%m-%d') > withdraw_date:
+		current_user.plan = '0'
 
 	if current_user.ad_collected_date != date_stuff():
 		current_user.ad_collected_on_day = 0
