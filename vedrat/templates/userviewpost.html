@@ -116,7 +116,7 @@
                                         <p class="small">Please <a href="{{url_for('payments.userpayment')}}">subscribe</a> to a plan to apply for this post</p>
                                         {% else %}
                                             {% if current_user.can_post == 1 %}
-                                                <a href="{{url_for('posts.userapplypost',post_id=post.uuid)}}" type="button" class="btn btn-sm btn-success">Apply</a>
+                                                <a href="{{url_for('users.userapplypost',post_id=post.uuid)}}" type="button" class="btn btn-sm btn-success">Apply</a>
                                             {% endif %}
                                         {% endif %}
                                     {% if post.poster_id == current_user.uuid %}
