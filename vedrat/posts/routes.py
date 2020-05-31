@@ -152,7 +152,7 @@ def userdeletepost(post_id):
 @posts.route('/newposts', methods=['GET','POST'])
 @posts.route('/newposts/<string:post_category>', methods=['GET','POST'])
 @login_required
-def newposts(post_category):
+def newposts(post_category=''):
 	form = PostSearchForm()
 	page = request.args.get('page', 1, type=int)
 	posts = Post.query.filter_by(post_status='open').order_by(Post.id.desc()).paginate(page=page,per_page=8)
