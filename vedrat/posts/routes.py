@@ -84,7 +84,7 @@ def postad(post_id=''):
 					flash("You don't have enough balance to complete this action.", 'info')
 					return render_template('postad.html/post.uuid', title='Post Ad', form=form)
 			except Exception as e:
-				flash(error_message, 'warning')
+				flash(error_message + str(e), 'warning')
 				return redirect(url_for('posts.postad'))
 		
 	elif request.method == "GET" and post_id!='':
