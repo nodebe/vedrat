@@ -79,11 +79,7 @@
                                         </div>
                                     <p class="text-small">This money is put into your working balance. You can use it to place adverts on the platform</p>
                                         <div class="form-group">
-                                            {% if current_user.plan != '0' %}
                                             <button class="btn btn-outline-primary" type="submit">Pay</button>
-                                            {% else %}
-                                            <span class="text-small text-info">Please subscribe to a plan to be able to use this feature</span>
-                                            {% endif %}
                                         </div>
                                     </form>
                                     {% else %}

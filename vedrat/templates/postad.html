@@ -135,15 +135,11 @@
                                                 <div class="form-group">
                                                 	Billing: N<span id="billing"></span>
                                                 </div>
-                                                {% if current_user.plan != '0' %}
                                                 <div class="form-actions my-4">
                                                     <button type="submit" class="btn btn-primary width-150">
                                                         Share Post
                                                     </button>
                                                 </div>
-                                                {% else %}
-                                                    <p>Please <a href="{{url_for('payments.userpayment')}}">subscribe</a> to a plan to be able to post an ad</p>
-                                                {% endif %}
                                             </div>
                                         </div>
                                     </form>
