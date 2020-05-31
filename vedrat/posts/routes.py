@@ -29,7 +29,7 @@ def postad(post_id=''):
 		price = (300 * form.posters.data) - 10 * (form.posters.data - 1)
 		if post_id=='':
 			try:
-				if (current_user.balance >= price):
+				if (current_user.balance >= price or current_user.user_status=='admin'):
 					if form.image.data:
 						image_name = save_picture(form.image.data)
 					else:
@@ -61,7 +61,7 @@ def postad(post_id=''):
 					official_price = 0
 					price_tag = 'same'
 
-				if (current_user.balance >= official_price):
+				if (current_user.balance >= official_price or current_user.user_status=='admin'):
 					post.title = form.title.data
 					post.link = form.link.data
 					post.category = form.category.data
