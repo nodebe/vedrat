@@ -78,7 +78,7 @@ def postad(post_id=''):
 					elif price_tag == 'add':
 						current_user.balance+=official_price
 					db.session.commit()
-					#delete_picture(previous_picture)
+					delete_picture(previous_picture)
 					flash('Your post has been updated successfully', 'success')
 					return redirect(url_for('users.userposts'))
 				else:
