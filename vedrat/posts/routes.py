@@ -68,7 +68,7 @@ def postad(post_id=''):
 					post.description = form.description.data
 					post.posters_needed = form.posters.data
 					if post.image != 'default_ad_image.png':
-						delete_picture(post.image)
+						previous_picture = post.image
 					if form.image.data:
 						post.image = save_picture(form.image.data)
 					else:
@@ -78,6 +78,7 @@ def postad(post_id=''):
 					elif price_tag == 'add':
 						current_user.balance+=official_price
 					db.session.commit()
+					#delete_picture(previous_picture)
 					flash('Your post has been updated successfully', 'success')
 					return redirect(url_for('users.userposts'))
 				else:
