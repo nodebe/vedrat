@@ -131,8 +131,10 @@
                                                             <span class="text-muted">{{post.web_link}}</span>
                                                         </td>
                                                         <td class="text-center">
-                                                            {% if post.clicks >= 1%}
+                                                            {% if post.clicks >= 1 and post.plan_when_applied != 'C' %}
                                                             <h6  class="text-muted">N280</h6>
+                                                            {% elif post.clicks >= 1 and post.plan_when_applied == 'C'%}
+                                                            <h6  class="text-muted">N120</h6>
                                                             {% else %}
                                                             <h6  class="text-muted">N0</h6>
                                                             {% endif %}
@@ -140,7 +142,7 @@
 
                                                         <td class="text-center">
                                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                                <a href="{{url_for('users.viewsharedad', uuid=post.uuid)}}"type="button" class="btn btn-sm btn-primary" title="view post"><i class="las la-eye"></i></a>
+                                                                <a href="{{url_for('users.viewsharedad',post_id=post.id)}}"type="button" class="btn btn-sm btn-primary" title="view post"><i class="las la-eye"></i></a>
                                                             </div>
 
                                                         </td>

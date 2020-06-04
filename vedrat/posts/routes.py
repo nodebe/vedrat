@@ -141,11 +141,14 @@ def userviewpost(post_id):
 @login_required
 def userdeletepost(post_id):
 	post = Post.query.filter_by(uuid=post_id).first()
+	pickedposts = PickedPost.query.filter_by(post_id=post_id).all()
 	if post.poster_id == current_user.uuid or current_user.user_status == 'admin':
 		initial_price = (300 * post.posters_needed) - 10 * (post.posters_needed - 1)
 		current_price = (300 * post.posters_applied) - 10 * (post.posters_applied - 1)
 		user_balance = initial_price - current_price
 		current_user.balance+=user_balance
+		for i in pickedposts:
+			db.session.delete(i)
 		db.session.delete(post)
 		db.session.commit()
 		flash('Post deleted successfully.','info')
@@ -185,7 +188,10 @@ def ad_post(url):
     link_ad = PickedPost.query.filter_by(uuid=url).first()
     picker = User.query.filter_by(uuid=link_ad.picker_id).first()
     if link_ad.clicks == 0:
-    	picker.ad_earning+=280
+    	if picker.plan == 'C':
+    		picker.ad_earning += 120
+    	elif picker.plan != 'C':
+    		picker.ad_earning += 280
     link_ad.clicks+=1
     db.session.commit()
     return redirect(link_ad.main_link)

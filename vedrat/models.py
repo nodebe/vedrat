@@ -33,6 +33,7 @@ class User(db.Model, UserMixin):
 	refer_earning = db.Column(db.Integer, default=0)
 	referred_plan_1 = db.Column(db.Integer, default=0)
 	referred_plan_2 = db.Column(db.Integer, default=0)
+	referred_plan_3 = db.Column(db.Integer, default=0)
 	user_status = db.Column(db.String(10), nullable=False, default='member')
 	
 	def __repr__(self):
@@ -67,6 +68,7 @@ class PickedPost(db.Model):
 	picker_id = db.Column(db.String(10), nullable=False)
 	main_link = db.Column(db.Text, nullable=False)
 	web_link = db.Column(db.String(40), nullable=False)
+	plan_when_applied = db.Column(db.String(1))
 	date = db.Column(db.String(11), default=post_date)
 	description = db.Column(db.Text)
 	clicks = db.Column(db.Integer, default=0)

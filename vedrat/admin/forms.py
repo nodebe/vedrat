@@ -41,7 +41,7 @@ class UserEditForm(FlaskForm):
 	bank_name = SelectField('Bank name', choices=banks)
 	acc_name = StringField('Account name')
 	acc_number = IntegerField('Account number')
-	plan = SelectField('Plan', choices=[('0','0'),('A','A'),('B','B')],validators=[DataRequired()])
+	plan = SelectField('Plan', choices=[('0','0'),('A','A'),('B','B'),('C','C')],validators=[DataRequired()])
 	balance = IntegerField('Balance')
 	account_status = SelectField('Account status', choices=(['open','open'],['blocked','blocked']))
 	ad_earning = IntegerField('Ad earning')

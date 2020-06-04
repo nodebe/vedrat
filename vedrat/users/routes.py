@@ -155,13 +155,13 @@ def userapplypost(post_id):
 			#deciding if a user can post or not based on his plan
 			if current_user.plan=='B' and current_user.ad_collected_on_day == 2:
 				current_user.can_post = 0
-			elif current_user.plan=='A' and current_user.ad_collected_on_day == 1:
+			elif (current_user.plan=='A' or current_user.plan=='C') and current_user.ad_collected_on_day == 1:
 				current_user.can_post = 0
 
 			short_link_id = str(unique_id())
 			short_linker = 'https://www.vedrat.com/ad_post/'+ short_link_id
 
-			picked = PickedPost(post_id=post_id,picker_id=current_user.uuid,main_link=post.link,web_link=short_linker, description=post.description, uuid=short_link_id)
+			picked = PickedPost(post_id=post_id,picker_id=current_user.uuid,main_link=post.link,web_link=short_linker, description=post.description, uuid=short_link_id, plan_when_applied=current_user.plan)
 
 			db.session.add(picked)
 			db.session.commit()
@@ -175,10 +175,10 @@ def userapplypost(post_id):
 		flash(error_message, 'warning')
 		return redirect(url_for('posts.sharedads'))
 
-@users.route('/viewsharedad/<string:uuid>')
+@users.route('/viewsharedad/<string:post_id>')
 @login_required
-def viewsharedad(uuid):
-	picked_post = PickedPost.query.filter_by(uuid=uuid).first()
+def viewsharedad(post_id):
+	picked_post = PickedPost.query.get_or_404(post_id)
 	post = Post.query.filter_by(uuid=picked_post.post_id).first()
 
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()

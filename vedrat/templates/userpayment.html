@@ -40,14 +40,28 @@
                         <div class="row d-flex justify-content-center">
                             <div class="col-md-6 col-lg-4">
                                 <div class="pricing-v1 card bg-dark text-white px-5 p-4 mt-0 mb-4 position-relative hover-box-shadow">
+                                    <h3 class="font-weight-bold mb-0 text-primary">Free </h3>
+                                    <hr>
+                                    <h3 class="price pt-2 h1">N0 <span class="text-small text-muted">per month</span></h3>
+                                    <p class="small">Earn N3000/month</p>
+                                    <p class="text-small">Make more money from referrals and earn upto N15000.</p>
+                                    <div class="price-btn"> 
+                                        <a class="btn btn-outline-primary" href="{{url_for('payments.pay_plan', plan_id='c')}}">Subscribe</a>
+                                    </div>
+                                </div>
+                                <!--end card-->
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="pricing-v1 card bg-dark text-white px-5 p-4 mt-0 mb-4 position-relative hover-box-shadow">
                                     <h3 class="font-weight-bold mb-0 text-primary">Plan A </h3>
                                     <hr>
                                     <h3 class="price pt-2 h1">N3000 <span class="text-small text-muted">per month</span></h3>
-                                    <p class="small">Earn N7000</p>
-                                    <p class="text-small">Make more money from referrals and earn upto N74000.</p>
-                                    <div class="price-btn"> 
-                                        <a class="btn btn-outline-primary" href="{{url_for('payments.pay_plan', plan_id='a')}}">Pay</a>
-                                    </div>
+                                    <p class="small">Earn N7000/month</p>
+                                    <p class="text-small">Make more money from referrals and earn upto N45000.</p>
+                                    <div class="price-btn">
+                                        <p class="text-primary">Coming soon</p>
+                                        <!-- <a class="btn btn-outline-primary" href="{{url_for('payments.pay_plan', plan_id='a')}}">Pay</a>
+ -->                                    </div>
                                 </div>
                                 <!--end card-->
                             </div>
@@ -57,9 +71,11 @@
                                     <h3 class="font-weight-bold mb-0 text-primary">Plan B </h3>
                                     <hr>
                                     <h3 class="price pt-2 h1">N5000 <span class="text-small text-muted">per month</span></h3>
-                                    <p class="small">Earn N14000</p>
+                                    <p class="small">Earn N14000/month</p>
                                     <p class="text-small">Make more money from referrals and earn upto N74000.</p>
-                                    <div class="price-btn"> <a class="btn btn-primary" href="{{url_for('payments.pay_plan', plan_id='b')}}">Pay</a>
+                                    <div class="price-btn"> 
+                                        <p class="text-primary">Coming soon</p>
+                                        <!-- <a class="btn btn-primary" href="{{url_for('payments.pay_plan', plan_id='b')}}">Pay</a> -->
                                     </div>
                                 </div>
                                 <!--end card-->

@@ -58,8 +58,14 @@ def date_stuff():
 
 def date_compare():
 	date = current_user.date_of_payment
-	adjusted = date + timedelta(days=25)
-	date = adjusted.strftime('%Y-%m-%d')
+	if date != None:
+		if current_user.plan != 'C':
+			adjusted = date + timedelta(days=25)
+		elif current_user.plan == 'C':
+			adjusted = date + timedelta(days=13)
+			date = adjusted.strftime('%Y-%m-%d')
+	else:
+		date = dt.now().strftime('%Y-%m-%d')
 	return date
 
 def referral_earning():

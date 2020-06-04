@@ -29,8 +29,17 @@ def pay_plan(plan_id):
 			elif plan_id == 'b':
 				response = Transaction.initialize(reference=transaction_id,amount=500000, email=current_user.email)
 				return redirect(response['data']['authorization_url'])
+			elif plan_id == 'c':
+				if current_user.referrer != '':
+					referrer = User.query.filter_by(uuid=current_user.referrer).first()
+					referrer.referred_plan_3 += 1
+				current_user.plan = 'C'
+				current_user.date_of_payment = dt.now().strftime('%Y-%m-%d')
+				db.session.commit()
+				flash('You have successfully subscribed to the free plan.', 'success')
+				return redirect(url_for('users.userdashboard'))
 		except Exception as e:
-			flash('Please check your internet connection!', 'warning')
+			flash('Please check your internet connection!' + str(response), 'warning')
 			return redirect('userpayment')
 	else:
 		flash('You are already subscribed to a plan ' + str(current_user.plan), 'warning')
@@ -52,13 +61,11 @@ def verify_transaction():
 				if verify['data']['requested_amount'] == 300000:
 					current_user.plan = 'A'
 					if referred_by != '':
-						referrer.refer_earning += 300
 						referrer.referred_plan_1 += 1
 						current_user.referrer = ''
 				elif verify['data']['requested_amount'] == 500000:
 					current_user.plan = 'B'
 					if referred_by != '':
-						referrer.refer_earning += 500
 						referrer.referred_plan_2 += 1
 						current_user.referrer = ''
 			db.session.commit()
@@ -98,10 +105,14 @@ def withdraw_balance():
 			new_date = dt.now().strftime('%Y-%m-%d')
 			if current_user.bank_name!='' and current_user.acc_name!='' and current_user.acc_number!='':
 				if new_date >= withdraw_date:
-					withdraw_amount = current_user.ad_earning + referral_earning()
+					if current_user.referrer != '':
+						referrer = User.query.filter_by(uuid=current_user.referrer).first()
+						referrer.refer_earning += 0.1*current_user.ad_earning
+					withdraw_amount = 0.93*current_user.ad_earning + referral_earning() + current_user.refer_earning
 					withdraw = Withdrawals(uuid_of_user=current_user.uuid,bank_name=current_user.bank_name,acc_number=current_user.acc_number,acc_name=current_user.acc_name, amount=withdraw_amount, status='pending')
 					current_user.referred_plan_1 = 0
 					current_user.referred_plan_2 = 0
+					current_user.referred_plan_3 = 0
 					current_user.ad_earning = 0
 					current_user.refer_earning = 0
 					current_user.plan = '0'

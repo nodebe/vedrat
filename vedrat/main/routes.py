@@ -1,4 +1,3 @@
-import flask
 from flask import Blueprint, render_template, url_for, flash, redirect, request, session
 from vedrat import app, db
 from vedrat.main.forms import ContactForm, BlogreplyForm
