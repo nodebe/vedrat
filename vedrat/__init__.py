@@ -8,8 +8,6 @@ from flask_avatars import Avatars
 import os
 
 app = Flask(__name__)
-#os.environ.get('SECRET_KEY')
-#os.environ.get('DATABASE_URL')
 #database_url = "postgresql://postgres:nodywelete1@localhost/vedratdbs"
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')

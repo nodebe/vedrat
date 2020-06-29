@@ -19,7 +19,7 @@ paystackapi
 Pillow
 pipenv
 pipreqs
-psycopg2
+psycopg2-binary
 pyajax
 pyparsing
 python-dateutil
