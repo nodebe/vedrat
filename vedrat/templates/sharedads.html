@@ -85,6 +85,16 @@
                                 </div>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.usertransactions')}}">
+                                <div><i class="las la-hand-holding-usd"></i>Transactions</div>
+                                <div class="d-flex  align-items-center">
+                                    <p class="mb-0 text-small text-success">
+
+                                    </p>
+                                </div>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </aside>
@@ -134,7 +144,7 @@
                                                             {% if post.clicks >= 1 and post.plan_when_applied != 'C' %}
                                                             <h6  class="text-muted">N280</h6>
                                                             {% elif post.clicks >= 1 and post.plan_when_applied == 'C'%}
-                                                            <h6  class="text-muted">N120</h6>
+                                                            <h6  class="text-muted">N96</h6>
                                                             {% else %}
                                                             <h6  class="text-muted">N0</h6>
                                                             {% endif %}

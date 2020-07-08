@@ -85,6 +85,16 @@
                                 </div>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.usertransactions')}}">
+                                <div><i class="las la-hand-holding-usd"></i>Transactions</div>
+                                <div class="d-flex  align-items-center">
+                                    <p class="mb-0 text-small text-success">
+
+                                    </p>
+                                </div>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </aside>
@@ -147,15 +157,19 @@
 
                                                 <td class="text-center">
                                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                                        <a href="{{url_for('posts.userviewpost', post_id=post.uuid)}}"type="button" class="btn btn-sm btn-info" title="view post"><i class="las la-eye"></i></a>
+                                                        <a href="{{url_for('posts.userviewpost', post_id=post.id)}}"type="button" class="btn btn-sm btn-info" title="view post"><i class="las la-eye"></i></a>
                                                         {% if post.post_status=='open' %}
-                                                        <a href="{{url_for('posts.usersuspendpost',post_id=post.uuid)}}"type="button" class="btn btn-sm btn-success" title="suspend post"><i class="las la-bell-slash"></i></a>
+                                                        <a href="{{url_for('posts.usersuspendpost',post_id=post.id)}}"type="button" class="btn btn-sm btn-success" title="suspend post"><i class="las la-bell-slash"></i></a>
                                                         {% elif post.post_status=='suspended' %}
-                                                        <a href="{{url_for('posts.usersuspendpost',post_id=post.uuid)}}" type="button" class="btn btn-sm btn-success" title="suspend post"><i class="las la-bell"></i></a>
+                                                        <a href="{{url_for('posts.usersuspendpost',post_id=post.id)}}" type="button" class="btn btn-sm btn-success" title="suspend post"><i class="las la-bell"></i></a>
                                                         {% else %}
                                                         <a type="button" class="btn btn-sm btn-success" disabled title="suspend post"><i class="las la-bell-slash"></i></a>
                                                         {% endif %}
-                                                        <a href="{{url_for('admin.adminblockpost', post_id=post.uuid)}}"type="button" class="btn btn-sm btn-danger" title="view post"><i class="las la-ban"></i></a>
+                                                        {% if post.post_status=='blocked' %}
+                                                        <a href="{{url_for('admin.adminblockpost', post_id=post.id)}}"type="button" class="btn btn-sm btn-warning" title="Open post"><i class="las la-ban"></i></a>
+                                                        {% else %}
+                                                        <a href="{{url_for('admin.adminblockpost', post_id=post.id)}}"type="button" class="btn btn-sm btn-danger" title="Block post"><i class="las la-ban"></i></a>
+                                                        {% endif %}
                                                     </div>
 
                                                 </td>

@@ -44,18 +44,18 @@ $(document).ready(function () {
     $(this).addClass("active");
   });
 
-  var price = (300 * $('#posters').val()) - 10 * ($('#posters').val() - 1)
+  var price = (168 * $('#posters').val()) - 10 * ($('#posters').val() - 1)
 
   $("#posters").keyup(function(){
-    $('#billing').text((300 * $('#posters').val()) - 10 * ($('#posters').val() - 1))
+    $('#billing').text((168 * $('#posters').val()) - 10 * ($('#posters').val() - 1))
   })
 
     $("#posters").mouseleave(function(){
-    $('#billing').text((300 * $('#posters').val()) - 10 * ($('#posters').val() - 1))
+    $('#billing').text((168 * $('#posters').val()) - 10 * ($('#posters').val() - 1))
   })
 
     $("#posters").mouseenter(function(){
-    $('#billing').text((300 * $('#posters').val()) - 10 * ($('#posters').val() - 1))
+    $('#billing').text((168 * $('#posters').val()) - 10 * ($('#posters').val() - 1))
   })
 }); // Anchor link scrolling,use by adding "data-scroll"
 

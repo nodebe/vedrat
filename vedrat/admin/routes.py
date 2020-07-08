@@ -4,7 +4,7 @@ from vedrat.utils import unique_id, save_blog_picture
 from vedrat.admin.forms import FAQForm, AddBlogPostForm, WithdrawListSearchForm, UserEditForm, BlockedUsersForm, BlockedPostsForm
 #from passlib.hash import sha256_crypt as sha256
 from flask_login import login_user, current_user, login_required
-from vedrat.models import FAQ, Withdrawals, PickedPost, Post, Blogpost, Contact, User, Blogreply
+from vedrat.models import FAQ, Transactions, PickedPost, Post, Blogpost, Contact, User, Blogreply
 
 admin = Blueprint('admin', __name__)
 
@@ -24,7 +24,7 @@ def postfaq():
 				return redirect(url_for('admin.postfaq'))
 
 			picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-			shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+			shared_ads = current_user.post_ids
 			return render_template('postfaq.html', title='Post FAQ', shared=len(picked_ads), posted=len(shared_ads), form=form)
 		except Exception as e:
 			flash(error_message, 'warning')
@@ -38,12 +38,12 @@ def withdrawals_list():
 	if current_user.user_status == 'admin':
 		form = WithdrawListSearchForm()
 		page = request.args.get('page', 1, type=int)
-		withdrawals = Withdrawals.query.order_by(Withdrawals.id.desc()).paginate(page=page,per_page=10)
+		transactions = Transactions.query.order_by(Transactions.id.desc()).paginate(page=page,per_page=10)
 		if form.validate_on_submit():
-			withdrawals = Withdrawals.query.filter_by(status=form.status.data).order_by(Withdrawals.id.desc()).paginate(page=page,per_page=10)
+			transactions = Transactions.query.filter_by(status=form.status.data).order_by(Transactions.id.desc()).paginate(page=page,per_page=10)
 		picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-		shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
-		return render_template('withdrawals_list.html', title='Withdrawals', shared=len(picked_ads), posted=len(shared_ads),withdrawals=withdrawals,form=form)
+		shared_ads = current_user.post_ids
+		return render_template('withdrawals_list.html', title='Withdrawals', shared=len(picked_ads), posted=len(shared_ads),transactions=transactions,form=form)
 	else:
 		abort(404)
 
@@ -51,8 +51,8 @@ def withdrawals_list():
 @login_required
 def verify_withdraw(uuid):
 	if current_user.user_status == 'admin':
-		withdraw = Withdrawals.query.filter_by(uuid=uuid).first()
-		withdraw.status = 'paid'
+		transaction = Transactions.query.get_or_404(uuid)
+		transaction.status = 'paid'
 		db.session.commit()
 		flash('Updated successfully', 'success')
 		return redirect(url_for('admin.withdrawals_list'))
@@ -79,7 +79,7 @@ def addblogpost():
 					flash(error_message + str(e), 'warning')
 					return redirect(url_for('admin.addblogpost'))
 			picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-			shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+			shared_ads = current_user.post_ids
 			return render_template('addblogpost.html', title='Add blog post', form=form)
 	else:
 		abort(404)
@@ -127,7 +127,7 @@ def adminusersview():
 		if form.validate_on_submit():
 			users = User.query.filter_by(account_status=form.status.data).order_by(User.id.desc()).paginate(page=page,per_page=10)
 		picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-		shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+		shared_ads = current_user.post_ids
 		return render_template('adminusersview.html', title='Users view', users=users, shared=len(picked_ads), posted=len(shared_ads), form=form)
 	else:
 		abort(403)
@@ -187,7 +187,7 @@ def adminpostsview():
 		if form.validate_on_submit():
 			posts = Post.query.filter_by(post_status=form.status.data).order_by(Post.id.desc()).paginate(page=page,per_page=10)
 		picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-		shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+		shared_ads = current_user.post_ids
 		return render_template('adminpostsview.html', title='Posts view', posts=posts, shared=len(picked_ads), posted=len(shared_ads), form=form)
 	else:
 		abort(403)
@@ -196,11 +196,13 @@ def adminpostsview():
 @login_required
 def adminblockpost(post_id):
 	if current_user.user_status == 'admin':
-		post = Post.query.filter_by(uuid=post_id).first()
+		post = Post.query.get_or_404(post_id)
 		if post.post_status != 'blocked':
 			post.post_status = 'blocked'
+			flash('Post Blocked', 'info')
 		elif post.post_status == 'blocked':
 			post.post_status = 'open'
+			flash('Post opened', 'info')
 		db.session.commit()
 		return redirect(url_for('admin.adminpostsview'))
 	else:

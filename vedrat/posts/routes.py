@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, url_for, flash, redirect, request, abort
 from vedrat import app, db
-from vedrat.utils import unique_id, save_picture, delete_picture
+from vedrat.utils import unique_id, save_picture, delete_picture, user_pay, user_pay_c, advertiser_pay
 from vedrat.posts.forms import PostForm, PostSearchForm
 from flask_login import current_user, login_required
 from vedrat.models import User, Post, PickedPost
@@ -24,9 +24,13 @@ def reportpost(post_id):
 @posts.route('/postad/<string:post_id>', methods=["GET","POST"])
 @login_required
 def postad(post_id=''):
+
+	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+	shared_ads = current_user.post_ids
+
 	form = PostForm()
 	if form.validate_on_submit():
-		price = (300 * form.posters.data) - 10 * (form.posters.data - 1)
+		price = (advertiser_pay * form.posters.data) - 10 * (form.posters.data - 1)
 		if post_id=='':
 			try:
 				if (current_user.balance >= price or current_user.user_status=='admin'):
@@ -42,15 +46,15 @@ def postad(post_id=''):
 					return redirect(url_for('users.userposts'))
 				else:
 					flash("You don't have enough balance to complete this action.", 'info')
-					return render_template('postad.html', title='Post Ad', form=form)
+					return render_template('postad.html', title='Post Ad', shared=len(picked_ads), posted=len(shared_ads), form=form)
 			except Exception as e:
 				flash(error_message, 'warning')
 				return redirect(url_for('posts.postad'))
 		elif post_id != '':
 			try:
 				post = Post.query.get_or_404(post_id)
-				new_price = (300 * form.posters.data) - 10 * (form.posters.data - 1)
-				initial_price = (300 * post.posters_needed) - 10 * (post.posters_needed - 1)
+				new_price = (advertiser_pay * form.posters.data) - 10 * (form.posters.data - 1)
+				initial_price = (advertiser_pay * post.posters_needed) - 10 * (post.posters_needed - 1)
 				if (form.posters.data > post.posters_needed):
 					official_price = new_price - initial_price
 					price_tag = 'remove'
@@ -87,7 +91,7 @@ def postad(post_id=''):
 					return redirect(url_for('users.userposts'))
 				else:
 					flash("You don't have enough balance to complete this action.", 'info')
-					return render_template('postad.html/post.uuid', title='Post Ad', form=form)
+					return render_template('postad.html/post.uuid', title='Post Ad', shared=len(picked_ads), posted=len(shared_ads), form=form)
 			except Exception as e:
 				flash(error_message + str(e), 'warning')
 				# return redirect(url_for('posts.postad'))
@@ -102,7 +106,7 @@ def postad(post_id=''):
 			form.posters.data = post.posters_needed
 		else:
 			abort(403)
-	return render_template('postad.html', title='Post Ad', form=form)
+	return render_template('postad.html', title='Post Ad', shared=len(picked_ads), posted=len(shared_ads), form=form)
 
 @posts.route('/usersuspendpost/<string:post_id>')
 @login_required
@@ -110,7 +114,6 @@ def usersuspendpost(post_id):
 	post = Post.query.get_or_404(post_id)
 	if post.poster == current_user or current_user.user_status == 'admin':
 		try:
-			post = Post.query.filter_by(uuid=post_id).first()
 			if post.post_status == 'open':
 				post.post_status = 'suspended'	
 				flash("Post suspended and won't be seen by users", 'info')
@@ -140,8 +143,8 @@ def userdeletepost(post_id):
 	post = Post.query.get_or_404(post_id)
 	pickedposts = PickedPost.query.filter_by(post_id=post_id).all()
 	if post.poster == current_user or current_user.user_status == 'admin':
-		initial_price = (300 * post.posters_needed) - 10 * (post.posters_needed - 1)
-		current_price = (300 * post.posters_applied) - 10 * (post.posters_applied - 1)
+		initial_price = (advertiser_pay * post.posters_needed) - 10 * (post.posters_needed - 1)
+		current_price = (advertiser_pay * post.posters_applied) - 10 * (post.posters_applied - 1)
 		user_balance = initial_price - current_price
 		current_user.balance+=user_balance
 		for i in pickedposts:
@@ -159,10 +162,10 @@ def userdeletepost(post_id):
 def newposts(post_category=''):
 	form = PostSearchForm()
 	page = request.args.get('page', 1, type=int)
-	posts = Post.query.filter_by(post_status='open').order_by(Post.id.desc()).paginate(page=page,per_page=8)
+	posts = Post.query.filter_by(post_status='open').filter(Post.posters_applied<Post.posters_needed).order_by(Post.id.desc()).paginate(page=page,per_page=8)
 	
 	if post_category != '':
-		posts = Post.query.filter_by(post_status='open').filter_by(category=post_category).order_by(Post.id.desc()).paginate(page=page,per_page=8)
+		posts = Post.query.filter_by(post_status='open').filter(Post.posters_applied<Post.posters_needed).filter_by(category=post_category).order_by(Post.id.desc()).paginate(page=page,per_page=8)
 
 
 	if form.validate_on_submit():
@@ -186,9 +189,9 @@ def ad_post(url):
     picker = User.query.filter_by(uuid=link_ad.picker_id).first()
     if link_ad.clicks == 0:
     	if picker.plan == 'C':
-    		picker.ad_earning += 120
+    		picker.ad_earning += user_pay_c
     	elif picker.plan != 'C':
-    		picker.ad_earning += 280
+    		picker.ad_earning += user_pay
     link_ad.clicks+=1
     db.session.commit()
     return redirect(link_ad.main_link)

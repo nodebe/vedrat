@@ -64,14 +64,14 @@ def logout():
 @login_required
 def userdashboard():
 	page = request.args.get('page', 1, type=int)
-	posts = Post.query.filter_by(post_status='open').order_by(Post.id.desc()).paginate(page=page,per_page=8)
+	posts = Post.query.filter_by(post_status='open').filter(Post.posters_applied<Post.posters_needed).order_by(Post.id.desc()).paginate(page=page,per_page=8)
 
 	refer_balance = referral_earning()
 	withdraw_date = date_compare()
 
 	#check if the user has withdrawn and should be changed to free plan
 	if dt.now().strftime('%Y-%m-%d') > withdraw_date:
-		current_user.plan = 'C'
+		current_user.plan = '0'
 
 	#compares the last date of ad applied for with current date
 	if current_user.ad_collected_date != date_stuff():
@@ -79,7 +79,7 @@ def userdashboard():
 		current_user.can_post = 1
 		db.session.commit()
 
-	if current_user.plan=='C':
+	if current_user.plan=='0':
 		flash('Visit the payment page to pay for a plan and earn higher', 'info')
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
 	shared_ads = current_user.post_ids
@@ -155,9 +155,9 @@ def userapplypost(post_id):
 			post.posters_applied += 1
 
 			#deciding if a user can post or not based on his plan
-			if current_user.plan=='B' and current_user.ad_collected_on_day == 2:
+			if current_user.plan=='B' and current_user.ad_collected_on_day >= 2:
 				current_user.can_post = 0
-			elif (current_user.plan=='A' or current_user.plan=='C') and current_user.ad_collected_on_day == 1:
+			elif (current_user.plan=='A' or current_user.plan=='C') and current_user.ad_collected_on_day >= 1:
 				current_user.can_post = 0
 
 			short_link_id = str(unique_id())
@@ -174,7 +174,7 @@ def userapplypost(post_id):
 		else:
 			return redirect(url_for('posts.sharedads'))
 	except Exception as e:
-		flash(error_message, 'warning')
+		flash(error_message+ str(e), 'warning')
 		return redirect(url_for('posts.sharedads'))
 
 @users.route('/viewsharedad/<string:post_id>')
@@ -209,3 +209,11 @@ def passwordreset():
 		else:
 			flash('Password reset Unsuccessful, Invalid Email', 'danger')
 	return render_template('passwordreset.html', form=form, title='Reset password')
+
+@users.route('/transactions')
+@login_required
+def usertransactions():
+
+	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+	shared_ads = current_user.post_ids
+	return render_template('usertransactions.html', title='Transactions',shared=len(picked_ads), posted=len(shared_ads))

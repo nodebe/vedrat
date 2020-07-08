@@ -93,4 +93,9 @@ def referral_earning():
 
 	return refer_balance
 
+user_pay = 280
+user_pay_c = 96
+advertiser_pay = 168
+refer_pay = 0.1
+
 from vedrat.models import User

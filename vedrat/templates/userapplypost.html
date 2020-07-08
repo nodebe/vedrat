@@ -1,6 +1,5 @@
 {% extends 'layout.html' %}
 {% block body %}
-{{ share.load() }}
 <div class="wrapper">
     <div class="breadcrumb-wrap">
         <div class="container py-3">
@@ -86,6 +85,16 @@
                                 </div>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex justify-content-between align-items-center" aria-current="page" href="{{url_for('users.usertransactions')}}">
+                                <div><i class="las la-hand-holding-usd"></i>Transactions</div>
+                                <div class="d-flex  align-items-center">
+                                    <p class="mb-0 text-small text-success">
+
+                                    </p>
+                                </div>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </aside>
@@ -113,8 +122,6 @@
                                     <a href="https://www.facebook.com" target="_blank" class="btn btn-sm btn-primary">Post <i class="lab la-facebook-f"></i></a>
                                     </div>
                                 </div>
-                                <!-- 
-                                    {{ share.create(title='Share with: ', sites='facebook, twitter') }} -->
                                     <p class="text-small col-12">{{post.posters_applied}}/{{post.posters_needed}} applied</p><!--  -->
                             </div>
                         </div>

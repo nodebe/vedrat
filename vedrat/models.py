@@ -78,21 +78,14 @@ class FAQ(db.Model):
 	question = db.Column(db.Text, nullable=False)
 	answer = db.Column(db.Text, nullable=False)
 
-class Withdrawals(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	uuid = db.Column(db.String(10), nullable=False, default=unique_id)
-	uuid_of_user = db.Column(db.String(10), nullable=False)
-	bank_name = db.Column(db.String(90), nullable=False)
-	acc_number = db.Column(db.String(15), default='3086500011')
-	acc_name = db.Column(db.String(70), nullable=False)
-	amount = db.Column(db.Integer, nullable=False)
-	status = db.Column(db.String(8), default='pending')
-
 class Transactions(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	transaction_type = db.Column(db.String(9))
+	transaction_type = db.Column(db.String(11))
 	transaction_id = db.Column(db.String(30))
 	transacter_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	amount = db.Column(db.String(), default='0')
+	date = db.Column(db.String(11), default=post_date)
+	status = db.Column(db.String(9), default='pending')
 
 class Blogpost(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
