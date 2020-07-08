@@ -102,7 +102,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body pt-4">
-                                    	{% if posts.items == [] %}
+                                    	{% if posts == [] %}
 				                            <p class="text-light text-center bg-info p-3">No ads available. 
 				                                <a href="{{url_for('posts.postad')}}" class="text-dark">Post an ad</a>
 				                            </p>
@@ -120,7 +120,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                	{% for post in posts.items %}
+                                                	{% for post in posts %}
                                                     <tr>
                                                         <td><img src="../static/img/vedrat/100/{{post.image}}" alt="{{post.image}}" class="img-lg rounded"></td>
                                                         <td class="text-center">
@@ -134,12 +134,12 @@
 
                                                         <td class="text-center">
                                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                                <a href="{{url_for('posts.postad', post_id=post.uuid)}}" type="button" class="btn btn-sm btn-primary" title="edit post"><i class="las la-edit"></i></a>
-                                                                <a href="{{url_for('posts.userviewpost', post_id=post.uuid)}}"type="button" class="btn btn-sm btn-info" title="view post"><i class="las la-eye"></i></a>
+                                                                <a href="{{url_for('posts.postad', post_id=post.id)}}" type="button" class="btn btn-sm btn-primary" title="edit post"><i class="las la-edit"></i></a>
+                                                                <a href="{{url_for('posts.userviewpost', post_id=post.id)}}"type="button" class="btn btn-sm btn-info" title="view post"><i class="las la-eye"></i></a>
                                                                 {% if post.post_status=='open' %}
-                                                                <a href="{{url_for('posts.usersuspendpost',post_id=post.uuid)}}"type="button" class="btn btn-sm btn-success" title="suspend post"><i class="las la-bell-slash"></i></a>
+                                                                <a href="{{url_for('posts.usersuspendpost',post_id=post.id)}}"type="button" class="btn btn-sm btn-success" title="suspend post"><i class="las la-bell-slash"></i></a>
                                                                 {% elif post.post_status=='suspended' %}
-                                                                <a href="{{url_for('posts.usersuspendpost',post_id=post.uuid)}}" type="button" class="btn btn-sm btn-success" title="suspend post"><i class="las la-bell"></i></a>
+                                                                <a href="{{url_for('posts.usersuspendpost',post_id=post.id)}}" type="button" class="btn btn-sm btn-success" title="suspend post"><i class="las la-bell"></i></a>
                                                                 {% else %}
                                                                 <a type="button" class="btn btn-sm btn-success" disabled title="suspend post"><i class="las la-bell-slash"></i></a>
                                                                 {% endif %}
@@ -152,11 +152,11 @@
                                             </table>
                                         </div>
                                         {% endif %}
-                                        <hr>
+                                        <hr><!-- 
                                         <div class="px-3 py-2">
                                             <nav aria-label="pagin">
                                                 <ul class="pagination mt-2">
-								                    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+								                    {% for page_num in posts %}
 								                      {% if posts.page == page_num %}
 								                        <li class="page-item">
 								                          <a class="page-link bg-success text-white" href="{{ url_for('users.userposts', page=page_num) }}">{{ page_num }}</a>
@@ -171,7 +171,7 @@
 								                    {% endfor %}
 								                </ul>
                                             </nav>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 <!-- end: My items table-->

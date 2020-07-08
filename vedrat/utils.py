@@ -7,7 +7,6 @@ from resizeimage import resizeimage
 from datetime import datetime as dt
 from datetime import timedelta
 from flask_login import current_user
-#from paystackapi.transaction import Transaction
 
 def unique_id():
     token = secrets.token_hex(16)[:7]
@@ -51,6 +50,7 @@ def delete_picture(pic_name):
 	os.remove(picture_path_100)
 	os.remove(picture_path)
 
+#returns the current date
 def date_stuff():
 	date = dt.now()
 	post_date = date.strftime('%Y-%m-%d')

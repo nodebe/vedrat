@@ -12,7 +12,7 @@ error_message = 'Error on our side, try again later!'
 @posts.route('/reportpost/<string:post_id>')
 @login_required
 def reportpost(post_id):
-	post = Post.query.filter_by(uuid=post_id).first()
+	post = Post.query.get_or_404(post_id)
 	post.report += 1
 	if post.report >= 5:
 		post.post_status = 'blocked'
@@ -34,7 +34,7 @@ def postad(post_id=''):
 						image_name = save_picture(form.image.data)
 					else:
 						image_name = 'default_ad_image.png'
-					post = Post(poster_id=current_user.uuid,title=form.title.data,link=form.link.data,description=form.description.data,posters_needed=form.posters.data,category=form.category.data,image=image_name)
+					post = Post(title=form.title.data,link=form.link.data,description=form.description.data,posters_needed=form.posters.data,category=form.category.data,image=image_name,poster_man=current_user.id)
 					current_user.balance-=price
 					db.session.add(post)
 					db.session.commit()
@@ -48,7 +48,7 @@ def postad(post_id=''):
 				return redirect(url_for('posts.postad'))
 		elif post_id != '':
 			try:
-				post = Post.query.filter_by(uuid=post_id).first()
+				post = Post.query.get_or_404(post_id)
 				new_price = (300 * form.posters.data) - 10 * (form.posters.data - 1)
 				initial_price = (300 * post.posters_needed) - 10 * (post.posters_needed - 1)
 				if (form.posters.data > post.posters_needed):
@@ -90,11 +90,11 @@ def postad(post_id=''):
 					return render_template('postad.html/post.uuid', title='Post Ad', form=form)
 			except Exception as e:
 				flash(error_message + str(e), 'warning')
-				return redirect(url_for('posts.postad'))
+				# return redirect(url_for('posts.postad'))
 		
 	elif request.method == "GET" and post_id!='':
-		post = Post.query.filter_by(uuid=post_id).first()
-		if post.poster_id == current_user.uuid:
+		post = Post.query.get_or_404(post_id)
+		if post.poster == current_user:
 			form.title.data = post.title
 			form.link.data = post.link
 			form.category.data = post.category
@@ -102,16 +102,13 @@ def postad(post_id=''):
 			form.posters.data = post.posters_needed
 		else:
 			abort(403)
-	
-	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
-	return render_template('postad.html', title='Post Ad', form=form, shared=len(picked_ads), posted=len(shared_ads))
+	return render_template('postad.html', title='Post Ad', form=form)
 
 @posts.route('/usersuspendpost/<string:post_id>')
 @login_required
 def usersuspendpost(post_id):
-	post = Post.query.filter_by(uuid=post_id).first()
-	if post.poster_id == current_user.uuid or current_user.user_status == 'admin':
+	post = Post.query.get_or_404(post_id)
+	if post.poster == current_user or current_user.user_status == 'admin':
 		try:
 			post = Post.query.filter_by(uuid=post_id).first()
 			if post.post_status == 'open':
@@ -134,15 +131,15 @@ def usersuspendpost(post_id):
 @posts.route('/userviewpost/<string:post_id>')
 @login_required
 def userviewpost(post_id):
-	post = Post.query.filter_by(uuid=post_id).first()
+	post = Post.query.get_or_404(post_id)
 	return render_template('userviewpost.html', title=post.title, post=post)
 
 @posts.route('/userdeletepost/<string:post_id>')
 @login_required
 def userdeletepost(post_id):
-	post = Post.query.filter_by(uuid=post_id).first()
+	post = Post.query.get_or_404(post_id)
 	pickedposts = PickedPost.query.filter_by(post_id=post_id).all()
-	if post.poster_id == current_user.uuid or current_user.user_status == 'admin':
+	if post.poster == current_user or current_user.user_status == 'admin':
 		initial_price = (300 * post.posters_needed) - 10 * (post.posters_needed - 1)
 		current_price = (300 * post.posters_applied) - 10 * (post.posters_applied - 1)
 		user_balance = initial_price - current_price
@@ -172,7 +169,7 @@ def newposts(post_category=''):
 		posts = Post.query.filter_by(post_status='open').filter_by(category=form.category.data).order_by(Post.id.desc()).paginate(page=page,per_page=8)
 
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	shared_ads = current_user.post_ids
 	return render_template('newposts.html', title='New posts', form=form, shared=len(picked_ads), posted=len(shared_ads), posts=posts)
 
 @posts.route('/sharedads')
@@ -180,7 +177,7 @@ def newposts(post_category=''):
 def sharedads():
 	page = request.args.get('page', 1, type=int)
 	picked_posts = PickedPost.query.filter_by(picker_id=current_user.uuid).order_by(PickedPost.id.desc()).paginate(page=page,per_page=8)
-	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	shared_ads = current_user.post_ids
 	return render_template('sharedads.html', title='Shared ads', shared=len(picked_posts.items), posted=len(shared_ads), posts=picked_posts)
 
 @posts.route('/ad_post/<string:url>')

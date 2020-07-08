@@ -47,7 +47,7 @@ def signin():
 				login_user(user)
 				next_page = request.args.get('next')
 				if next_page and current_user.plan=='0' and 'userdashboard' not in next_page:
-					flash('Please visit the payment page to pay for a plan and start earning', 'info')
+					flash('Visit the payment page to pay for a plan and earn higher', 'info')
 				return redirect(next_page) if next_page else redirect(url_for('users.userdashboard'))
 			else:
 				flash('Login Unsuccessful. Account Blocked!', 'warning')
@@ -63,25 +63,27 @@ def logout():
 @users.route('/userdashboard')
 @login_required
 def userdashboard():
-	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
 	page = request.args.get('page', 1, type=int)
 	posts = Post.query.filter_by(post_status='open').order_by(Post.id.desc()).paginate(page=page,per_page=8)
 
 	refer_balance = referral_earning()
 	withdraw_date = date_compare()
 
+	#check if the user has withdrawn and should be changed to free plan
 	if dt.now().strftime('%Y-%m-%d') > withdraw_date:
-		current_user.plan = '0'
+		current_user.plan = 'C'
 
+	#compares the last date of ad applied for with current date
 	if current_user.ad_collected_date != date_stuff():
 		current_user.ad_collected_on_day = 0
 		current_user.can_post = 1
 		db.session.commit()
 
-	if current_user.plan=='0':
-		flash('Please visit the payment page to pay for a plan and start earning', 'info')
-	return render_template('userdashboard.html', title='Dashboard', shared=len(picked_ads), posted=len(shared_ads), posts=posts, refer_balance=refer_balance)
+	if current_user.plan=='C':
+		flash('Visit the payment page to pay for a plan and earn higher', 'info')
+	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
+	shared_ads = current_user.post_ids
+	return render_template('userdashboard.html', shared=len(picked_ads), posted=len(shared_ads),title='Dashboard', posts=posts, refer_balance=refer_balance)
 
 @users.route('/usersettings', methods=['GET','POST'])
 @login_required
@@ -107,7 +109,7 @@ def usersettings():
 		form.acc_name.data = current_user.acc_name
 
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	shared_ads = current_user.post_ids
 	return render_template('settings.html', title='Settings', shared=len(picked_ads), posted=len(shared_ads), form=form, pform=passwordform)
 
 @users.route('/changepassword', methods=['POST'])
@@ -134,9 +136,9 @@ def changepassword():
 @login_required
 def userposts():
 	page = request.args.get('page', 1, type=int)
-	posts = Post.query.filter_by(poster_id=current_user.uuid).order_by(Post.id.desc()).paginate(page=page,per_page=8)
+	posts = current_user.post_ids
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	shared_ads = current_user.post_ids
 	return render_template('userposts.html', title='My ads', posts=posts, shared=len(picked_ads), posted=len(shared_ads))
 
 @users.route('/userapplypost/<string:post_id>')
@@ -144,7 +146,7 @@ def userposts():
 def userapplypost(post_id):
 	try:
 		if current_user.can_post == 1:
-			post = Post.query.filter_by(uuid=post_id).first()
+			post = Post.query.get_or_404(post_id)
 
 			date = date_stuff()
 
@@ -167,7 +169,7 @@ def userapplypost(post_id):
 			db.session.commit()
 
 			picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-			shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+			shared_ads = current_user.post_ids
 			return render_template('userapplypost.html', title=post.title, shared=len(picked_ads), posted=len(shared_ads), post=post,picked=picked)
 		else:
 			return redirect(url_for('posts.sharedads'))
@@ -179,10 +181,10 @@ def userapplypost(post_id):
 @login_required
 def viewsharedad(post_id):
 	picked_post = PickedPost.query.get_or_404(post_id)
-	post = Post.query.filter_by(uuid=picked_post.post_id).first()
+	post = Post.query.filter_by(id=picked_post.post_id).first()
 
 	picked_ads = PickedPost.query.filter_by(picker_id=current_user.uuid).all()
-	shared_ads = Post.query.filter_by(poster_id=current_user.uuid).all()
+	shared_ads = current_user.post_ids
 	return render_template('viewsharedad.html', title=post.title, shared=len(picked_ads), posted=len(shared_ads), post=post, picked=picked_post)
 
 @users.route('/passwordreset', methods=['GET','POST'])

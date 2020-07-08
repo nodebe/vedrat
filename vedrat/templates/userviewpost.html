@@ -116,11 +116,11 @@
                                         <p class="small">Please <a href="{{url_for('payments.userpayment')}}">subscribe</a> to a plan to apply for this post</p>
                                         {% else %}
                                             {% if current_user.can_post == 1 %}
-                                                <a href="{{url_for('users.userapplypost',post_id=post.uuid)}}" type="button" class="btn btn-sm btn-success">Apply</a>
+                                                <a href="{{url_for('users.userapplypost',post_id=post.id)}}" type="button" class="btn btn-sm btn-success">Apply</a>
                                             {% endif %}
                                         {% endif %}
-                                    {% if post.poster_id == current_user.uuid %}
-                                    <a href="{{url_for('posts.postad',post_id=post.uuid)}}" type="button" class="btn btn-sm btn-info">Edit</a>
+                                    {% if post.poster_man == current_user.id %}
+                                    <a href="{{url_for('posts.postad',post_id=post.id)}}" type="button" class="btn btn-sm btn-info">Edit</a>
                                     <a onclick="functionAlert()" type="button" class="btn btn-sm btn-danger text-white">Delete</a>
                                     {% endif %}
                                     </div>
@@ -130,7 +130,7 @@
                         </div>
                         <div id = "confirmbox">
                            <div class = "message">Are you sure to delete this post?</div>
-                           <a href='/userdeletepost/{{post.uuid}}'><button class = "yes">Yes</button></a>
+                           <a href='/userdeletepost/{{post.id}}'><button class = "yes">Yes</button></a>
                            <button class = "yes">Cancel</button>
                         </div>
                     </div>

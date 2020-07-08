@@ -10,12 +10,6 @@ def load_user(user_id):
 date = dt.now()
 post_date = date.strftime('%Y-%m-%d')
 
-picked_posts = db.Table('posts',
-	db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-	db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
-	db.Column('date_applied', db.String(15), default=post_date)
-	)
-
 class User(db.Model, UserMixin):
 	id = db.Column(db.Integer, primary_key=True, unique=True)
 	uuid = db.Column(db.String(10), nullable=False, unique=True)
@@ -43,13 +37,6 @@ class User(db.Model, UserMixin):
 	user_status = db.Column(db.String(10), nullable=False, default='member')
 	post_ids = db.relationship('Post', backref='poster')
 	transaction_ids = db.relationship('Transactions', backref='transacter')
-	picked = db.relationship('Post', secondary=picked_posts, backref=db.backref('posters'), lazy='dynamic')
-	
-
-class Link_to_Post(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	web_link = db.Column(db.String(40), nullable=False)
-	main_link = db.Column(db.Text, nullable=False)
 
 class Contact(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -61,8 +48,6 @@ class Contact(db.Model):
 
 class Post(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	uuid = db.Column(db.String(10), nullable=False, default=unique_id, unique=True)
-	poster_id = db.Column(db.String(10), nullable=False)
 	title = db.Column(db.String(50), nullable=False)
 	image = db.Column(db.String(100), nullable=False)
 	link = db.Column(db.Text)
@@ -72,7 +57,6 @@ class Post(db.Model):
 	post_status = db.Column(db.String(10), default='open')
 	category = db.Column(db.String(20), nullable=False)
 	report = db.Column(db.Integer, default=0)
-	clicks = db.Column(db.Integer, default=0)
 	poster_man = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
