@@ -66,7 +66,7 @@ def date_compare():
 			date = adjusted.strftime('%Y-%m-%d')
 	else:
 		date = dt.now().strftime('%Y-%m-%d')
-	return date
+	return str(date)
 
 def referral_earning():
 	referred_1 = current_user.referred_plan_1
