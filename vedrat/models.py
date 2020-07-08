@@ -10,8 +10,14 @@ def load_user(user_id):
 date = dt.now()
 post_date = date.strftime('%Y-%m-%d')
 
+picked_posts = db.Table('posts',
+	db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+	db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+	db.Column('date_applied', db.String(15), default=post_date)
+	)
+
 class User(db.Model, UserMixin):
-	id = db.Column(db.Integer, primary_key=True)
+	id = db.Column(db.Integer, primary_key=True, unique=True)
 	uuid = db.Column(db.String(10), nullable=False, unique=True)
 	fullname = db.Column(db.String(30), nullable=False)
 	email = db.Column(db.String(50), unique=True, nullable=False)
@@ -21,7 +27,7 @@ class User(db.Model, UserMixin):
 	bank_name = db.Column(db.String(90), default='')
 	acc_number = db.Column(db.String(15), default=0)
 	acc_name = db.Column(db.String(70), default='')
-	plan = db.Column(db.String(1), default='0')
+	plan = db.Column(db.String(1), default='C')
 	balance = db.Column(db.Integer, default=0)
 	verify_id_code = db.Column(db.String(16), default='0')
 	account_status = db.Column(db.String(10), default='open')
@@ -35,9 +41,15 @@ class User(db.Model, UserMixin):
 	referred_plan_2 = db.Column(db.Integer, default=0)
 	referred_plan_3 = db.Column(db.Integer, default=0)
 	user_status = db.Column(db.String(10), nullable=False, default='member')
+	post_ids = db.relationship('Post', backref='poster')
+	transaction_ids = db.relationship('Transactions', backref='transacter')
+	picked = db.relationship('Post', secondary=picked_posts, backref=db.backref('posters'), lazy='dynamic')
 	
-	def __repr__(self):
-		return f"User('{self.fullname}','{self.password}','{self.email}','{self.phone}'')"
+
+class Link_to_Post(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	web_link = db.Column(db.String(40), nullable=False)
+	main_link = db.Column(db.Text, nullable=False)
 
 class Contact(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -60,6 +72,9 @@ class Post(db.Model):
 	post_status = db.Column(db.String(10), default='open')
 	category = db.Column(db.String(20), nullable=False)
 	report = db.Column(db.Integer, default=0)
+	clicks = db.Column(db.Integer, default=0)
+	poster_man = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 
 class PickedPost(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -72,6 +87,7 @@ class PickedPost(db.Model):
 	date = db.Column(db.String(11), default=post_date)
 	description = db.Column(db.Text)
 	clicks = db.Column(db.Integer, default=0)
+
 
 class FAQ(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -87,6 +103,12 @@ class Withdrawals(db.Model):
 	acc_name = db.Column(db.String(70), nullable=False)
 	amount = db.Column(db.Integer, nullable=False)
 	status = db.Column(db.String(8), default='pending')
+
+class Transactions(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	transaction_type = db.Column(db.String(9))
+	transaction_id = db.Column(db.String(30))
+	transacter_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Blogpost(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

@@ -88,66 +88,66 @@
                     </ul>
                 </div>
             </aside>
-                    <div class="col-lg-9">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card mb-5">
-                                    <div class="card-header border-bottom">
-                                        <div class="d-flex align-items-center">
-                                            <div>
-                                                <h6 class="card-title mb-0">Add New Post</h6>
+                <div class="col-lg-9">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card mb-5">
+                                <div class="card-header border-bottom">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <h6 class="card-title mb-0">Add New Post</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                	<form role="form" class="form-width" method="POST" enctype="multipart/form-data">
+                                	{{ form.hidden_tag() }}
+                                	{% from 'includes/_formhelpers.html' import render_field %}
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        {{render_field(form.title, class_='form-control')}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        {{render_field(form.link, class_='form-control')}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">{{render_field(form.category, class_='form-control')}}
+                                            </div>
+                                            <div class="form-group">
+                                                {{render_field(form.description, class_='form-control', rows='3', minLength='10',maxLength='250')}}
+                                            </div>
+                                            <h6 class="mt-4 mb-3">Upload photo</h6>
+                                            <div class="input-group mb-3">
+                                                <div class="custom-file">		{{render_field(form.image, class_='form-control-file border')}}
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <h4 class="text-black mb-3">Pricing</h4><hr>
+                                            <div class="form-group">
+                                                {{render_field(form.posters, class_='form-control', type='number', min='5')}}
+                                            </div>
+                                            <div class="form-group">
+                                            	Billing: N<span id="billing"></span>
+                                            </div>
+                                            <div class="form-actions my-4">
+                                                <button type="submit" class="btn btn-primary width-150">
+                                                    Share Post
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card-body">
-                                    	<form role="form" class="form-width" method="POST" enctype="multipart/form-data">
-                                    	{{ form.hidden_tag() }}
-                                    	{% from 'includes/_formhelpers.html' import render_field %}
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            {{render_field(form.title, class_='form-control')}}
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            {{render_field(form.link, class_='form-control')}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">{{render_field(form.category, class_='form-control')}}
-                                                </div>
-                                                <div class="form-group">
-                                                    {{render_field(form.description, class_='form-control', rows='3', minLength='10',maxLength='250')}}
-                                                </div>
-                                                <h6 class="mt-4 mb-3">Upload photo</h6>
-                                                <div class="input-group mb-3">
-                                                    <div class="custom-file">		{{render_field(form.image, class_='form-control-file border')}}
-                                                    </div>
-                                                </div>
-                                                <br />
-                                                <h4 class="text-black mb-3">Pricing</h4><hr>
-                                                <div class="form-group">
-                                                    {{render_field(form.posters, class_='form-control', type='number', min='5')}}
-                                                </div>
-                                                <div class="form-group">
-                                                	Billing: N<span id="billing"></span>
-                                                </div>
-                                                <div class="form-actions my-4">
-                                                    <button type="submit" class="btn btn-primary width-150">
-                                                        Share Post
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    </div>
+                                </form>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
         </div>
     </div>
 </div>

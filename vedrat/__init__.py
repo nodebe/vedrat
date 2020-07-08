@@ -3,16 +3,16 @@ from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
-from flask_share import Share
+# from flask_share import Share
 from flask_avatars import Avatars
 import os
 
 app = Flask(__name__)
-#database_url = "postgresql://postgres:nodywelete1@localhost/vedratdbs"
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+database_url = "postgresql://postgres:nodywelete1@localhost/vedratdbs"
+app.config['SECRET_KEY'] = "os.environ.get('SECRET_KEY')"
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url#os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
-share = Share(app)
+#share = Share(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 login_manager.login_view = 'users.signin'

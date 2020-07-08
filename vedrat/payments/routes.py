@@ -104,7 +104,7 @@ def withdraw_balance():
 			withdraw_date = date_compare()
 			new_date = dt.now().strftime('%Y-%m-%d')
 			if current_user.bank_name!='' and current_user.acc_name!='' and current_user.acc_number!='':
-				if new_date >= withdraw_date:
+				if new_date >= str(withdraw_date):
 					if current_user.referrer != '':
 						referrer = User.query.filter_by(uuid=current_user.referrer).first()
 						referrer.refer_earning += 0.1*current_user.ad_earning
@@ -133,7 +133,7 @@ def withdraw_balance():
 			flash('You have to be subscribed to a plan', 'info')
 			return redirect(url_for('payments.userpayment'))
 	except Exception as e:
-		flash(error_message, 'warning')
+		flash(error_message + str(e), 'warning')
 		return redirect(url_for('payments.userpayment'))
 
 @payments.route('/userpayment')
