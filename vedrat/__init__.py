@@ -8,9 +8,8 @@ from flask_avatars import Avatars
 import os
 
 app = Flask(__name__)
-database_url = "postgresql://postgres:nodywelete1@localhost/vedratdbs"
-app.config['SECRET_KEY'] = "os.environ.get('SECRET_KEY')"
-app.config['SQLALCHEMY_DATABASE_URI'] = database_url#os.environ.get('DATABASE_URL')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 #share = Share(app)
 migrate = Migrate(app, db)

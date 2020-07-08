@@ -7,11 +7,11 @@ from vedrat.models import User, Transactions
 from datetime import datetime as dt
 from paystackapi.paystack import Paystack
 from paystackapi.transaction import Transaction
+import os
 
 payments = Blueprint('payments', __name__)
 
-paystack_secret_key = 'sk_test_37408e2ede43f221bed5b6ab0d7ed78913f2b6dc'
-paystack = Paystack(secret_key = paystack_secret_key)
+paystack = Paystack(secret_key = os.environ.get('PAYSTACK_SECRET'))
 
 error_message = 'Error on our side, try again later!'
 
